@@ -1,4 +1,5 @@
-import { create } from 'zustand'
+// Use the traditional API for React 19 compatibility
+import { create } from 'zustand/traditional'
 import type { Goal, Project, Task } from './types'
 
 interface State {
