@@ -2,9 +2,8 @@ import { useStore } from '../../domain/store'
 import { useState } from 'react'
 
 export default function HomePage() {
-  const tasks = useStore((s) =>
-    s.goals.flatMap((g) => g.projects.flatMap((p) => p.tasks))
-  )
+  const goals = useStore((s) => s.goals)
+  const tasks = goals.flatMap((g) => g.projects.flatMap((p) => p.tasks))
   const [view, setView] = useState<'day' | 'week' | 'month'>('month')
 
   const grouped = tasks.reduce<Record<string, typeof tasks>>((acc, t) => {
