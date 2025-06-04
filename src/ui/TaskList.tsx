@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function TaskList({ projectId }: Props) {
-  const { goals, addTask } = useStore()
+  const { goals, addTask, removeTask } = useStore()
   const project = goals.flatMap((g) => g.projects).find((p) => p.id === projectId)
   const [name, setName] = useState('')
 
@@ -23,6 +23,7 @@ export default function TaskList({ projectId }: Props) {
       priority: 3,
       dependencyIds: [],
       completed: false,
+      date: new Date().toISOString().slice(0, 10),
     }
     addTask(projectId, task)
     setName('')
@@ -33,8 +34,19 @@ export default function TaskList({ projectId }: Props) {
       <h4 className="font-semibold mb-2">Tasks for {project.name}</h4>
       <ul className="mb-2">
         {project.tasks.map((t) => (
-          <li key={t.id} className="border p-1 mb-1 rounded">
-            {t.name} {t.completed ? '(done)' : ''}
+          <li
+            key={t.id}
+            className="border p-1 mb-1 rounded flex justify-between items-center"
+          >
+            <span>
+              {t.name} {t.completed ? '(done)' : ''}
+            </span>
+            <button
+              onClick={() => removeTask(projectId, t.id)}
+              className="px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
