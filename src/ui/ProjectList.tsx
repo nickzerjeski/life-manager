@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useStore } from '../domain/store'
-import type { Project } from '../domain/types'
+import type { Project, Task } from '../domain/types'
 
 interface Props {
   goalId: string
 }
 
 export default function ProjectList({ goalId }: Props) {
-  const { goals, addProject } = useStore()
+  const { goals, addProject, removeProject } = useStore()
   const goal = goals.find((g) => g.id === goalId)
   const [name, setName] = useState('')
 
@@ -15,13 +15,24 @@ export default function ProjectList({ goalId }: Props) {
 
   const handleAdd = () => {
     if (!name) return
-    const project: Project = {
+    const id = Math.random().toString(36).slice(2)
+    const task: Task = {
       id: Math.random().toString(36).slice(2),
+      name: 'Sample Task',
+      description: '',
+      duration: 60,
+      priority: 3,
+      dependencyIds: [],
+      completed: false,
+      date: new Date().toISOString().slice(0, 10),
+    }
+    const project: Project = {
+      id,
       goalId,
       name,
       period: { from: new Date().toISOString(), to: new Date().toISOString() },
       status: 'Not started',
-      tasks: [],
+      tasks: [task],
     }
     addProject(goalId, project)
     setName('')
@@ -32,8 +43,19 @@ export default function ProjectList({ goalId }: Props) {
       <h3 className="font-semibold mb-2">Projects for {goal.name}</h3>
       <ul className="mb-2">
         {goal.projects.map((p) => (
-          <li key={p.id} className="border p-1 mb-1 rounded">
-            {p.name} - {p.status}
+          <li
+            key={p.id}
+            className="border p-1 mb-1 rounded flex justify-between items-center"
+          >
+            <span>
+              {p.name} - {p.status}
+            </span>
+            <button
+              onClick={() => removeProject(goalId, p.id)}
+              className="px-2 py-1 rounded bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>

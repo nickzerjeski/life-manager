@@ -6,6 +6,7 @@ export interface Task {
   priority: number; // 1-5
   dependencyIds: string[];
   completed: boolean;
+  date: string; // ISO date
 }
 
 export interface Project {
