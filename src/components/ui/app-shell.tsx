@@ -1,13 +1,13 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, ListTodo, MessageSquare, Users2, Settings } from 'lucide-react';
+import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat } from 'lucide-react';
 import { AppShellProvider, useAppShell } from './app-shell-context';
 
 /* ----- icons mapping for sidebar items ----- */
 const nav = [
-  { name: 'Tasks', icon: ListTodo },
-  { name: 'Kommunikation', icon: MessageSquare },
-  { name: 'Klienten', icon: Users2 },
+  { name: 'Habits', icon: Repeat },
+  { name: 'Projects', icon: ListTodo }, 
+  { name: 'Goals', icon: Target },
 ] as const;
 
 function ShellInner({ children }: { children: React.ReactNode }) {
@@ -40,7 +40,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
       >
         {/* header + close btn */}
         <div className="px-2 mb-8 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-blue-700 hidden md:block">Betreuer App</h1>
+          <h1 className="text-xl font-bold text-blue-700 hidden md:block">Lifemanager</h1>
           <Button
             variant="ghost"
             size="icon"
