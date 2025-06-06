@@ -1,21 +1,16 @@
-'use client';
-import { useState } from 'react';
 import GoalPage from '../pages/GoalPage';
 import { useAppShell } from './app-shell-context';
-import { initialClients } from '@/data/initialClients';
 import ProjectPage from '../pages/ProjectPage';
 import CommunicationPage from '../pages/CommunicationPage';
 import SettingPage from '../pages/SettingPage';
 
-export default function DashboardContent() {
-  const [clients, setClients] = useState(initialClients);
-  
+export default function DashboardContent() {  
   const { activeTab } = useAppShell();
   switch (activeTab) {
     case 'Habits':
       return <CommunicationPage />;
     case 'Projects':
-      return <ProjectPage clients={clients} setClients={setClients} />;
+      return <ProjectPage />;
     case 'Goals':
       return <GoalPage />;
     default:
