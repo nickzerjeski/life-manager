@@ -3,7 +3,7 @@ import { Status } from "@/types/Status";
 export const containerStyle: Record<Status, string> = {
   [Status.ON_TRACK]: 'bg-green-50 border border-green-200',
   [Status.AT_RISK]: 'bg-yellow-50 border border-yellow-200',
-  [Status.OFF_TRACK]: 'bg-red-50 border border-red-200',
+  [Status.OFF_TRACK]: 'bg-orange-50 border border-red-200',
   [Status.NOT_STARTED]: 'bg-gray-50 border border-gray-200',
   [Status.ACHIEVED]: 'bg-blue-50 border border-blue-200',
 };
