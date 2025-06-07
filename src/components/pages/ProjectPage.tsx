@@ -1,44 +1,12 @@
 import React, { useState } from "react";
 import { Plus, Search } from "lucide-react";
-import { Status } from "@/types/Status";
-import { Goal } from "@/models/Goal";
-import { Project } from "@/models/Project";
+import { ProjectHandler } from "@/models/ProjectHandler";
 import { containerStyle, statusLabelStyle } from "@/styles/statusStyles";
 
-/* ---------- dummy data ---------- */
-const dummyGoals: Goal[] = [
-  { id: 1, title: "Increase market share" } as unknown as Goal,
-  { id: 2, title: "Improve sustainability" } as unknown as Goal,
-];
-
-const initialProjects: Project[] = [
-  new Project(
-    1,
-    "Solar Farm Expansion",
-    "Expand the regional solar farm to 150 MW capacity to support grid stability and meet renewable‑energy targets.",
-    0,
-    30,
-    100,
-    [new Date("2025-01-01"), new Date("2025-12-31")],
-    Status.ON_TRACK,
-    dummyGoals[1],
-  ),
-  new Project(
-    2,
-    "ERP Roll‑out",
-    "Implement a company‑wide ERP solution to unify finance, supply‑chain, and HR operations across all business units.",
-    0,
-    70,
-    100,
-    [new Date("2024-06-01"), new Date("2025-06-30")],
-    Status.AT_RISK,
-    dummyGoals[0],
-  ),
-];
 
 /* ---------- main component ---------- */
 export default function ProjectPage() {
-  const [projects] = useState<Project[]>(initialProjects);
+  const projects = ProjectHandler.getInstance().getProjects();
   const [search, setSearch] = useState("");
 
   const filtered = projects.filter((p) =>
