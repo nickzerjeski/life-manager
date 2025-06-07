@@ -3,12 +3,16 @@ import { useState } from 'react';
 import ClientDetailView from '../ClientDetailView';
 import { GoalHandler } from '@/models/GoalHandler';
 import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
+import { Plus } from 'lucide-react';
+import AddGoalModal from '@/modal/AddGoalModal';
 
 
 export default function GoalPage() {
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
-
-  const goals = GoalHandler.getInstance().getGoals();
+  const [goals, setGoals] = useState<Goal[]>(
+    GoalHandler.getInstance().getGoals(),
+  );
+  const [showAdd, setShowAdd] = useState(false);
 
   return (
     <section className="mb-6 p-4 sm:p-6 rounded-lg shadow border bg-white">
@@ -18,13 +22,21 @@ export default function GoalPage() {
           onBack={() => setSelectedGoal(null)} onSaveChanges={undefined} onDeleteClient={undefined} />
       ) : (
         <>
-          <h2 className="text-2xl font-bold mb-4">Goals</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Goals</h2>
+            <button
+              onClick={() => setShowAdd(true)}
+              className="flex items-center justify-center w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out"
+            >
+              <Plus size={18} className="mr-2" /> Add Goal
+            </button>
+          </div>
           <ul className="space-y-4">
             {goals.map((goal) => (
               <li
                 key={goal.id}
-                className={`${containerStyle[goal.status]} p-3 border rounded-md flex flex-col 
-                          sm:flex-row justify-between items-start sm:items-center 
+                className={`${containerStyle[goal.status]} p-3 border rounded-md flex flex-col
+                          sm:flex-row justify-between items-start sm:items-center
                           gap-2 cursor-pointer transition-shadow hover:shadow-md `}
                 onClick={() => setSelectedGoal(goal)}
               >
@@ -43,6 +55,11 @@ export default function GoalPage() {
           </ul>
         </>
       )}
+      <AddGoalModal
+        isOpen={showAdd}
+        onClose={() => setShowAdd(false)}
+        onCreated={() => setGoals(GoalHandler.getInstance().getGoals())}
+      />
     </section>
   );
 }
