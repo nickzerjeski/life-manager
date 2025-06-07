@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Landmark, Heart, Calendar, FileText, Trash2, Edit, ArrowLeft } from 'lucide-react';
+import { User, Landmark, Heart, Calendar, FileText, Trash2, Edit, ArrowLeft } from 'lucide-react';
 import Modal from './Modal';
 import PersonalTab from './tabs/PersonalTab';
 import FinancialTab from './tabs/FinancialTab';
 import HealthTab from './tabs/HealthTab';
 import TasksTab from './tabs/TasksTab';
 import DocumentsTab from './tabs/DocumentsTab';
-import { formatDate } from './helpers';
-import { formatCurrency } from './helpers';
 
-const ClientDetailView = ({ client, onBack, onSaveChanges, onDeleteClient }) => {
+interface ClientDetailViewProps {
+  client: any;
+  onBack: () => void;
+  onSaveChanges: (client: any) => void;
+  onDeleteClient: (id: string) => void;
+}
+
+const ClientDetailView: React.FC<ClientDetailViewProps> = ({ client, onBack, onSaveChanges, onDeleteClient }) => {
   const [activeTab, setActiveTab] = useState('personal');
-  const [editedClient, setEditedClient] = useState(client);
+  const [editedClient, setEditedClient] = useState<any>(client);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -21,14 +26,14 @@ const ClientDetailView = ({ client, onBack, onSaveChanges, onDeleteClient }) => 
     setActiveTab('personal');
   }, [client]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditedClient(prev => ({ ...prev, [name]: value }));
+    setEditedClient((prev: any) => ({ ...prev, [name]: value }));
   };
 
-  const handleScopeChange = (e) => {
-    const scopes = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-    setEditedClient(prev => ({ ...prev, betreuungScope: scopes }));
+  const handleScopeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const scopes = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
+    setEditedClient((prev: any) => ({ ...prev, betreuungScope: scopes }));
   };
 
   const handleSave = () => {
@@ -64,13 +69,17 @@ const ClientDetailView = ({ client, onBack, onSaveChanges, onDeleteClient }) => 
     }
   };
 
-  const TabButton = ({ tabId, label, icon: Icon }) => (
+  interface TabButtonProps {
+    tabId: string;
+    label: string;
+    icon: React.ComponentType<{ size?: number }>;
+  }
+
+  const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon }) => (
     <button
       onClick={() => setActiveTab(tabId)}
       className={`flex flex-shrink-0 items-center px-4 py-2 text-sm font-medium rounded-md transition ${
-        activeTab === tabId
-          ? 'bg-blue-100 text-blue-700'
-          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+        activeTab === tabId ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
       }`}
     >
       <Icon size={18} className="mr-2" />
@@ -134,9 +143,7 @@ const ClientDetailView = ({ client, onBack, onSaveChanges, onDeleteClient }) => 
         </nav>
       </div>
 
-      <div className="mt-4">
-        {renderTabContent()}
-      </div>
+      <div className="mt-4">{renderTabContent()}</div>
 
       <Modal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} title="Klienten löschen bestätigen">
         <p className="mb-4">

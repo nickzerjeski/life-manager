@@ -1,6 +1,20 @@
 import React from 'react';
 
-const TextAreaField = ({ label, name, value, onChange, isEditing }) => (
+interface TextAreaFieldProps {
+  label: string;
+  name: string;
+  value: string | undefined;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  isEditing: boolean;
+}
+
+const TextAreaField: React.FC<TextAreaFieldProps> = ({
+  label,
+  name,
+  value,
+  onChange,
+  isEditing,
+}) => (
   <div className="mb-3">
     <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
       {label}
