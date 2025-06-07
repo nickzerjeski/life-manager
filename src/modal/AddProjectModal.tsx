@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Modal from '@/components/Modal';
+import Modal from '@/components/ui/modal';
 import { Project } from '@/models/Project';
 import { ProjectHandler } from '@/models/ProjectHandler';
 import { GoalHandler } from '@/models/GoalHandler';

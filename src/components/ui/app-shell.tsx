@@ -74,7 +74,17 @@ function ShellInner({ children }: { children: React.ReactNode }) {
 
         {/* logout */}
         <div className="mt-auto pt-4 border-t">
-        <button className="w-full flex items-center px-3 py-2.5 rounded-md text-sm text-gray-600 hover:bg-gray-100">
+        <button
+            onClick={() => {
+              setActiveTab('Settings');
+              if (window.innerWidth < 768) setIsSidebarOpen(false);
+            }}
+            className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm ${
+              activeTab === 'Settings'
+                ? 'bg-blue-50 text-blue-700'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
             <Settings className="w-5 h-5 mr-3" />
             Einstellungen
           </button>

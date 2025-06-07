@@ -1,7 +1,7 @@
 'use client';
 import { createContext, useContext, useState } from 'react';
 
-type TabName = 'Habits' | 'Projects' | 'Goals';
+type TabName = 'Habits' | 'Projects' | 'Goals' | 'Settings';
 
 interface ShellCtx {
   activeTab: TabName;
