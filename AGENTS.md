@@ -27,7 +27,8 @@ Guides contributors on repository structure and coding style.
 Unit tests are not yet configured.
 ## Usage notes for Codex
 When adding new features, update corresponding domain model first, then UI. Run `npm run lint` before committing.
-For project information and structure read `README.md`. 
+For project information and structure read `README.md`.
+Refer to `docs/style-guide.md` for component styling details.
 
 ## Styleguide
 - Use Tailwind CSS utility classes exclusively for styling.
