@@ -1,20 +1,25 @@
-# **App Name**: ViteTailwind Showcase
+# LifeManager Blueprint
 
-## Core Features:
+## Purpose
+This document outlines the high‑level goals and architecture of the **LifeManager** project.
 
-- Component Gallery: Display pre-defined Tailwind CSS examples, such as typography, buttons, forms, and layouts, demonstrating various styling options.
-- Theme Switcher: Allow users to toggle between different Tailwind themes (light, dark, etc.) to see how the styles adapt.
-- Live Editor: Provide a live editor where users can modify Tailwind classes and see the changes reflected in real-time on the displayed examples.
+## Core Features
+- Goal, Project and Task management connected to Google Calendar.
+- AI‑assisted planning that expands a goal into projects and tasks.
+- Intelligent scheduler that respects durations, deadlines and dependencies.
+- Cloud document storage for project references and AI context.
+- Offline‑capable PWA with an optional Electron desktop shell.
+- Authentication via Google OAuth with JWT‑based sessions.
 
-## Style Guidelines:
+## Architecture Overview
+- **Client**: React, Next.js and Tailwind CSS.
+- **Server**: Node.js REST API with n8n orchestrating OpenAI workflows.
+- **Storage**: PostgreSQL for metadata and an S3‑compatible bucket for documents.
+- **Calendar**: Google Calendar API for free/busy lookups and event creation.
 
-- Primary color: Tailwind's blue-500 for a modern and clean look.
-- Secondary color: Gray-200 for backgrounds and subtle dividers.
-- Accent: Teal-500 for interactive elements and highlights.
-- Use a responsive layout with a sidebar for navigation and a main content area for displaying examples.
-- Use simple, consistent icons from a library like Heroicons to represent different component categories.
-- Subtle transitions and hover effects to enhance interactivity and provide visual feedback.
+## Development Principles
+- Keep components focused and test with Vitest beside each source file.
+- Apply Tailwind utility classes; interactive elements use the `blue-600` palette.
+- Maintain ≥ 80% unit test coverage and run `npm run lint` before committing.
 
-## Original User Request:
-I want you to create a Vite App that uses tailwind. Be creative and make a sample app where everything is in the App.jsx
-  
+LifeManager turns big aspirations into achievable tasks so users can focus on execution, not planning.
