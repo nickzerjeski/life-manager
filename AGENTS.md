@@ -13,11 +13,10 @@ Guides contributors on repository structure and coding style.
 - `docs/` – project documentation
 
 ## Commands
-- `npm run dev`      – Vite dev server
+- `npm run dev`      – Next.js dev server
 - `npm run build`    – Production PWA build
 - `npm run lint`     – ESLint
 - `npm run electron` – Desktop shell
-- `npm test`         – Vitest unit tests
 
 ## Coding conventions
 - Use TypeScript and React function components.
@@ -25,10 +24,9 @@ Guides contributors on repository structure and coding style.
 - Prefer named exports and keep components small.
 
 ## Testing
-Write unit tests in `*.test.ts` beside source files. Achieve ≥ 80 % statement coverage. Use Vitest.
-
+Unit tests are not yet configured.
 ## Usage notes for Codex
-When adding new features, update corresponding domain model first, then UI. Run `npm run lint` and ensure tests pass before committing.
+When adding new features, update corresponding domain model first, then UI. Run `npm run lint` before committing.
 For project information and structure read `README.md`. 
 
 ## Styleguide
