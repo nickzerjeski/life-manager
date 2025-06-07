@@ -73,5 +73,9 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - Testing: Vitest, Testing Library, MSW
 - CI/CD: GitHub Actions, codecov
 ## Development Workflow
-`npm install`
-`npm run dev` – Start project.
+1. Install dependencies with `npm install`.
+2. Start the dev server using `npm run dev`.
+3. Lint with `npm run lint` and run tests via `npm test`.
+4. Build production assets with `npm run build`.
+5. Start the desktop shell using `npm run electron`.
+

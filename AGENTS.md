@@ -1,10 +1,16 @@
 # AGENTS.md
 
 ## Purpose
--
+Guides contributors on repository structure and coding style.
 
 ## Directory guide
--
+- `src/` – React and Next.js application code
+  - `app/` – page routing and layout files
+  - `components/` – reusable UI pieces
+  - `models/` – TypeScript domain models
+  - `ai/` – AI workflow helpers
+  - `hooks/` – custom React hooks
+- `docs/` – project documentation
 
 ## Commands
 - `npm run dev`      – Vite dev server
@@ -14,7 +20,9 @@
 - `npm test`         – Vitest unit tests
 
 ## Coding conventions
--
+- Use TypeScript and React function components.
+- Place tests beside source files using `*.test.ts`.
+- Prefer named exports and keep components small.
 
 ## Testing
 Write unit tests in `*.test.ts` beside source files. Achieve ≥ 80 % statement coverage. Use Vitest.
