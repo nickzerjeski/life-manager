@@ -2,7 +2,12 @@ import React from 'react';
 import { FileText, Trash2 } from 'lucide-react';
 import { formatDate } from '../helpers';
 
-const DocumentsTab = ({ client, isEditing }) => (
+interface DocumentsTabProps {
+  client: any;
+  isEditing: boolean;
+}
+
+const DocumentsTab: React.FC<DocumentsTabProps> = ({ client, isEditing }) => (
   <div className="space-y-4">
     <h4 className="text-lg font-semibold mb-2 text-gray-700">Dokumente</h4>
     <p className="text-sm text-blue-700 bg-blue-100 p-3 rounded-md border border-blue-300">
@@ -18,8 +23,11 @@ const DocumentsTab = ({ client, isEditing }) => (
     )}
     {client.documents?.length > 0 ? (
       <ul className="space-y-2">
-        {client.documents.map(doc => (
-          <li key={doc.id} className="p-3 border border-gray-200 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-gray-50">
+        {client.documents.map((doc: any) => (
+          <li
+            key={doc.id}
+            className="p-3 border border-gray-200 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-gray-50"
+          >
             <div className="flex items-center space-x-2 flex-grow min-w-0">
               <FileText size={18} className="text-gray-500 flex-shrink-0" />
               <div className="min-w-0">

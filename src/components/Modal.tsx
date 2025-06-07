@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { X } from 'lucide-react';
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: ReactNode;
+  children: ReactNode;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
   return (

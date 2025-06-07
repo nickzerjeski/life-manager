@@ -1,6 +1,11 @@
 import React from 'react';
 
-const HealthTab = ({ client, isEditing }) => (
+interface HealthTabProps {
+  client: any;
+  isEditing: boolean;
+}
+
+const HealthTab: React.FC<HealthTabProps> = ({ client, isEditing }) => (
   <div className="space-y-6">
     <p className="text-sm text-red-700 bg-red-100 p-3 rounded-md border border-red-300">
       <strong>Achtung:</strong> Gesundheitsdaten sind besonders sensibel (DSGVO Art. 9). Die Speicherung und Verarbeitung erfordert höchste Sicherheitsstandards und eine klare Rechtsgrundlage. Diese Darstellung ist nur ein Beispiel.
@@ -10,7 +15,7 @@ const HealthTab = ({ client, isEditing }) => (
       {isEditing && <p className="text-sm text-yellow-700 italic mb-2">Bearbeitung von Ärzten ist in diesem Prototyp nicht implementiert.</p>}
       {client.doctors?.length > 0 ? (
         <div className="space-y-3">
-          {client.doctors.map(doc => (
+          {client.doctors.map((doc: any) => (
             <div key={doc.id} className="p-3 border border-gray-200 rounded-md bg-gray-50 text-sm">
               <p><strong>Name:</strong> {doc.name}</p>
               <p><strong>Fachrichtung:</strong> {doc.specialty}</p>

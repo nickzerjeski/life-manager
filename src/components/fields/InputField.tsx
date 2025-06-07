@@ -1,6 +1,24 @@
 import React from 'react';
 
-const InputField = ({ label, name, value, onChange, isEditing, type = 'text', sensitive = false }) => (
+interface InputFieldProps {
+  label: string;
+  name: string;
+  value: string | number | undefined;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isEditing: boolean;
+  type?: string;
+  sensitive?: boolean;
+}
+
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  name,
+  value,
+  onChange,
+  isEditing,
+  type = 'text',
+  sensitive = false,
+}) => (
   <div className="mb-3">
     <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
       {label}
