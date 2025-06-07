@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Landmark, Heart, Calendar, FileText, Trash2, Edit, ArrowLeft } from 'lucide-react';
-import Modal from './Modal';
+import Modal from '@/components/ui/modal';
 import PersonalTab from './tabs/PersonalTab';
 import FinancialTab from './tabs/FinancialTab';
 import HealthTab from './tabs/HealthTab';
