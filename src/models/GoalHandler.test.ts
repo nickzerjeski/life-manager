@@ -6,11 +6,22 @@ import { Status } from '@/types/Status'
 import { AOL } from '@/types/AOL'
 
 function createSampleGoal(id: number): Goal {
-  return new Goal(id, `goal${id}`, '', 0, 0, 1, [new Date(), new Date()], Status.NotStarted, AOL.Health)
+  return new Goal(
+    id,
+    `goal${id}`,
+    '',
+    0,
+    0,
+    1,
+    [new Date(), new Date()],
+    Status.NOT_STARTED,
+    AOL.HEALTH
+  )
 }
 
 test('createGoal adds a goal to the handler', () => {
-  const handler = new GoalHandler()
+  const handler = GoalHandler.getInstance()
+  handler.clearGoals()
   const goal = createSampleGoal(1)
   handler.createGoal(goal)
   assert.equal(handler.getGoals().length, 1)
@@ -18,7 +29,8 @@ test('createGoal adds a goal to the handler', () => {
 })
 
 test('deleteGoal removes the specified goal', () => {
-  const handler = new GoalHandler()
+  const handler = GoalHandler.getInstance()
+  handler.clearGoals()
   handler.createGoal(createSampleGoal(1))
   handler.createGoal(createSampleGoal(2))
   handler.deleteGoal(1)
