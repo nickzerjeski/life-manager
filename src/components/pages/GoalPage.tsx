@@ -26,7 +26,7 @@ export default function GoalPage() {
             <h2 className="text-2xl font-bold">Goals</h2>
             <button
               onClick={() => setShowAdd(true)}
-              className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+              className="flex items-center justify-center w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out"
             >
               <Plus size={18} className="mr-2" /> Add Goal
             </button>
