@@ -12,7 +12,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - Authentication – Google OAuth initiates authorisation; backend issues session JWTs for API calls.
 - Offline Support – Progressive Web App caches critical assets and state; synchronises on reconnection.
 - Desktop Option – Electron shell packages the same codebase for Windows, macOS, and Linux.
-- Unit Testing and CI – Vitest ≥ 80 % coverage, ESLint Airbnb TypeScript rules, GitHub Actions gate merges.
+- CI – ESLint with Airbnb TypeScript rules; GitHub Actions gate merges.
 ## Domain Concepts
 ### Goal
 - Quantitative: track start, current, and target numeric values
@@ -64,18 +64,16 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - `POST /documents/upload-url` (presign PUT)
 - `POST /calendar/sync`
 ## Tech Stack
-- Client: React, TypeScript, Vite, Tailwind CSS
+- Client: React, TypeScript, Next.js, Tailwind CSS
 - Backend: Language-agnostic REST (reference Node.js), n8n for AI orchestration
 - AI: OpenAI Chat Completions (gpt-4o) and embeddings
 - Storage: PostgreSQL for metadata, S3-compatible bucket for documents
 - Calendar: Google Calendar API v3
 - Desktop: Electron 30 with context isolation
-- Testing: Vitest, Testing Library, MSW
 - CI/CD: GitHub Actions, codecov
 ## Development Workflow
 1. Install dependencies with `npm install`.
 2. Start the dev server using `npm run dev`.
-3. Lint with `npm run lint` and run tests via `npm test`.
+3. Lint with `npm run lint`.
 4. Build production assets with `npm run build`.
-5. Start the desktop shell using `npm run electron`.
 

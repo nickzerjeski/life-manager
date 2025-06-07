@@ -18,7 +18,7 @@ This document outlines the high‑level goals and architecture of the **LifeMana
 - **Calendar**: Google Calendar API for free/busy lookups and event creation.
 
 ## Development Principles
-- Keep components focused and test with Vitest beside each source file.
+- Keep components focused and write unit tests beside each source file.
 - Apply Tailwind utility classes; interactive elements use the `blue-600` palette.
 - Maintain ≥ 80% unit test coverage and run `npm run lint` before committing.
 
