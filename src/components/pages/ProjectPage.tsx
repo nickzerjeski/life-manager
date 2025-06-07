@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import { Plus, Search } from "lucide-react";
 import { ProjectHandler } from "@/models/ProjectHandler";
 import { containerStyle, statusLabelStyle } from "@/styles/statusStyles";
+import AddProjectModal from "@/modal/AddProjectModal";
 
 
 /* ---------- main component ---------- */
 export default function ProjectPage() {
-  const projects = ProjectHandler.getInstance().getProjects();
+  const [projects, setProjects] = useState(
+    ProjectHandler.getInstance().getProjects()
+  );
+  const [showAdd, setShowAdd] = useState(false);
   const [search, setSearch] = useState("");
 
   const filtered = projects.filter((p) =>
@@ -19,7 +23,7 @@ export default function ProjectPage() {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
         <h1 className="text-2xl font-bold text-gray-800">Project Overview</h1>
         <button
-          onClick={() => { /* placeholder for future create‑project workflow */ }}
+          onClick={() => setShowAdd(true)}
           className="flex items-center justify-center w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out"
         >
           <Plus size={18} className="mr-2" />
@@ -58,6 +62,13 @@ export default function ProjectPage() {
           <p className="text-gray-500 col-span-full text-center py-10">No projects found.</p>
         )}
       </div>
+      <AddProjectModal
+        isOpen={showAdd}
+        onClose={() => setShowAdd(false)}
+        onCreated={() =>
+          setProjects(ProjectHandler.getInstance().getProjects())
+        }
+      />
     </section>
   );
 }
