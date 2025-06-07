@@ -2,6 +2,12 @@
 import { useEffect, useState } from 'react';
 import { initialClients } from '@/data/initialClients';
 import DashboardContent from '@/components/ui/dashboard-content';
+import { GoalHandler } from '@/models/GoalHandler';
+import { ProjectHandler } from '@/models/ProjectHandler';
+
+// initialize handlers on first load
+const goals = GoalHandler.getInstance();
+ProjectHandler.getInstance(goals);
 
 export default function Home() {
   /* ---------- single source of truth for client list ---------- */
