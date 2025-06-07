@@ -13,6 +13,8 @@ export default function DashboardContent() {
       return <ProjectPage />;
     case 'Goals':
       return <GoalPage />;
+    case 'Settings':
+      return <SettingPage />;
     default:
       return <GoalPage />;
   }
