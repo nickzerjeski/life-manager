@@ -27,18 +27,26 @@ export class DocumentHandler {
   /** Fetch all documents belonging to a specific goal. */
   async getDocumentsForGoal(goalId: number): Promise<Document[]> {
     const res = await fetch(`${this.baseUrl}/documents?goalId=${goalId}`)
-    const data = await res.json()
-    return data.map(
-      (d: any) => new Document(d.id, d.goalId, d.name, d.type, new Date(d.uploadDate))
-    )
+    if (!res.ok) return []
+    try {
+      const data = await res.json()
+      return data.map(
+        (d: any) => new Document(d.id, d.goalId, d.name, d.type, new Date(d.uploadDate))
+      )
+    } catch {
+      return []
+    }
   }
 
   /** Create a new document entry. */
   async createDocument(document: Document): Promise<void> {
-    await fetch(`${this.baseUrl}/documents`, {
+    const res = await fetch(`${this.baseUrl}/documents`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(document),
     })
+    if (!res.ok) {
+      throw new Error('Failed to create document')
+    }
   }
 }
