@@ -49,7 +49,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
       case 'overview':
         return <GoalOverviewTab goal={editedGoal} />;
       case 'project':
-        return <ProjectTab {...commonProps} />;
+        return <ProjectTab goal={editedGoal} />;
       case 'tasks':
         return <TaskTab {...commonProps} />;
       case 'documents':

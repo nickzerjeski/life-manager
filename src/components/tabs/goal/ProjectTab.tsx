@@ -1,34 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Goal } from '@/models/Goal';
+import { Project } from '@/models/Project';
+import { ProjectHandler } from '@/models/ProjectHandler';
+import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
 
 interface ProjectTabProps {
-  client: any;
-  isEditing: boolean;
+  goal: Goal;
 }
 
-const ProjectTab: React.FC<ProjectTabProps> = ({ client, isEditing }) => (
-  <div className="space-y-6">
-    <p className="text-sm text-red-700 bg-red-100 p-3 rounded-md border border-red-300">
-      <strong>Achtung:</strong> Gesundheitsdaten sind besonders sensibel (DSGVO Art. 9). Die Speicherung und Verarbeitung erfordert höchste Sicherheitsstandards und eine klare Rechtsgrundlage. Diese Darstellung ist nur ein Beispiel.
-    </p>
-    <div>
-      <h4 className="text-lg font-semibold mb-2 text-gray-700">Ärzte</h4>
-      {isEditing && <p className="text-sm text-yellow-700 italic mb-2">Bearbeitung von Ärzten ist in diesem Prototyp nicht implementiert.</p>}
-      {client.doctors?.length > 0 ? (
-        <div className="space-y-3">
-          {client.doctors.map((doc: any) => (
-            <div key={doc.id} className="p-3 border border-gray-200 rounded-md bg-gray-50 text-sm">
-              <p><strong>Name:</strong> {doc.name}</p>
-              <p><strong>Fachrichtung:</strong> {doc.specialty}</p>
-              <p><strong>Telefon:</strong> {doc.phone}</p>
-            </div>
+const ProjectTab: React.FC<ProjectTabProps> = ({ goal }) => {
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    ProjectHandler.getInstance()
+      .getProjectsForGoal(goal.id)
+      .then(setProjects)
+      .catch(() => setProjects([]));
+  }, [goal.id]);
+
+  return (
+    <div className="space-y-4">
+      <h4 className="text-lg font-semibold mb-2 text-gray-700">Projects</h4>
+      {projects.length > 0 ? (
+        <ul className="space-y-2">
+          {projects.map((project) => (
+            <li
+              key={project.id}
+              className={`${containerStyle[project.status]} p-3 border rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2`}
+            >
+              <div>
+                <p className="font-medium text-sm text-gray-800">{project.name}</p>
+                <p className="text-xs text-gray-500">{project.description}</p>
+                <p className="text-xs text-gray-600">
+                  {project.period[0].toLocaleDateString()} - {project.period[1].toLocaleDateString()}
+                </p>
+              </div>
+              <span
+                className={`${statusLabelStyle[project.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full`}
+              >
+                {project.status}
+              </span>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
-        <p className="text-gray-500 italic text-sm">Keine Ärzte erfasst.</p>
+        <p className="text-gray-500 italic text-sm">No projects for this goal.</p>
       )}
-      {isEditing && <button className="mt-2 text-sm text-blue-600 hover:underline">+ Arzt hinzufügen (nicht implementiert)</button>}
     </div>
-  </div>
-);
+  );
+};
 
 export default ProjectTab;
