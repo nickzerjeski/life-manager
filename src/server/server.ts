@@ -85,6 +85,16 @@ function parseBody(req: http.IncomingMessage): Promise<string> {
 export function createServer() {
   return http.createServer(async (req, res) => {
     const { method, url } = req
+
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+    if (method === 'OPTIONS') {
+      res.statusCode = 204
+      res.end()
+      return
+    }
     const parsed = new URL(url || '/', 'http://localhost')
 
     if (method === 'GET' && parsed.pathname === '/goals') {

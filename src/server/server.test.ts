@@ -3,7 +3,11 @@ import assert from 'node:assert/strict'
 import http from 'node:http'
 import { createServer } from './server'
 
-function request(method: string, path: string, body = ''): Promise<{ status: number; data: any }> {
+function request(
+  method: string,
+  path: string,
+  body = ''
+): Promise<{ status: number; data: any; headers: http.IncomingHttpHeaders }> {
   const server = createServer()
   return new Promise((resolve, reject) => {
     server.listen(0, () => {
@@ -15,7 +19,7 @@ function request(method: string, path: string, body = ''): Promise<{ status: num
         res.on('end', () => {
           server.close()
           const text = data || 'null'
-          resolve({ status: res.statusCode || 0, data: JSON.parse(text) })
+          resolve({ status: res.statusCode || 0, data: JSON.parse(text), headers: res.headers })
         })
       })
       req.on('error', err => {
@@ -126,4 +130,10 @@ test('server responds to curl', async () => {
   const data = JSON.parse(output)
   assert.ok(Array.isArray(data))
   server.close()
+})
+
+test('responses include CORS headers', async () => {
+  const res = await request('GET', '/goals')
+  assert.equal(res.status, 200)
+  assert.equal(res.headers['access-control-allow-origin'], '*')
 })
