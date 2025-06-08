@@ -169,3 +169,12 @@ export function createServer() {
     res.end('Not Found')
   })
 }
+
+// When executed directly via `npm run server`, start the HTTP server.
+if (require.main === module) {
+  const port = process.env.PORT ? Number(process.env.PORT) : 3001
+  createServer().listen(port, () => {
+    /* eslint-disable no-console */
+    console.log(`Server running on http://localhost:${port}`)
+  })
+}

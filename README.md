@@ -74,6 +74,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 ## Development Workflow
 1. Install dependencies with `npm install`.
 2. Run the backend server using `npm run server` and keep it running.
+   Verify it is reachable with `curl http://localhost:3001/goals`.
 3. In another terminal start the dev server with `npm run dev`.
 4. Lint with `npm run lint`.
 5. Build production assets with `npm run build`.

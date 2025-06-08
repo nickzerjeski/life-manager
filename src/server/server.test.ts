@@ -50,3 +50,19 @@ test('DELETE /goals removes a goal', async () => {
   const resDel = await request('DELETE', '/goals/100')
   assert.equal(resDel.status, 204)
 })
+
+test('server responds to curl', async () => {
+  const server = createServer()
+  await new Promise(resolve => server.listen(0, resolve))
+  const { port } = server.address() as any
+  const { exec } = await import('node:child_process')
+  const output: string = await new Promise((resolve, reject) => {
+    exec(`curl -s http://localhost:${port}/goals`, (err, stdout) => {
+      if (err) reject(err)
+      else resolve(stdout)
+    })
+  })
+  const data = JSON.parse(output)
+  assert.ok(Array.isArray(data))
+  server.close()
+})
