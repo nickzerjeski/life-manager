@@ -29,7 +29,7 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
   const [status, setStatus] = useState<Status>(Status.NOT_STARTED);
   const [aol, setAol] = useState<AOL>(AOL.GROWTH);
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     const goal = new Goal(
       Date.now(),
       name,
@@ -41,8 +41,8 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
       status,
       aol
     );
-    GoalHandler.getInstance().createGoal(goal);
-    if (onCreated) onCreated();
+    await GoalHandler.getInstance().createGoal(goal);
+    if (onCreated) await onCreated();
     onClose();
     // reset fields
     setName('');

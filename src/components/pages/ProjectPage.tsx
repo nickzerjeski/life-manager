@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, Search } from "lucide-react";
 import { ProjectHandler } from "@/models/ProjectHandler";
 import { containerStyle, statusLabelStyle } from "@/styles/statusStyles";
@@ -7,9 +7,13 @@ import AddProjectModal from "@/modal/AddProjectModal";
 
 /* ---------- main component ---------- */
 export default function ProjectPage() {
-  const [projects, setProjects] = useState(
-    ProjectHandler.getInstance().getProjects()
-  );
+  const [projects, setProjects] = useState<any[]>([]);
+  useEffect(() => {
+    ProjectHandler.getInstance()
+      .getProjects()
+      .then(setProjects)
+      .catch(() => setProjects([]));
+  }, []);
   const [showAdd, setShowAdd] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -65,9 +69,10 @@ export default function ProjectPage() {
       <AddProjectModal
         isOpen={showAdd}
         onClose={() => setShowAdd(false)}
-        onCreated={() =>
-          setProjects(ProjectHandler.getInstance().getProjects())
-        }
+        onCreated={async () => {
+          const updated = await ProjectHandler.getInstance().getProjects();
+          setProjects(updated);
+        }}
       />
     </section>
   );

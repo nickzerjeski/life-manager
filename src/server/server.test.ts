@@ -51,6 +51,67 @@ test('DELETE /goals removes a goal', async () => {
   assert.equal(resDel.status, 204)
 })
 
+test('GET /projects returns initial projects', async () => {
+  const res = await request('GET', '/projects')
+  assert.equal(res.status, 200)
+  assert.ok(Array.isArray(res.data))
+})
+
+test('POST /projects creates a project', async () => {
+  const newProject = {
+    id: 55,
+    name: 'p',
+    description: '',
+    start: 0,
+    stand: 0,
+    objective: 1,
+    period: [new Date(), new Date()],
+    status: 'Not Started',
+    goal: {
+      id: 1,
+      name: 'g',
+      description: '',
+      start: 0,
+      stand: 0,
+      objective: 1,
+      period: [new Date(), new Date()],
+      status: 'Not Started',
+      aol: 'Growth'
+    }
+  }
+  const res = await request('POST', '/projects', JSON.stringify(newProject))
+  assert.equal(res.status, 201)
+  assert.equal(res.data.id, 55)
+})
+
+test('DELETE /projects removes a project', async () => {
+  const proj = {
+    id: 56,
+    name: 'tmp',
+    description: '',
+    start: 0,
+    stand: 0,
+    objective: 1,
+    period: [new Date(), new Date()],
+    status: 'Not Started',
+    goal: {
+      id: 1,
+      name: 'g',
+      description: '',
+      start: 0,
+      stand: 0,
+      objective: 1,
+      period: [new Date(), new Date()],
+      status: 'Not Started',
+      aol: 'Growth'
+    }
+  }
+  const resCreate = await request('POST', '/projects', JSON.stringify(proj))
+  assert.equal(resCreate.status, 201)
+  const resDel = await request('DELETE', '/projects/56')
+  assert.equal(resDel.status, 204)
+})
+
 test('server responds to curl', async () => {
   const server = createServer()
   await new Promise(resolve => server.listen(0, resolve))
