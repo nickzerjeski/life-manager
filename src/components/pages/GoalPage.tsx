@@ -1,5 +1,5 @@
 import { Goal } from '@/models/Goal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ClientDetailView from '../ClientDetailView';
 import { GoalHandler } from '@/models/GoalHandler';
 import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
@@ -9,9 +9,13 @@ import AddGoalModal from '@/modal/AddGoalModal';
 
 export default function GoalPage() {
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
-  const [goals, setGoals] = useState<Goal[]>(
-    GoalHandler.getInstance().getGoals(),
-  );
+  const [goals, setGoals] = useState<Goal[]>([]);
+  useEffect(() => {
+    GoalHandler.getInstance()
+      .getGoals()
+      .then(setGoals)
+      .catch(() => setGoals([]));
+  }, []);
   const [showAdd, setShowAdd] = useState(false);
 
   return (
@@ -58,7 +62,10 @@ export default function GoalPage() {
       <AddGoalModal
         isOpen={showAdd}
         onClose={() => setShowAdd(false)}
-        onCreated={() => setGoals(GoalHandler.getInstance().getGoals())}
+        onCreated={async () => {
+          const updated = await GoalHandler.getInstance().getGoals();
+          setGoals(updated);
+        }}
       />
     </section>
   );

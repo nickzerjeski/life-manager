@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '@/components/ui/modal';
 import { Project } from '@/models/Project';
 import { ProjectHandler } from '@/models/ProjectHandler';
@@ -12,7 +12,13 @@ interface AddProjectModalProps {
 }
 
 export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProjectModalProps) {
-  const goals = GoalHandler.getInstance().getGoals();
+  const [goals, setGoals] = useState<Goal[]>([]);
+  useEffect(() => {
+    GoalHandler.getInstance()
+      .getGoals()
+      .then(setGoals)
+      .catch(() => setGoals([]));
+  }, []);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [start, setStart] = useState(0);
@@ -28,9 +34,14 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     return nextYear.toISOString().slice(0, 10);
   });
   const [status, setStatus] = useState<Status>(Status.NOT_STARTED);
-  const [goalId, setGoalId] = useState(goals[0]?.id ?? 0);
+  const [goalId, setGoalId] = useState(0);
+  useEffect(() => {
+    if (goals.length > 0 && goalId === 0) {
+      setGoalId(goals[0].id);
+    }
+  }, [goals, goalId]);
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     const goal = goals.find((g) => g.id === goalId) || goals[0];
     if (!goal) return;
     const project = new Project(
@@ -44,8 +55,8 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       status,
       goal
     );
-    ProjectHandler.getInstance(GoalHandler.getInstance()).createProject(project);
-    if (onCreated) onCreated();
+    await ProjectHandler.getInstance(GoalHandler.getInstance()).createProject(project);
+    if (onCreated) await onCreated();
     onClose();
     // reset fields
     setName('');

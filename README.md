@@ -73,7 +73,9 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - CI/CD: GitHub Actions, codecov
 ## Development Workflow
 1. Install dependencies with `npm install`.
-2. Start the dev server using `npm run dev`.
-3. Lint with `npm run lint`.
-4. Build production assets with `npm run build`.
+2. Run the backend server using `npm run server` and keep it running.
+   Verify it is reachable with `curl http://localhost:3001/goals`.
+3. In another terminal start the dev server with `npm run dev`.
+4. Lint with `npm run lint`.
+5. Build production assets with `npm run build`.
 
