@@ -1,12 +1,13 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat } from 'lucide-react';
+import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home } from 'lucide-react';
 import { AppShellProvider, useAppShell } from './app-shell-context';
 
 /* ----- icons mapping for sidebar items ----- */
 const nav = [
+  { name: 'Home', icon: Home },
   { name: 'Habits', icon: Repeat },
-  { name: 'Projects', icon: ListTodo }, 
+  { name: 'Projects', icon: ListTodo },
   { name: 'Goals', icon: Target },
 ] as const;
 
