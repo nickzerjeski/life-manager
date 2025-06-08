@@ -1,13 +1,13 @@
 import React from 'react';
 import { FileText, Trash2 } from 'lucide-react';
-import { formatDate } from '../helpers';
+import { formatDate } from '../../helpers';
 
-interface DocumentsTabProps {
+interface DocumentTabProps {
   client: any;
   isEditing: boolean;
 }
 
-const DocumentsTab: React.FC<DocumentsTabProps> = ({ client, isEditing }) => (
+const DocumentTab: React.FC<DocumentTabProps> = ({ client, isEditing }) => (
   <div className="space-y-4">
     <h4 className="text-lg font-semibold mb-2 text-gray-700">Dokumente</h4>
     <p className="text-sm text-blue-700 bg-blue-100 p-3 rounded-md border border-blue-300">
@@ -58,4 +58,4 @@ const DocumentsTab: React.FC<DocumentsTabProps> = ({ client, isEditing }) => (
   </div>
 );
 
-export default DocumentsTab;
+export default DocumentTab;

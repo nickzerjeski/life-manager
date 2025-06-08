@@ -1,69 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { User, Landmark, Heart, Calendar, FileText, Trash2, Edit, ArrowLeft } from 'lucide-react';
+import { User, Heart, Calendar, FileText, Trash2, Edit, ChartNoAxesCombined, ListTodo, LucideProps } from 'lucide-react';
 import Modal from '@/components/ui/modal';
-import PersonalTab from './tabs/PersonalTab';
-import FinancialTab from './tabs/FinancialTab';
-import HealthTab from './tabs/HealthTab';
-import TasksTab from './tabs/TasksTab';
-import DocumentsTab from './tabs/DocumentsTab';
+import OverviewTab from '../tabs/goal/OverviewTab';
+import ProjectTab from '../tabs/goal/ProjectTab';
+import TaskTab from '../tabs/goal/TaskTab';
+import DocumentTab from '../tabs/goal/DocumentTab';
 
-interface ClientDetailViewProps {
-  client: any;
-  onBack: () => void;
-  onSaveChanges: (client: any) => void;
-  onDeleteClient: (id: string) => void;
+interface GoalDetailViewProps {
+  goal: any;
 }
 
-const ClientDetailView: React.FC<ClientDetailViewProps> = ({ client, onBack, onSaveChanges, onDeleteClient }) => {
-  const [activeTab, setActiveTab] = useState('personal');
-  const [editedClient, setEditedClient] = useState<any>(client);
+const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
+  const [activeTab, setActiveTab] = useState('overview');
+  const [editedGoal, setEditedGoal] = useState<any>(goal);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    setEditedClient(client);
+    setEditedGoal(goal);
     setIsEditing(false);
-    setActiveTab('personal');
-  }, [client]);
+    setActiveTab('overview');
+  }, [goal]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditedClient((prev: any) => ({ ...prev, [name]: value }));
+    setEditedGoal((prev: any) => ({ ...prev, [name]: value }));
   };
 
   const handleScopeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const scopes = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
-    setEditedClient((prev: any) => ({ ...prev, betreuungScope: scopes }));
+    setEditedGoal((prev: any) => ({ ...prev, betreuungScope: scopes }));
   };
 
   const handleSave = () => {
-    onSaveChanges(editedClient);
+    // saving would persist changes to the goal
     setIsEditing(false);
   };
 
   const handleCancelEdit = () => {
-    setEditedClient(client);
+    setEditedGoal(goal);
     setIsEditing(false);
   };
 
   const handleDelete = () => {
-    onDeleteClient(client.id);
     setShowDeleteConfirm(false);
   };
 
   const renderTabContent = () => {
-    const commonProps = { client: editedClient, isEditing, onChange: handleInputChange };
+    const commonProps = { client: editedGoal, isEditing, onChange: handleInputChange };
     switch (activeTab) {
-      case 'personal':
-        return <PersonalTab {...commonProps} onScopeChange={handleScopeChange} />;
-      case 'financial':
-        return <FinancialTab {...commonProps} />;
-      case 'health':
-        return <HealthTab {...commonProps} />;
+      case 'overview':
+        return <OverviewTab {...commonProps} onScopeChange={handleScopeChange} />;
+      case 'project':
+        return <ProjectTab {...commonProps} />;
       case 'tasks':
-        return <TasksTab {...commonProps} />;
+        return <TaskTab {...commonProps} />;
       case 'documents':
-        return <DocumentsTab {...commonProps} />;
+        return <DocumentTab {...commonProps} />;
       default:
         return null;
     }
@@ -72,7 +65,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ client, onBack, onS
   interface TabButtonProps {
     tabId: string;
     label: string;
-    icon: React.ComponentType<{ size?: number }>;
+    icon: React.ComponentType<LucideProps>;
   }
 
   const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon }) => (
@@ -91,13 +84,10 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ client, onBack, onS
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow border border-gray-200">
       <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
         <div className="flex-grow min-w-0">
-          <button onClick={onBack} className="flex items-center text-blue-600 hover:text-blue-800 mb-2 text-sm">
-            <ArrowLeft size={16} className="mr-1" /> Zurück zur Übersicht
-          </button>
-          <h2 className="text-2xl font-bold text-gray-800 truncate" title={`${client.firstName} ${client.lastName}`}>
-            {client.firstName} {client.lastName}
+          <h2 className="text-2xl font-bold text-gray-800 truncate" title={goal.name}>
+            {goal.name}
           </h2>
-          <p className="text-sm text-gray-500 truncate">Fallnr.: {client.caseNumber} | Gericht: {client.court}</p>
+          <p className="text-sm text-gray-500 truncate">{goal.description}</p>
         </div>
         <div className="flex space-x-2 flex-shrink-0">
           {!isEditing ? (
@@ -135,19 +125,18 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ client, onBack, onS
 
       <div className="mb-6 border-b border-gray-200">
         <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
-          <TabButton tabId="personal" label="Persönliche Daten" icon={User} />
-          <TabButton tabId="financial" label="Finanzen" icon={Landmark} />
-          <TabButton tabId="health" label="Gesundheit" icon={Heart} />
-          <TabButton tabId="tasks" label="Aufgaben" icon={Calendar} />
-          <TabButton tabId="documents" label="Dokumente" icon={FileText} />
+          <TabButton tabId="overview" label="Overview" icon={ChartNoAxesCombined} />
+          <TabButton tabId="project" label="Projects" icon={ListTodo} />
+          <TabButton tabId="tasks" label="Tasks" icon={Calendar} />
+          <TabButton tabId="documents" label="Documents" icon={FileText} />
         </nav>
       </div>
 
       <div className="mt-4">{renderTabContent()}</div>
 
-      <Modal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} title="Klienten löschen bestätigen">
+      <Modal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} title="Goal löschen bestätigen">
         <p className="mb-4">
-          Sind Sie sicher, dass Sie den Klienten <strong>{client.firstName} {client.lastName}</strong> dauerhaft löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.
+          Sind Sie sicher, dass Sie das Goal <strong>{goal.name}</strong> dauerhaft löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.
         </p>
         <div className="flex justify-end space-x-3">
           <button
@@ -168,4 +157,4 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ client, onBack, onS
   );
 };
 
-export default ClientDetailView;
+export default GoalDetailView;

@@ -17,7 +17,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
     <div className="relative min-h-screen md:flex">
       {/* ----- mobile top bar ----- */}
       <div className="md:hidden flex justify-between items-center p-4 bg-white border-b sticky top-0 z-20">
-        <h1 className="text-lg font-bold text-blue-700">Betreuer App</h1>
+        <h1 className="text-lg font-bold text-blue-700">Lifemanager</h1>
         <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
           <Menu className="h-6 w-6" />
         </Button>

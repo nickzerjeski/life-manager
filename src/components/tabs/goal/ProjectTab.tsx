@@ -1,11 +1,11 @@
 import React from 'react';
 
-interface HealthTabProps {
+interface ProjectTabProps {
   client: any;
   isEditing: boolean;
 }
 
-const HealthTab: React.FC<HealthTabProps> = ({ client, isEditing }) => (
+const ProjectTab: React.FC<ProjectTabProps> = ({ client, isEditing }) => (
   <div className="space-y-6">
     <p className="text-sm text-red-700 bg-red-100 p-3 rounded-md border border-red-300">
       <strong>Achtung:</strong> Gesundheitsdaten sind besonders sensibel (DSGVO Art. 9). Die Speicherung und Verarbeitung erfordert höchste Sicherheitsstandards und eine klare Rechtsgrundlage. Diese Darstellung ist nur ein Beispiel.
@@ -31,4 +31,4 @@ const HealthTab: React.FC<HealthTabProps> = ({ client, isEditing }) => (
   </div>
 );
 
-export default HealthTab;
+export default ProjectTab;

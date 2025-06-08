@@ -1,13 +1,13 @@
 import React from 'react';
-import { formatDate } from '../helpers';
+import { formatDate } from '../../helpers';
 import { TaskStatus } from '@/components/types/types';
 
-interface TasksTabProps {
+interface TaskTabProps {
   client: any;
   isEditing: boolean;
 }
 
-const TasksTab: React.FC<TasksTabProps> = ({ client, isEditing }) => (
+const TaskTab: React.FC<TaskTabProps> = ({ client, isEditing }) => (
   <div className="space-y-4">
     <h4 className="text-lg font-semibold mb-2 text-gray-700">Aufgaben & Fristen</h4>
     {isEditing && <p className="text-sm text-yellow-700 italic mb-2">Bearbeitung von Aufgaben ist in diesem Prototyp nicht implementiert.</p>}
@@ -49,4 +49,4 @@ const TasksTab: React.FC<TasksTabProps> = ({ client, isEditing }) => (
   </div>
 );
 
-export default TasksTab;
+export default TaskTab;
