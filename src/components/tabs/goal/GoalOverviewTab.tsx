@@ -1,11 +1,15 @@
 import React from 'react';
 import { Goal } from '@/models/Goal';
 import { differenceInCalendarDays } from 'date-fns';
-import RadialChart from '@/components/ui/RadialChart';
+import dynamic from 'next/dynamic';
 
 interface GoalOverviewTabProps {
   goal: Goal;
 }
+
+const RadialChart = dynamic(() => import('@/components/ui/RadialChart'), {
+  ssr: false,
+});
 
 const GoalOverviewTab: React.FC<GoalOverviewTabProps> = ({ goal }) => {
   const progress = Math.max(
@@ -29,7 +33,7 @@ const GoalOverviewTab: React.FC<GoalOverviewTabProps> = ({ goal }) => {
   return (
     <div className="bg-white shadow rounded p-4 flex flex-col items-center">
       <h3 className="text-sm font-semibold mb-4">Goal Progress</h3>
-      <RadialChart progress={progress} label={`${daysLeft}d left`} />
+      <RadialChart />
     </div>
   );
 };
