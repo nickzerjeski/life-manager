@@ -82,7 +82,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow border border-gray-200">
       <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
         <div className="flex-grow min-w-0">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-start gap-2 mb-1">
             <button
               onClick={onBack}
               aria-label="Back to Goals"
@@ -90,11 +90,13 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
             >
               <ArrowLeft size={20} />
             </button>
-            <h2 className="text-2xl font-bold text-gray-800 truncate" title={goal.name}>
-              {goal.name}
-            </h2>
+            <div className="min-w-0">
+              <h2 className="text-2xl font-bold text-gray-800 truncate" title={goal.name}>
+                {goal.name}
+              </h2>
+              <p className="text-sm text-gray-500 truncate">{goal.description}</p>
+            </div>
           </div>
-          <p className="text-sm text-gray-500 truncate">{goal.description}</p>
         </div>
         <div className="flex space-x-2 flex-shrink-0">
           {!isEditing ? (
