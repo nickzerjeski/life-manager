@@ -3,10 +3,13 @@ import { useAppShell } from './app-shell-context';
 import ProjectPage from '../pages/ProjectPage';
 import CommunicationPage from '../pages/CommunicationPage';
 import SettingPage from '../pages/SettingPage';
+import HomePage from '../pages/HomePage';
 
 export default function DashboardContent() {  
   const { activeTab } = useAppShell();
   switch (activeTab) {
+    case 'Home':
+      return <HomePage />;
     case 'Habits':
       return <CommunicationPage />;
     case 'Projects':
@@ -16,6 +19,6 @@ export default function DashboardContent() {
     case 'Settings':
       return <SettingPage />;
     default:
-      return <GoalPage />;
+      return <HomePage />;
   }
 }
