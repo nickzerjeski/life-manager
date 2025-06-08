@@ -21,7 +21,7 @@ export default function GoalPage() {
   return (
     <section className="mb-6 p-4 sm:p-6 rounded-lg shadow border bg-white">
       {selectedGoal ? (
-        <GoalDetailView goal={selectedGoal} />
+        <GoalDetailView goal={selectedGoal} onBack={() => setSelectedGoal(null)} />
       ) : (
         <>
           <div className="flex justify-between items-center mb-4">

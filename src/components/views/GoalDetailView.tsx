@@ -8,9 +8,10 @@ import DocumentTab from '../tabs/goal/DocumentTab';
 
 interface GoalDetailViewProps {
   goal: any;
+  onBack: () => void;
 }
 
-const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
+const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [editedGoal, setEditedGoal] = useState<any>(goal);
   const [isEditing, setIsEditing] = useState(false);
@@ -78,6 +79,14 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
 
   return (
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow border border-gray-200">
+      <div className="mb-4">
+        <button
+          onClick={onBack}
+          className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Back to Goals
+        </button>
+      </div>
       <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
         <div className="flex-grow min-w-0">
           <h2 className="text-2xl font-bold text-gray-800 truncate" title={goal.name}>
