@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Heart, Calendar, FileText, Trash2, Edit } from 'lucide-react';
+import { User, Heart, Calendar, FileText, Trash2, Edit, ChartNoAxesCombined, ListTodo, LucideProps } from 'lucide-react';
 import Modal from '@/components/ui/modal';
 import OverviewTab from '../tabs/goal/OverviewTab';
 import ProjectTab from '../tabs/goal/ProjectTab';
@@ -65,7 +65,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
   interface TabButtonProps {
     tabId: string;
     label: string;
-    icon: React.ComponentType<{ size?: number }>;
+    icon: React.ComponentType<LucideProps>;
   }
 
   const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon }) => (
@@ -125,8 +125,8 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
 
       <div className="mb-6 border-b border-gray-200">
         <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
-          <TabButton tabId="overview" label="Overview" icon={User} />
-          <TabButton tabId="project" label="Projects" icon={Heart} />
+          <TabButton tabId="overview" label="Overview" icon={ChartNoAxesCombined} />
+          <TabButton tabId="project" label="Projects" icon={ListTodo} />
           <TabButton tabId="tasks" label="Tasks" icon={Calendar} />
           <TabButton tabId="documents" label="Documents" icon={FileText} />
         </nav>
