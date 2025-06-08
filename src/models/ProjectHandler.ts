@@ -1,4 +1,5 @@
 import { Project } from './Project'
+import { Goal } from './Goal'
 import { GoalHandler } from './GoalHandler'
 
 /**
@@ -65,12 +66,60 @@ export class ProjectHandler {
   /** Get all stored projects. */
   async getProjects(): Promise<Project[]> {
     const res = await fetch(`${this.baseUrl}/projects`)
-    return res.json()
+    const data = await res.json()
+    return data.map(
+      (p: any) =>
+        new Project(
+          p.id,
+          p.name,
+          p.description,
+          p.start,
+          p.stand,
+          p.objective,
+          [new Date(p.period[0]), new Date(p.period[1])],
+          p.status,
+          new Goal(
+            p.goal.id,
+            p.goal.name,
+            p.goal.description,
+            p.goal.start,
+            p.goal.stand,
+            p.goal.objective,
+            [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
+            p.goal.status,
+            p.goal.aol
+          )
+        )
+    )
   }
 
   /** Get projects associated with a specific goal id. */
   async getProjectsForGoal(goalId: number): Promise<Project[]> {
     const res = await fetch(`${this.baseUrl}/projects?goalId=${goalId}`)
-    return res.json()
+    const data = await res.json()
+    return data.map(
+      (p: any) =>
+        new Project(
+          p.id,
+          p.name,
+          p.description,
+          p.start,
+          p.stand,
+          p.objective,
+          [new Date(p.period[0]), new Date(p.period[1])],
+          p.status,
+          new Goal(
+            p.goal.id,
+            p.goal.name,
+            p.goal.description,
+            p.goal.start,
+            p.goal.stand,
+            p.goal.objective,
+            [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
+            p.goal.status,
+            p.goal.aol
+          )
+        )
+    )
   }
 }

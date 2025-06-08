@@ -67,6 +67,20 @@ export class GoalHandler {
    */
   async getGoals(): Promise<Goal[]> {
     const res = await fetch(`${this.baseUrl}/goals`)
-    return res.json()
+    const data = await res.json()
+    return data.map(
+      (g: any) =>
+        new Goal(
+          g.id,
+          g.name,
+          g.description,
+          g.start,
+          g.stand,
+          g.objective,
+          [new Date(g.period[0]), new Date(g.period[1])],
+          g.status,
+          g.aol
+        )
+    )
   }
 }

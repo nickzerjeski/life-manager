@@ -50,3 +50,17 @@ test('deleteGoal removes the specified goal', async () => {
   assert.equal(goals[0].id, 2)
   server.close()
 })
+
+test('getGoals converts period to Date objects', async () => {
+  const server = createServer()
+  await new Promise(resolve => server.listen(0, resolve))
+  const { port } = server.address() as any
+  GoalHandler.reset()
+  const handler = GoalHandler.getInstance(`http://localhost:${port}`)
+  await handler.clearGoals()
+  await handler.createGoal(createSampleGoal(1))
+  const goals = await handler.getGoals()
+  assert.ok(goals[0].period[0] instanceof Date)
+  assert.ok(goals[0].period[1] instanceof Date)
+  server.close()
+})

@@ -77,3 +77,22 @@ test('getProjectsForGoal filters correctly', async () => {
   assert.ok(filtered.every((p) => p.goal.id === 1))
   server.close()
 })
+
+test('getProjects returns projects with date objects', async () => {
+  const server = createServer()
+  await new Promise(resolve => server.listen(0, resolve))
+  const { port } = server.address() as any
+  GoalHandler.reset()
+  ProjectHandler.reset()
+  const goalHandler = GoalHandler.getInstance(`http://localhost:${port}`)
+  const projectHandler = ProjectHandler.getInstance(goalHandler, `http://localhost:${port}`)
+  await goalHandler.clearGoals()
+  await projectHandler.clearProjects()
+  const goal = createGoal(1)
+  await goalHandler.createGoal(goal)
+  await projectHandler.createProject(createProject(1, goal))
+  const projects = await projectHandler.getProjects()
+  assert.ok(projects[0].period[0] instanceof Date)
+  assert.ok(projects[0].goal.period[0] instanceof Date)
+  server.close()
+})
