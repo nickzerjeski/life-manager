@@ -38,8 +38,8 @@ export class DocumentHandler {
     }
   }
 
-  /** Create a new document entry. */
-  async createDocument(document: Document): Promise<void> {
+  /** Create a new document entry and return the created item. */
+  async createDocument(document: Document): Promise<Document> {
     const res = await fetch(`${this.baseUrl}/documents`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -47,6 +47,31 @@ export class DocumentHandler {
     })
     if (!res.ok) {
       throw new Error('Failed to create document')
+    }
+    const data = await res.json()
+    return new Document(data.id, data.goalId, data.name, data.type, new Date(data.uploadDate))
+  }
+
+  /** Upload file contents for an existing document. */
+  async uploadDocument(documentId: number, file: File): Promise<void> {
+    const content = await file.text()
+    const res = await fetch(`${this.baseUrl}/documents/${documentId}/upload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: file.name, content }),
+    })
+    if (!res.ok) {
+      throw new Error('Failed to upload document')
+    }
+  }
+
+  /** Delete a document by id. */
+  async deleteDocument(id: number): Promise<void> {
+    const res = await fetch(`${this.baseUrl}/documents/${id}`, {
+      method: 'DELETE',
+    })
+    if (!res.ok) {
+      throw new Error('Failed to delete document')
     }
   }
 }

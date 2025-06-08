@@ -34,11 +34,27 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
     e.preventDefault()
     if (!file) return
     const doc = new Document(0, goal.id, name, type, new Date())
-    await handler.createDocument(doc)
-    setName('')
-    setType('')
-    setFile(null)
-    loadDocuments()
+    try {
+      const created = await handler.createDocument(doc)
+      await handler.uploadDocument(created.id, file)
+      setName('')
+      setType('')
+      setFile(null)
+      loadDocuments()
+    } catch (err) {
+      /* eslint-disable no-console */
+      console.error(err)
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await handler.deleteDocument(id)
+      loadDocuments()
+    } catch (err) {
+      /* eslint-disable no-console */
+      console.error(err)
+    }
   }
 
   return (
@@ -92,8 +108,9 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
               {isEditing && (
                 <button
                   type="button"
+                  onClick={() => handleDelete(doc.id)}
                   className="text-red-600 hover:text-red-800 p-1 self-end sm:self-center"
-                  title="Löschen (nicht implementiert)"
+                  title="Löschen"
                 >
                   <Trash2 size={16} />
                 </button>

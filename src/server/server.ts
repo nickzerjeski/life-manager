@@ -8,6 +8,8 @@ import { AOL } from '../types/AOL'
 let goals: Goal[] = []
 let projects: Project[] = []
 let documents: Document[] = []
+// store uploaded file contents keyed by document id
+let documentFiles: Record<number, { name: string; content: string }> = {}
 
 function initData() {
   goals = [
@@ -75,6 +77,7 @@ function initData() {
     new Document(1, goals[0].id, 'Projektplan.pdf', 'pdf', new Date('2025-06-05')),
     new Document(2, goals[1].id, 'Spezifikation.docx', 'docx', new Date('2025-06-10')),
   ]
+  documentFiles = {}
 }
 
 initData()
@@ -195,15 +198,34 @@ export function createServer() {
     if (method === 'POST' && parsed.pathname === '/documents') {
       const body = await parseBody(req)
       const doc = JSON.parse(body)
+      const nextId = documents.length ? Math.max(...documents.map(d => d.id)) + 1 : 1
+      doc.id = doc.id || nextId
       documents.push(doc)
       res.statusCode = 201
+      res.setHeader('Content-Type', 'application/json')
       res.end(JSON.stringify(doc))
+      return
+    }
+
+    if (
+      method === 'POST' &&
+      parsed.pathname.startsWith('/documents/') &&
+      parsed.pathname.endsWith('/upload')
+    ) {
+      const parts = parsed.pathname.split('/')
+      const id = Number(parts[2])
+      const body = await parseBody(req)
+      const file = JSON.parse(body)
+      documentFiles[id] = { name: file.name, content: file.content }
+      res.statusCode = 201
+      res.end()
       return
     }
 
     if (method === 'DELETE' && parsed.pathname.startsWith('/documents/')) {
       const id = Number(parsed.pathname.split('/')[2])
       documents = documents.filter(d => d.id !== id)
+      delete documentFiles[id]
       res.statusCode = 204
       res.end()
       return
@@ -211,6 +233,7 @@ export function createServer() {
 
     if (method === 'POST' && parsed.pathname === '/admin/clearDocuments') {
       documents = []
+      documentFiles = {}
       res.statusCode = 204
       res.end()
       return
@@ -219,6 +242,7 @@ export function createServer() {
     if (method === 'POST' && parsed.pathname === '/admin/setDocuments') {
       const body = await parseBody(req)
       documents = JSON.parse(body)
+      documentFiles = {}
       res.statusCode = 204
       res.end()
       return
