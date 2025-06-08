@@ -1,32 +1,6 @@
 import React from 'react';
 import { Goal } from '@/models/Goal';
-import { Doughnut, Bar, Line } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  TimeScale,
-} from 'chart.js';
-import 'chartjs-adapter-date-fns';
 import { differenceInCalendarDays } from 'date-fns';
-
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  TimeScale
-);
 
 interface GoalOverviewTabProps {
   goal: Goal;
@@ -51,60 +25,75 @@ const GoalOverviewTab: React.FC<GoalOverviewTabProps> = ({ goal }) => {
   );
   const daysLeft = Math.max(totalDays - daysPassed, 0);
 
-  const progressData = {
-    labels: ['Progress', 'Remaining'],
-    datasets: [
-      {
-        data: [progress, 100 - progress],
-        backgroundColor: ['#2563eb', '#e5e7eb'],
-        borderWidth: 0,
-      },
-    ],
-  };
+  const timeProgress = totalDays > 0 ? (daysPassed / totalDays) * 100 : 0;
 
-  const daysData = {
-    labels: ['Days Passed', 'Days Left'],
-    datasets: [
-      {
-        data: [daysPassed, daysLeft],
-        backgroundColor: ['#2563eb', '#d1d5db'],
-        borderWidth: 0,
-      },
-    ],
-  };
-
-  const history: { date: string; value: number }[] | undefined = (goal as any).history;
-  const historyData = history && history.length > 0 ? {
-    labels: history.map(h => h.date),
-    datasets: [
-      {
-        label: 'Progress',
-        data: history.map(h => h.value),
-        borderColor: '#2563eb',
-        backgroundColor: 'rgba(37,99,235,0.2)',
-        tension: 0.3,
-      },
-    ],
-  } : null;
+  const radiusOuter = 54;
+  const radiusInner = 44;
+  const circumferenceOuter = 2 * Math.PI * radiusOuter;
+  const circumferenceInner = 2 * Math.PI * radiusInner;
+  const offsetOuter = circumferenceOuter - (progress / 100) * circumferenceOuter;
+  const offsetInner = circumferenceInner - (timeProgress / 100) * circumferenceInner;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="bg-white shadow rounded p-4 flex flex-col items-center">
-        <h3 className="text-sm font-semibold mb-2">Overall Progress</h3>
-        <Doughnut data={progressData} className="max-w-xs" />
-        <p className="mt-2 text-sm font-medium text-gray-700">{progress.toFixed(1)}%</p>
-      </div>
-      <div className="bg-white shadow rounded p-4 flex flex-col items-center">
-        <h3 className="text-sm font-semibold mb-2">Time Progress</h3>
-        <Doughnut data={daysData} className="max-w-xs" />
-        <p className="mt-2 text-sm font-medium text-gray-700">{daysPassed} / {totalDays} days</p>
-      </div>
-      {historyData && (
-        <div className="bg-white shadow rounded p-4">
-          <h3 className="text-sm font-semibold mb-2">Milestones</h3>
-          <Line data={historyData} className="h-40" />
-        </div>
-      )}
+    <div className="bg-white shadow rounded p-4 flex flex-col items-center">
+      <h3 className="text-sm font-semibold mb-4">Goal Progress</h3>
+      <svg className="w-32 h-32" viewBox="0 0 120 120">
+        <circle
+          cx="60"
+          cy="60"
+          r={radiusOuter}
+          strokeWidth="8"
+          className="text-gray-200"
+          fill="none"
+          stroke="currentColor"
+        />
+        <circle
+          cx="60"
+          cy="60"
+          r={radiusOuter}
+          strokeWidth="8"
+          className="text-blue-600"
+          fill="none"
+          strokeDasharray={circumferenceOuter}
+          strokeDashoffset={offsetOuter}
+          strokeLinecap="round"
+          transform="rotate(-90 60 60)"
+          stroke="currentColor"
+        />
+        <circle
+          cx="60"
+          cy="60"
+          r={radiusInner}
+          strokeWidth="8"
+          className="text-gray-300"
+          fill="none"
+          stroke="currentColor"
+        />
+        <circle
+          cx="60"
+          cy="60"
+          r={radiusInner}
+          strokeWidth="8"
+          className="text-green-500"
+          fill="none"
+          strokeDasharray={circumferenceInner}
+          strokeDashoffset={offsetInner}
+          strokeLinecap="round"
+          transform="rotate(-90 60 60)"
+          stroke="currentColor"
+        />
+        <text
+          x="60"
+          y="55"
+          textAnchor="middle"
+          className="text-sm font-semibold fill-gray-700"
+        >
+          {progress.toFixed(1)}%
+        </text>
+        <text x="60" y="72" textAnchor="middle" className="text-xs fill-gray-500">
+          {daysLeft}d left
+        </text>
+      </svg>
     </div>
   );
 };
