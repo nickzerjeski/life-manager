@@ -1,7 +1,7 @@
 import GoalPage from '../pages/GoalPage';
 import { useAppShell } from './app-shell-context';
 import ProjectPage from '../pages/ProjectPage';
-import CommunicationPage from '../pages/CommunicationPage';
+import HabitPage from '../pages/HabitPage';
 import SettingPage from '../pages/SettingPage';
 import HomePage from '../pages/HomePage';
 
@@ -11,7 +11,7 @@ export default function DashboardContent() {
     case 'Home':
       return <HomePage />;
     case 'Habits':
-      return <CommunicationPage />;
+      return <HabitPage />;
     case 'Projects':
       return <ProjectPage />;
     case 'Goals':
