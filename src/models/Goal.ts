@@ -36,4 +36,32 @@ export class Goal {
         this.status = status;
         this.aol = aol;
     }
+
+    /**
+     * Percentage progress based on start, stand and objective values.
+     */
+    get progressPercentage(): number {
+        if (this.objective === this.start) return 0;
+        return ((this.stand - this.start) / (this.objective - this.start)) * 100;
+    }
+
+    /** Total number of days for the goal period. */
+    get totalDays(): number {
+        const ms = this.period[1].getTime() - this.period[0].getTime();
+        return Math.ceil(ms / (1000 * 60 * 60 * 24));
+    }
+
+    /** Days elapsed since the start of the goal. */
+    get daysElapsed(): number {
+        const now = new Date();
+        const ms = now.getTime() - this.period[0].getTime();
+        return Math.max(0, Math.floor(ms / (1000 * 60 * 60 * 24)));
+    }
+
+    /** Remaining days until the goal ends. */
+    get daysRemaining(): number {
+        const now = new Date();
+        const ms = this.period[1].getTime() - now.getTime();
+        return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
+    }
 }
