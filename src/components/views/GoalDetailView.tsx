@@ -27,10 +27,6 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
     setEditedGoal((prev: any) => ({ ...prev, [name]: value }));
   };
 
-  const handleScopeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const scopes = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
-    setEditedGoal((prev: any) => ({ ...prev, betreuungScope: scopes }));
-  };
 
   const handleSave = () => {
     // saving would persist changes to the goal
