@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Heart, Calendar, FileText, Trash2, Edit, ChartNoAxesCombined, ListTodo, LucideProps } from 'lucide-react';
 import Modal from '@/components/ui/modal';
-import OverviewTab from '../tabs/goal/OverviewTab';
+import GoalOverviewTab from '../tabs/goal/GoalOverviewTab';
 import ProjectTab from '../tabs/goal/ProjectTab';
 import TaskTab from '../tabs/goal/TaskTab';
 import DocumentTab from '../tabs/goal/DocumentTab';
@@ -27,10 +27,6 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
     setEditedGoal((prev: any) => ({ ...prev, [name]: value }));
   };
 
-  const handleScopeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const scopes = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
-    setEditedGoal((prev: any) => ({ ...prev, betreuungScope: scopes }));
-  };
 
   const handleSave = () => {
     // saving would persist changes to the goal
@@ -50,7 +46,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
     const commonProps = { client: editedGoal, isEditing, onChange: handleInputChange };
     switch (activeTab) {
       case 'overview':
-        return <OverviewTab {...commonProps} onScopeChange={handleScopeChange} />;
+        return <GoalOverviewTab goal={editedGoal} />;
       case 'project':
         return <ProjectTab {...commonProps} />;
       case 'tasks':
