@@ -1,6 +1,5 @@
 import { Project } from './Project'
 import { GoalHandler } from './GoalHandler'
-import { Status } from '@/types/Status'
 
 /**
  * ProjectHandler manages projects and ensures they reference existing goals.
@@ -8,78 +7,70 @@ import { Status } from '@/types/Status'
 export class ProjectHandler {
   private static instance: ProjectHandler | null = null
 
-  private projects: Project[] = []
   private goalHandler: GoalHandler
+  private baseUrl: string
 
-  private constructor(goalHandler: GoalHandler) {
+  private constructor(goalHandler: GoalHandler, baseUrl: string) {
     this.goalHandler = goalHandler
-    const goals = goalHandler.getGoals()
-    this.projects = [
-      new Project(
-        1,
-        'Solar Farm Expansion',
-        'Expand the regional solar farm to 150\u202FMW capacity to support grid stability and meet renewable\u2011energy targets.',
-        0,
-        30,
-        100,
-        [new Date('2025-01-01'), new Date('2025-12-31')],
-        Status.ON_TRACK,
-        goals[1] || goals[0]
-      ),
-      new Project(
-        2,
-        'ERP Roll\u2011out',
-        'Implement a company\u2011wide ERP solution to unify finance, supply\u2011chain, and HR operations across all business units.',
-        0,
-        70,
-        100,
-        [new Date('2024-06-01'), new Date('2025-06-30')],
-        Status.AT_RISK,
-        goals[0] || goals[1]
-      ),
-    ]
+    this.baseUrl = baseUrl
   }
 
-  static getInstance(goalHandler?: GoalHandler): ProjectHandler {
+  static getInstance(goalHandler?: GoalHandler, baseUrl = 'http://localhost:3001'): ProjectHandler {
     if (!ProjectHandler.instance) {
       if (!goalHandler) {
         throw new Error('ProjectHandler requires a GoalHandler instance on first call')
       }
-      ProjectHandler.instance = new ProjectHandler(goalHandler)
+      ProjectHandler.instance = new ProjectHandler(goalHandler, baseUrl)
     }
     return ProjectHandler.instance
   }
 
+  /** Reset the singleton instance (primarily for tests). */
+  static reset(): void {
+    ProjectHandler.instance = null
+  }
+
   /** Add a new project after validating its goal exists. */
-  createProject(project: Project): void {
-    if (!this.goalHandler.getGoals().some((g) => g.id === project.goal.id)) {
+  async createProject(project: Project): Promise<void> {
+    const goals = await this.goalHandler.getGoals()
+    if (!goals.some((g) => g.id === project.goal.id)) {
       throw new Error('Invalid goal for project')
     }
-    this.projects.push(project)
+    await fetch(`${this.baseUrl}/projects`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(project),
+    })
   }
 
   /** Remove a project by id. */
-  deleteProject(id: number): void {
-    this.projects = this.projects.filter((p) => p.id !== id)
+  async deleteProject(id: number): Promise<void> {
+    await fetch(`${this.baseUrl}/projects/${id}`, { method: 'DELETE' })
   }
 
   /** Remove all projects from the handler. Primarily for testing. */
-  clearProjects(): void {
-    this.projects = []
+  async clearProjects(): Promise<void> {
+    await fetch(`${this.baseUrl}/admin/clearProjects`, { method: 'POST' })
   }
 
   /** Replace projects with provided list. Useful for testing. */
-  setProjects(projects: Project[]): void {
-    this.projects = projects
+  async setProjects(projects: Project[]): Promise<void> {
+    await fetch(`${this.baseUrl}/admin/setProjects`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(projects),
+    })
   }
 
   /** Get all stored projects. */
-  getProjects(): Project[] {
-    return this.projects
+  async getProjects(): Promise<Project[]> {
+    const res = await fetch(`${this.baseUrl}/projects`)
+    return res.json()
   }
 
   /** Get projects associated with a specific goal id. */
-  getProjectsForGoal(goalId: number): Project[] {
-    return this.projects.filter((p) => p.goal.id === goalId)
+  async getProjectsForGoal(goalId: number): Promise<Project[]> {
+    const res = await fetch(`${this.baseUrl}/projects?goalId=${goalId}`)
+    return res.json()
   }
 }

@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { Goal } from './Goal'
 import { GoalHandler } from './GoalHandler'
+import { createServer } from '../server/server'
 import { Status } from '@/types/Status'
 import { AOL } from '@/types/AOL'
 
@@ -19,21 +20,33 @@ function createSampleGoal(id: number): Goal {
   )
 }
 
-test('createGoal adds a goal to the handler', () => {
-  const handler = GoalHandler.getInstance()
-  handler.clearGoals()
+test('createGoal adds a goal to the handler', async () => {
+  const server = createServer()
+  await new Promise(resolve => server.listen(0, resolve))
+  const { port } = server.address() as any
+  GoalHandler.reset()
+  const handler = GoalHandler.getInstance(`http://localhost:${port}`)
+  await handler.clearGoals()
   const goal = createSampleGoal(1)
-  handler.createGoal(goal)
-  assert.equal(handler.getGoals().length, 1)
-  assert.equal(handler.getGoals()[0].id, 1)
+  await handler.createGoal(goal)
+  const goals = await handler.getGoals()
+  assert.equal(goals.length, 1)
+  assert.equal(goals[0].id, 1)
+  server.close()
 })
 
-test('deleteGoal removes the specified goal', () => {
-  const handler = GoalHandler.getInstance()
-  handler.clearGoals()
-  handler.createGoal(createSampleGoal(1))
-  handler.createGoal(createSampleGoal(2))
-  handler.deleteGoal(1)
-  assert.equal(handler.getGoals().length, 1)
-  assert.equal(handler.getGoals()[0].id, 2)
+test('deleteGoal removes the specified goal', async () => {
+  const server = createServer()
+  await new Promise(resolve => server.listen(0, resolve))
+  const { port } = server.address() as any
+  GoalHandler.reset()
+  const handler = GoalHandler.getInstance(`http://localhost:${port}`)
+  await handler.clearGoals()
+  await handler.createGoal(createSampleGoal(1))
+  await handler.createGoal(createSampleGoal(2))
+  await handler.deleteGoal(1)
+  const goals = await handler.getGoals()
+  assert.equal(goals.length, 1)
+  assert.equal(goals[0].id, 2)
+  server.close()
 })

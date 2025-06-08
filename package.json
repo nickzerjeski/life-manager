@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test"
+    "test": "tsx --test",
+    "server": "tsx src/server/server.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.0.4",
