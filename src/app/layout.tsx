@@ -1,17 +1,11 @@
 import type {Metadata} from 'next';
-import {Geist, Geist_Mono} from 'next/font/google';
+// Use basic system fonts to avoid runtime network fetches
+// Google fonts require internet access during build which is
+// unavailable in some environments.
+// import {Geist, Geist_Mono} from 'next/font/google';
 import './globals.css';
 import { AppShell } from '@/components/ui/app-shell';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
   title: 'Lifemanager',
@@ -25,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className="antialiased">
         <AppShell>{children}</AppShell>
       </body>
     </html>
