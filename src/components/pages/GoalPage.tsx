@@ -1,6 +1,6 @@
 import { Goal } from '@/models/Goal';
 import { useEffect, useState } from 'react';
-import ClientDetailView from '../ClientDetailView';
+import GoalDetailView from '../views/GoalDetailView';
 import { GoalHandler } from '@/models/GoalHandler';
 import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
 import { Plus } from 'lucide-react';
@@ -21,9 +21,7 @@ export default function GoalPage() {
   return (
     <section className="mb-6 p-4 sm:p-6 rounded-lg shadow border bg-white">
       {selectedGoal ? (
-        <ClientDetailView
-          client={selectedGoal}
-          onBack={() => setSelectedGoal(null)} onSaveChanges={undefined} onDeleteClient={undefined} />
+        <GoalDetailView goal={selectedGoal} />
       ) : (
         <>
           <div className="flex justify-between items-center mb-4">

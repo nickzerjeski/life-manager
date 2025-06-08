@@ -1,14 +1,14 @@
 import React from 'react';
-import InputField from '../fields/InputField';
+import InputField from '../../fields/InputField';
 
-interface PersonalTabProps {
+interface OverviewTabProps {
   client: any;
   isEditing: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onScopeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const PersonalTab: React.FC<PersonalTabProps> = ({ client, isEditing, onChange, onScopeChange }) => (
+const OverviewTab: React.FC<OverviewTabProps> = ({ client, isEditing, onChange, onScopeChange }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
     <InputField label="Vorname" name="firstName" value={client.firstName} onChange={onChange} isEditing={isEditing} />
     <InputField label="Nachname" name="lastName" value={client.lastName} onChange={onChange} isEditing={isEditing} />
@@ -64,4 +64,4 @@ const PersonalTab: React.FC<PersonalTabProps> = ({ client, isEditing, onChange, 
   </div>
 );
 
-export default PersonalTab;
+export default OverviewTab;
