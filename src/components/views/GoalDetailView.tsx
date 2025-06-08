@@ -44,6 +44,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
 
   const renderTabContent = () => {
     const commonProps = { client: editedGoal, isEditing, onChange: handleInputChange };
+    const documentProps = { goal: editedGoal, isEditing };
     switch (activeTab) {
       case 'overview':
         return <GoalOverviewTab goal={editedGoal} />;
@@ -52,7 +53,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal }) => {
       case 'tasks':
         return <TaskTab {...commonProps} />;
       case 'documents':
-        return <DocumentTab {...commonProps} />;
+        return <DocumentTab {...documentProps} />;
       default:
         return null;
     }
