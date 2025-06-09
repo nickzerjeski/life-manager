@@ -86,7 +86,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
             <button
               onClick={onBack}
               aria-label="Back to Goals"
-              className="text-blue-600 hover:text-blue-700"
+              className="text-blue-600 hover:text-blue-700 mt-1"
             >
               <ArrowLeft size={20} />
             </button>
