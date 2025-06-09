@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Heart, Calendar, FileText, Trash2, Edit, ChartNoAxesCombined, ListTodo, LucideProps } from 'lucide-react';
+import { ArrowLeft, User, Heart, Calendar, FileText, Trash2, Edit, ChartNoAxesCombined, ListTodo, LucideProps } from 'lucide-react';
 import Modal from '@/components/ui/modal';
 import GoalOverviewTab from '../tabs/goal/GoalOverviewTab';
 import ProjectTab from '../tabs/goal/ProjectTab';
@@ -80,20 +80,23 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
 
   return (
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow border border-gray-200">
-      <div className="mb-4">
-        <button
-          onClick={onBack}
-          className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
-        >
-          Back to Goals
-        </button>
-      </div>
       <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
         <div className="flex-grow min-w-0">
-          <h2 className="text-2xl font-bold text-gray-800 truncate" title={goal.name}>
-            {goal.name}
-          </h2>
-          <p className="text-sm text-gray-500 truncate">{goal.description}</p>
+          <div className="flex items-start gap-2 mb-1">
+            <button
+              onClick={onBack}
+              aria-label="Back to Goals"
+              className="mt-2"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div className="min-w-0">
+              <h2 className="text-2xl font-bold text-gray-800 truncate" title={goal.name}>
+                {goal.name}
+              </h2>
+              <p className="text-sm text-gray-500 truncate">{goal.description}</p>
+            </div>
+          </div>
         </div>
         <div className="flex space-x-2 flex-shrink-0">
           {!isEditing ? (
