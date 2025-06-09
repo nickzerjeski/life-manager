@@ -1,4 +1,6 @@
 import http from 'node:http'
+import fs from 'node:fs'
+import path from 'node:path'
 import { Goal } from '../models/Goal'
 import { Project } from '../models/Project'
 import { Document } from '../models/Document'
@@ -74,10 +76,12 @@ function initData() {
   ]
 
   documents = [
-    new Document(1, goals[0].id, 'ProjectPlan.pdf', 'pdf', new Date('2025-06-05')),
+    new Document(1, goals[0].id, 'Course-Info.pdf', 'pdf', new Date('2025-06-05')),
     new Document(2, goals[1].id, 'Specification.docx', 'docx', new Date('2025-06-10')),
   ]
-  documentFiles = {}
+  const pdfPath = path.join(__dirname, '../data/Course-Info.pdf')
+  const pdfContent = fs.readFileSync(pdfPath).toString('base64')
+  documentFiles = { 1: { name: 'Course-Info.pdf', content: pdfContent } }
 }
 
 initData()
@@ -225,6 +229,33 @@ export function createServer() {
         : documents
       res.setHeader('Content-Type', 'application/json')
       res.end(JSON.stringify(result))
+      return
+    }
+
+    if (
+      method === 'GET' &&
+      parsed.pathname.startsWith('/documents/') &&
+      !parsed.pathname.endsWith('/upload')
+    ) {
+      const id = Number(parsed.pathname.split('/')[2])
+      const doc = documents.find(d => d.id === id)
+      if (!doc) {
+        res.statusCode = 404
+        res.end('Not Found')
+        return
+      }
+      const file = documentFiles[id]
+      res.setHeader('Content-Type', 'application/json')
+      res.end(
+        JSON.stringify({
+          id: doc.id,
+          goalId: doc.goalId,
+          name: doc.name,
+          type: doc.type,
+          uploadDate: doc.uploadDate,
+          content: file?.content || null,
+        })
+      )
       return
     }
 

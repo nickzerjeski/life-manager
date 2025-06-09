@@ -65,6 +65,16 @@ export class DocumentHandler {
     }
   }
 
+  /** Retrieve a single document including its file content. */
+  async getDocument(id: number): Promise<{ name: string; type: string; content: string | null }> {
+    const res = await fetch(`${this.baseUrl}/documents/${id}`)
+    if (!res.ok) {
+      throw new Error('Failed to fetch document')
+    }
+    const data = await res.json()
+    return { name: data.name, type: data.type, content: data.content }
+  }
+
   /** Delete a document by id. */
   async deleteDocument(id: number): Promise<void> {
     const res = await fetch(`${this.baseUrl}/documents/${id}`, {
