@@ -3,11 +3,12 @@ import { Plus, Search } from "lucide-react";
 import { ProjectHandler } from "@/models/ProjectHandler";
 import { containerStyle, statusLabelStyle } from "@/styles/statusStyles";
 import AddProjectModal from "@/modal/AddProjectModal";
+import { Project } from "@/models/Project";
 
 
 /* ---------- main component ---------- */
 export default function ProjectPage() {
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   useEffect(() => {
     ProjectHandler.getInstance()
       .getProjects()

@@ -1,5 +1,4 @@
 import React from 'react';
-import { formatDate } from '../../helpers';
 import { TaskStatus } from '@/components/types/types';
 
 interface TaskTabProps {
@@ -26,7 +25,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ client, isEditing }) => (
           >
             <div className="flex-grow">
               <p className={`font-medium text-sm ${task.status === TaskStatus.DONE ? 'line-through text-gray-500' : 'text-gray-800'}`}>{task.title}</p>
-              <p className="text-xs text-gray-600">Due on: {formatDate(task.dueDate)}</p>
+              <p className="text-xs text-gray-600">Due on: {task.dueDate}</p>
             </div>
             <span
               className={`flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${

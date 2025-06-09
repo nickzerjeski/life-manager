@@ -6,7 +6,6 @@ import { DocumentHandler } from '@/models/DocumentHandler'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Modal from '@/components/ui/modal'
-import { formatDate } from '../../helpers'
 
 interface DocumentTabProps {
   goal: Goal
@@ -131,7 +130,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
                   </p>
                   <p className="text-xs text-gray-600">
                     Type: {doc.type} | Uploaded:{' '}
-                    {formatDate(doc.uploadDate.toISOString())}
+                    {doc.uploadDate.toISOString()}
                   </p>
                 </div>
               </div>
