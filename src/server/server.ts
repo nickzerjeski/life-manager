@@ -15,8 +15,8 @@ function initData() {
   goals = [
     new Goal(
       1,
-      'Projektplanung abschließen',
-      'Detaillierte Schritte und Meilensteine festlegen',
+      'Complete project planning',
+      'Define detailed steps and milestones',
       0,
       20,
       100,
@@ -26,8 +26,8 @@ function initData() {
     ),
     new Goal(
       2,
-      'MVP-Implementierung starten',
-      'Kernfunktionalität entwickeln und testen',
+      'Start MVP implementation',
+      'Develop and test core functionality',
       0,
       10,
       100,
@@ -37,8 +37,8 @@ function initData() {
     ),
     new Goal(
       3,
-      'Markteinführung vorbereiten',
-      'Marketing-Kampagne und Dokumentation erstellen',
+      'Prepare market launch',
+      'Create marketing campaign and documentation',
       0,
       0,
       100,
@@ -74,8 +74,8 @@ function initData() {
   ]
 
   documents = [
-    new Document(1, goals[0].id, 'Projektplan.pdf', 'pdf', new Date('2025-06-05')),
-    new Document(2, goals[1].id, 'Spezifikation.docx', 'docx', new Date('2025-06-10')),
+    new Document(1, goals[0].id, 'ProjectPlan.pdf', 'pdf', new Date('2025-06-05')),
+    new Document(2, goals[1].id, 'Specification.docx', 'docx', new Date('2025-06-10')),
   ]
   documentFiles = {}
 }

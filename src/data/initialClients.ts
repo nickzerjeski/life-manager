@@ -53,7 +53,7 @@ export interface Client {
   address: string;
   phone: string;
   email: string;
-  betreuungScope: string[];
+  careScope: string[];
   court: string;
   caseNumber: string;
   socialSecurityNumber: string;
@@ -75,16 +75,16 @@ export const initialClients: Client[] = [
     firstName: 'Max',
     lastName: 'Mustermann',
     dob: '1950-05-15',
-    address: 'Hauptstraße 1, 10115 Berlin',
+    address: '1 Main Street, Berlin 10115',
     phone: '030 1234567',
     email: 'max.mustermann@email.de',
-    betreuungScope: [
-      'Vermögenssorge',
-      'Gesundheitssorge',
-      'Aufenthaltsbestimmung',
-      'Postangelegenheiten',
+    careScope: [
+      'Asset management',
+      'Healthcare',
+      'Residence determination',
+      'Mail matters',
     ],
-    court: 'Amtsgericht Mitte',
+    court: 'Local Court Mitte',
     caseNumber: '12 B 345/23',
     socialSecurityNumber: '12 150550 M 123',
     taxId: '12345678901',
@@ -96,8 +96,8 @@ export const initialClients: Client[] = [
       { id: 'b2', bankName: 'Deutsche Bank', iban: 'DE02 1007 0000 0123 4567 89', bic: 'DEUTDEBBXXX', balance: 5300.10 },
     ],
     income: [
-      { id: 'i1', source: 'Rente', amount: 1100, frequency: 'Monthly' },
-      { id: 'i2', source: 'Grundsicherung', amount: 450, frequency: 'Monthly' },
+      { id: 'i1', source: 'Pension', amount: 1100, frequency: 'Monthly' },
+      { id: 'i2', source: 'Basic security', amount: 450, frequency: 'Monthly' },
     ],
     expenses: [
       { id: 'e1', category: 'Rent', amount: 650, frequency: 'Monthly' },
@@ -105,15 +105,15 @@ export const initialClients: Client[] = [
       { id: 'e3', category: 'Insurance (Haftpflicht)', amount: 80, frequency: 'Yearly' },
     ],
     doctors: [
-      { id: 'd1', name: 'Dr. Anna Schmidt', specialty: 'Hausarzt', phone: '030 9876543' },
+      { id: 'd1', name: 'Dr. Anna Schmidt', specialty: 'General practitioner', phone: '030 9876543' },
     ],
     tasks: [
-      { id: 't1', title: 'Apply for Wohngeld', description: 'Apply for Wohngeld description', dueDate: '2025-05-15', completed: false, status: TaskStatus.OPEN },
+      { id: 't1', title: 'Apply for housing benefit', description: 'Apply for housing benefit description', dueDate: '2025-05-15', completed: false, status: TaskStatus.OPEN },
       { id: 't2', title: 'Pay electricity bill', description: 'Pay electricity bill description', dueDate: '2025-04-20', completed: true, status: TaskStatus.DONE },
     ],
     documents: [
-      { id: 'doc1', name: 'Betreuungsurkunde.pdf', type: 'Legal', uploadDate: '2023-11-10' },
-      { id: 'doc2', name: 'Mietvertrag.pdf', type: 'Housing', uploadDate: '2024-01-05' },
+      { id: 'doc1', name: 'GuardianshipCertificate.pdf', type: 'Legal', uploadDate: '2023-11-10' },
+      { id: 'doc2', name: 'RentalAgreement.pdf', type: 'Housing', uploadDate: '2024-01-05' },
     ],
   },
   {
@@ -121,11 +121,11 @@ export const initialClients: Client[] = [
     firstName: 'Erika',
     lastName: 'Musterfrau',
     dob: '1962-11-22',
-    address: 'Nebenstraße 5, 80331 München',
+    address: '5 Side Street, Munich 80331',
     phone: '089 9876543',
     email: 'erika.musterfrau@email.de',
-    betreuungScope: ['Vermögenssorge', 'Aufenthaltsbestimmung'],
-    court: 'Amtsgericht München',
+    careScope: ['Asset management', 'Residence determination'],
+    court: 'Local Court Munich',
     caseNumber: '34 C 678/24',
     socialSecurityNumber: '12 221162 F 456',
     taxId: '98765432109',
@@ -146,7 +146,7 @@ export const initialClients: Client[] = [
       { id: 't3', title: 'Review care plan', description: 'Review care plan description', dueDate: '2025-06-01', completed: false, status: TaskStatus.IN_PROGRESS },
     ],
     documents: [
-      { id: 'doc3', name: 'Heimvertrag.pdf', type: 'Housing', uploadDate: '2024-03-15' },
+      { id: 'doc3', name: 'CareHomeContract.pdf', type: 'Housing', uploadDate: '2024-03-15' },
     ],
   },
 ];

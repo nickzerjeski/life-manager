@@ -6,7 +6,7 @@ export class Goal {
   name: string;
   description: string;
   start: number;
-  stand: number;
+  current: number;
   objective: number;
   period: [Date, Date];
   status: Status;
@@ -18,19 +18,19 @@ export class Goal {
      * @param name - Name of the project.
      * @param description - Description of the project.
      * @param start - Start value of the project.
-     * @param stand - Current status or progress of the project.
+     * @param current - Current status or progress of the project.
      * @param objective - Objective or target value for the project.
      * @param period - Tuple containing start and end dates of the project.
      * @param status - Current status of the project.
      * @param goal - Associated goal for the project.
      */
-    constructor(id: number, name: string, description: string, start: number, stand: number,
+    constructor(id: number, name: string, description: string, start: number, current: number,
                 objective: number, period: [Date, Date], status: Status, aol: AOL) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.start = start;
-        this.stand = stand;
+        this.current = current;
         this.objective = objective;
         this.period = period;
         this.status = status;
@@ -38,11 +38,11 @@ export class Goal {
     }
 
     /**
-     * Percentage progress based on start, stand and objective values.
+     * Percentage progress based on start, current and objective values.
      */
     get progressPercentage(): number {
         if (this.objective === this.start) return 0;
-        return ((this.stand - this.start) / (this.objective - this.start)) * 100;
+        return ((this.current - this.start) / (this.objective - this.start)) * 100;
     }
 
     /** Total number of days for the goal period. */

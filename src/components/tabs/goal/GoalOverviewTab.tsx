@@ -36,7 +36,7 @@ const GoalOverviewTab: React.FC<GoalOverviewTabProps> = ({ goal }) => {
   const progress = Math.max(
     0,
     Math.min(
-      ((goal.stand - goal.start) / (goal.objective - goal.start)) * 100,
+      ((goal.current - goal.start) / (goal.objective - goal.start)) * 100,
       100
     )
   );

@@ -42,14 +42,14 @@ test('GET /goals returns initial goals', async () => {
 })
 
 test('POST /goals creates a goal', async () => {
-  const newGoal = { id: 99, name: 'new', description: '', start: 0, stand: 0, objective: 1, period: [new Date(), new Date()], status: 'Not Started', aol: 'Growth' }
+  const newGoal = { id: 99, name: 'new', description: '', start: 0, current: 0, objective: 1, period: [new Date(), new Date()], status: 'Not Started', aol: 'Growth' }
   const res = await request('POST', '/goals', JSON.stringify(newGoal))
   assert.equal(res.status, 201)
   assert.equal(res.data.id, 99)
 })
 
 test('DELETE /goals removes a goal', async () => {
-  const resCreate = await request('POST', '/goals', JSON.stringify({ id: 100, name: 'temp', description: '', start: 0, stand: 0, objective: 1, period: [new Date(), new Date()], status: 'Not Started', aol: 'Growth' }))
+  const resCreate = await request('POST', '/goals', JSON.stringify({ id: 100, name: 'temp', description: '', start: 0, current: 0, objective: 1, period: [new Date(), new Date()], status: 'Not Started', aol: 'Growth' }))
   assert.equal(resCreate.status, 201)
   const resDel = await request('DELETE', '/goals/100')
   assert.equal(resDel.status, 204)
@@ -67,7 +67,7 @@ test('POST /projects creates a project', async () => {
     name: 'p',
     description: '',
     start: 0,
-    stand: 0,
+    current: 0,
     objective: 1,
     period: [new Date(), new Date()],
     status: 'Not Started',
@@ -76,7 +76,7 @@ test('POST /projects creates a project', async () => {
       name: 'g',
       description: '',
       start: 0,
-      stand: 0,
+      current: 0,
       objective: 1,
       period: [new Date(), new Date()],
       status: 'Not Started',
@@ -94,7 +94,7 @@ test('DELETE /projects removes a project', async () => {
     name: 'tmp',
     description: '',
     start: 0,
-    stand: 0,
+    current: 0,
     objective: 1,
     period: [new Date(), new Date()],
     status: 'Not Started',
@@ -103,7 +103,7 @@ test('DELETE /projects removes a project', async () => {
       name: 'g',
       description: '',
       start: 0,
-      stand: 0,
+      current: 0,
       objective: 1,
       period: [new Date(), new Date()],
       status: 'Not Started',
