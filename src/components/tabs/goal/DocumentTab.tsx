@@ -5,6 +5,7 @@ import { Document } from '@/models/Document'
 import { DocumentHandler } from '@/models/DocumentHandler'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import Modal from '@/components/ui/modal'
 import { formatDate } from '../../helpers'
 
 interface DocumentTabProps {
@@ -18,6 +19,8 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
   const [type, setType] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [showUpload, setShowUpload] = useState(false)
+  const [activeDoc, setActiveDoc] = useState<Document | null>(null)
+  const [activeContent, setActiveContent] = useState<string | null>(null)
   const handler = React.useMemo(() => DocumentHandler.getInstance(), [])
 
   const loadDocuments = React.useCallback(() => {
@@ -56,6 +59,22 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
       /* eslint-disable no-console */
       console.error(err)
     }
+  }
+
+  const handleOpen = async (doc: Document) => {
+    try {
+      const result = await handler.getDocument(doc.id)
+      setActiveDoc(doc)
+      setActiveContent(result.content)
+    } catch (err) {
+      /* eslint-disable no-console */
+      console.error(err)
+    }
+  }
+
+  const closeModal = () => {
+    setActiveDoc(null)
+    setActiveContent(null)
   }
 
   return (
@@ -101,7 +120,8 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
           {documents.map(doc => (
             <li
               key={doc.id}
-              className="bg-white shadow rounded p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-gray-800"
+              onClick={() => handleOpen(doc)}
+              className="bg-white shadow rounded p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-gray-800 cursor-pointer"
             >
               <div className="flex items-center space-x-2 flex-grow min-w-0">
                 <FileText size={18} className="text-gray-500 flex-shrink-0" />
@@ -128,6 +148,18 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
         </ul>
       ) : (
         <p className="text-gray-500 italic text-sm">No documents recorded.</p>
+      )}
+      {activeDoc && (
+        <Modal isOpen={!!activeDoc} onClose={closeModal} title={activeDoc.name}>
+          {activeContent && activeDoc.type === 'pdf' ? (
+            <iframe
+              src={`data:application/pdf;base64,${activeContent}`}
+              className="w-full h-[80vh]"
+            />
+          ) : (
+            <pre className="whitespace-pre-wrap text-sm">{activeContent}</pre>
+          )}
+        </Modal>
       )}
     </div>
   )
