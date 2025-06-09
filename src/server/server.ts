@@ -171,6 +171,9 @@ export function createServer() {
         res.end('Goal not found')
         return
       }
+
+      /* Generate a dummy project based for the goal */
+      // TODO: Create a call to n8n webhook to actually create goal
       const nextId = projects.length ? Math.max(...projects.map(p => p.id)) + 1 : 1
       const project = new Project(
         nextId,
@@ -183,6 +186,8 @@ export function createServer() {
         Status.ON_TRACK,
         goal
       )
+      /* --------------------------------------------- */
+
       projects.push(project)
       res.statusCode = 201
       res.setHeader('Content-Type', 'application/json')
