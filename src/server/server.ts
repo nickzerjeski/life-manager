@@ -162,6 +162,34 @@ export function createServer() {
       return
     }
 
+    if (method === 'POST' && parsed.pathname === '/projects/generate') {
+      const body = await parseBody(req)
+      const { goalId } = JSON.parse(body)
+      const goal = goals.find(g => g.id === Number(goalId))
+      if (!goal) {
+        res.statusCode = 404
+        res.end('Goal not found')
+        return
+      }
+      const nextId = projects.length ? Math.max(...projects.map(p => p.id)) + 1 : 1
+      const project = new Project(
+        nextId,
+        'Generated Project',
+        'Auto generated project',
+        0,
+        0,
+        100,
+        goal.period,
+        Status.ON_TRACK,
+        goal
+      )
+      projects.push(project)
+      res.statusCode = 201
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify(project))
+      return
+    }
+
     if (method === 'DELETE' && parsed.pathname.startsWith('/projects/')) {
       const id = Number(parsed.pathname.split('/')[2])
       projects = projects.filter(p => p.id !== id)

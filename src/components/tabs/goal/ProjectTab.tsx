@@ -10,17 +10,37 @@ interface ProjectTabProps {
 
 const ProjectTab: React.FC<ProjectTabProps> = ({ goal }) => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const handler = React.useMemo(() => ProjectHandler.getInstance(), []);
 
   useEffect(() => {
-    ProjectHandler.getInstance()
+    handler
       .getProjectsForGoal(goal.id)
       .then(setProjects)
       .catch(() => setProjects([]));
-  }, [goal.id]);
+  }, [goal.id, handler]);
+
+  const generate = async () => {
+    try {
+      const generated = await handler.generateProjects(goal.id);
+      setProjects(prev => [...prev, ...generated]);
+    } catch (err) {
+      /* eslint-disable no-console */
+      console.error(err);
+    }
+  };
 
   return (
     <div className="space-y-4">
-      <h4 className="text-lg font-semibold mb-2 text-gray-700">Projects</h4>
+      <div className="flex items-center justify-between">
+        <h4 className="text-lg font-semibold mb-2 text-gray-700">Projects</h4>
+        <button
+          type="button"
+          onClick={generate}
+          className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded text-sm"
+        >
+          Generate Projects
+        </button>
+      </div>
       {projects.length > 0 ? (
         <ul className="space-y-2">
           {projects.map((project) => (

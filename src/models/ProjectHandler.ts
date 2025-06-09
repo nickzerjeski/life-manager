@@ -122,4 +122,40 @@ export class ProjectHandler {
         )
     )
   }
+
+  /** Request project generation for a goal. */
+  async generateProjects(goalId: number): Promise<Project[]> {
+    const res = await fetch(`${this.baseUrl}/projects/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ goalId })
+    })
+    if (!res.ok) {
+      throw new Error('Failed to generate projects')
+    }
+    const data = await res.json()
+    const map = (p: any) =>
+      new Project(
+        p.id,
+        p.name,
+        p.description,
+        p.start,
+        p.current,
+        p.objective,
+        [new Date(p.period[0]), new Date(p.period[1])],
+        p.status,
+        new Goal(
+          p.goal.id,
+          p.goal.name,
+          p.goal.description,
+          p.goal.start,
+          p.goal.current,
+          p.goal.objective,
+          [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
+          p.goal.status,
+          p.goal.aol
+        )
+      )
+    return Array.isArray(data) ? data.map(map) : [map(data)]
+  }
 }

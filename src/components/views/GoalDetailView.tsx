@@ -99,29 +99,6 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
           </div>
         </div>
         <div className="flex space-x-2 flex-shrink-0">
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="flex items-center bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
-            >
-              <Edit size={16} className="mr-1 sm:mr-2" /> Edit
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={handleSave}
-                className="flex items-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
-              >
-                Save
-              </button>
-              <button
-                onClick={handleCancelEdit}
-                className="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
-              >
-                Cancel
-              </button>
-            </>
-          )}
           <button
             onClick={() => setShowDeleteConfirm(true)}
             className="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"

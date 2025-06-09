@@ -8,6 +8,7 @@ This document outlines the high‑level goals and architecture of the **LifeMana
 - AI‑assisted planning that expands a goal into projects and tasks.
 - Intelligent scheduler that respects durations, deadlines and dependencies.
 - Cloud document storage for project references and AI context.
+- One-click project generation from uploaded documents.
 - Offline‑capable PWA with an optional Electron desktop shell.
 - Authentication via Google OAuth with JWT‑based sessions.
 
