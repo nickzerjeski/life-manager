@@ -59,7 +59,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
 
   return (
     <div className="space-y-4">
-      <h4 className="text-lg font-semibold mb-2 text-gray-700">Dokumente</h4>
+      <h4 className="text-lg font-semibold mb-2 text-gray-700">Documents</h4>
       {isEditing && (
         <form
           onSubmit={handleSubmit}
@@ -74,7 +74,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
           <Input
             value={type}
             onChange={e => setType(e.target.value)}
-            placeholder="Typ"
+            placeholder="Type"
             className="text-sm"
           />
           <Input type="file" onChange={e => setFile(e.target.files?.[0] || null)} />
@@ -82,7 +82,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
             type="submit"
             className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded"
           >
-            Hochladen
+            Upload
           </Button>
         </form>
       )}
@@ -100,7 +100,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
                     {doc.name}
                   </p>
                   <p className="text-xs text-gray-600">
-                    Typ: {doc.type} | Hochgeladen:{' '}
+                    Type: {doc.type} | Uploaded:{' '}
                     {formatDate(doc.uploadDate.toISOString())}
                   </p>
                 </div>
@@ -110,7 +110,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
                   type="button"
                   onClick={() => handleDelete(doc.id)}
                   className="text-red-600 hover:text-red-800 p-1 self-end sm:self-center"
-                  title="Löschen"
+                  title="Delete"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -119,7 +119,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
           ))}
         </ul>
       ) : (
-        <p className="text-gray-500 italic text-sm">Keine Dokumente erfasst.</p>
+        <p className="text-gray-500 italic text-sm">No documents recorded.</p>
       )}
     </div>
   )
