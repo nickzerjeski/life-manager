@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FileText, Trash2 } from 'lucide-react'
+import { FileText, Trash2, Upload } from 'lucide-react'
 import { Goal } from '@/models/Goal'
 import { Document } from '@/models/Document'
 import { DocumentHandler } from '@/models/DocumentHandler'
@@ -17,6 +17,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [file, setFile] = useState<File | null>(null)
+  const [showUpload, setShowUpload] = useState(false)
   const handler = React.useMemo(() => DocumentHandler.getInstance(), [])
 
   const loadDocuments = React.useCallback(() => {
@@ -59,8 +60,17 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
 
   return (
     <div className="space-y-4">
-      <h4 className="text-lg font-semibold mb-2 text-gray-700">Documents</h4>
-      {isEditing && (
+      <div className="flex items-center justify-between">
+        <h4 className="text-lg font-semibold mb-2 text-gray-700">Documents</h4>
+        <button
+          type="button"
+          onClick={() => setShowUpload(s => !s)}
+          className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
+        >
+          <Upload size={16} className="mr-1 sm:mr-2" /> Upload Document
+        </button>
+      </div>
+      {showUpload && (
         <form
           onSubmit={handleSubmit}
           className="bg-white shadow rounded p-4 text-gray-800 space-y-2"
@@ -105,16 +115,14 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
                   </p>
                 </div>
               </div>
-              {isEditing && (
-                <button
-                  type="button"
-                  onClick={() => handleDelete(doc.id)}
-                  className="text-red-600 hover:text-red-800 p-1 self-end sm:self-center"
-                  title="Delete"
-                >
-                  <Trash2 size={16} />
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => handleDelete(doc.id)}
+                className="text-red-600 hover:text-red-800 p-1 self-end sm:self-center"
+                title="Delete"
+              >
+                <Trash2 size={16} />
+              </button>
             </li>
           ))}
         </ul>

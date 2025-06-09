@@ -9,6 +9,8 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - Intelligent Scheduler – Deterministic service queries Google Calendar free/busy slots, inserts task blocks, and adjusts when tasks slip or constraints change.
 - Dynamic Status Evaluation – Goal and project status progress through Not started → On Track → At Risk → Off Track → Achieved based on remaining work versus time.
 - Cloud Document Storage – Upload PDF, Markdown, or plain-text references; link each file to a goal, project, or task for future AI context.
+- Quick Project Generation – Use the new button in the Projects tab to request auto-generated projects from the backend.
+- Document Management – Upload files from the Documents tab and remove them individually.
 - Authentication – Google OAuth initiates authorisation; backend issues session JWTs for API calls.
 - Offline Support – Progressive Web App caches critical assets and state; synchronises on reconnection.
 - Desktop Option – Electron shell packages the same codebase for Windows, macOS, and Linux.
@@ -60,6 +62,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - `PATCH /goals/{id}`
 - `POST /goals/{id}/start` (AI trigger)
 - `GET /projects?goal={id}`
+- `POST /projects/generate` – create a project for a given goal
 - `PATCH /tasks/{id}/complete`
 - `POST /documents/upload-url` (presign PUT)
 - `POST /calendar/sync`
