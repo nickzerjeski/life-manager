@@ -22,7 +22,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [start, setStart] = useState(0);
-  const [stand, setStand] = useState(0);
+  const [current, setCurrent] = useState(0);
   const [objective, setObjective] = useState(0);
   const [startDate, setStartDate] = useState(() => {
     const today = new Date();
@@ -49,7 +49,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       name,
       description,
       start,
-      stand,
+      current,
       objective,
       [new Date(startDate), new Date(endDate)],
       status,
@@ -62,7 +62,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     setName('');
     setDescription('');
     setStart(0);
-    setStand(0);
+    setCurrent(0);
     setObjective(0);
     const today = new Date().toISOString().slice(0, 10);
     const nextYear = new Date();
@@ -108,8 +108,8 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
             <label className="block text-sm font-medium text-gray-700 mb-1">Current</label>
             <input
               type="number"
-              value={stand}
-              onChange={(e) => setStand(Number(e.target.value))}
+              value={current}
+              onChange={(e) => setCurrent(Number(e.target.value))}
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>

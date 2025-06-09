@@ -38,7 +38,7 @@ const InputField: React.FC<InputFieldProps> = ({
           sensitive ? 'font-mono blur-sm hover:blur-none transition-all' : ''
         }`}
       >
-        {value || <span className="text-gray-400 italic">Nicht angegeben</span>}
+        {value || <span className="text-gray-400 italic">Not provided</span>}
       </p>
     )}
   </div>

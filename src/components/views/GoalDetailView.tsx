@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, User, Heart, Calendar, FileText, Trash2, Edit, ChartNoAxesCombined, ListTodo, LucideProps } from 'lucide-react';
 import Modal from '@/components/ui/modal';
-import GoalOverviewTab from '../tabs/goal/GoalOverviewTab';
+import OverviewTab from '../tabs/goal/OverviewTab';
 import ProjectTab from '../tabs/goal/ProjectTab';
 import TaskTab from '../tabs/goal/TaskTab';
 import DocumentTab from '../tabs/goal/DocumentTab';
@@ -48,7 +48,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
     const documentProps = { goal: editedGoal, isEditing };
     switch (activeTab) {
       case 'overview':
-        return <GoalOverviewTab goal={editedGoal} />;
+        return <OverviewTab goal={editedGoal} />;
       case 'project':
         return <ProjectTab goal={editedGoal} />;
       case 'tasks':
@@ -104,7 +104,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
               onClick={() => setIsEditing(true)}
               className="flex items-center bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
             >
-              <Edit size={16} className="mr-1 sm:mr-2" /> Bearbeiten
+              <Edit size={16} className="mr-1 sm:mr-2" /> Edit
             </button>
           ) : (
             <>
@@ -112,13 +112,13 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
                 onClick={handleSave}
                 className="flex items-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
               >
-                Speichern
+                Save
               </button>
               <button
                 onClick={handleCancelEdit}
                 className="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
               >
-                Abbrechen
+                Cancel
               </button>
             </>
           )}
@@ -127,7 +127,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
             className="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
             disabled={isEditing}
           >
-            <Trash2 size={16} className="mr-1 sm:mr-2" /> Löschen
+            <Trash2 size={16} className="mr-1 sm:mr-2" /> Delete
           </button>
         </div>
       </div>
@@ -143,22 +143,22 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
 
       <div className="mt-4">{renderTabContent()}</div>
 
-      <Modal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} title="Goal löschen bestätigen">
+      <Modal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} title="Confirm delete goal">
         <p className="mb-4">
-          Sind Sie sicher, dass Sie das Goal <strong>{goal.name}</strong> dauerhaft löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.
+          Are you sure you want to permanently delete the goal <strong>{goal.name}</strong>? This action cannot be undone.
         </p>
         <div className="flex justify-end space-x-3">
           <button
             onClick={() => setShowDeleteConfirm(false)}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out"
           >
-            Abbrechen
+            Cancel
           </button>
           <button
             onClick={handleDelete}
             className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out"
           >
-            Löschen bestätigen
+            Confirm Delete
           </button>
         </div>
       </Modal>

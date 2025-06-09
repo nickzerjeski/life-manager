@@ -30,7 +30,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
       />
     ) : (
       <p className="text-gray-900 p-2 rounded-md bg-gray-50 whitespace-pre-wrap min-h-[60px] text-sm">
-        {value || <span className="text-gray-400 italic">Nicht angegeben</span>}
+        {value || <span className="text-gray-400 italic">Not provided</span>}
       </p>
     )}
   </div>
