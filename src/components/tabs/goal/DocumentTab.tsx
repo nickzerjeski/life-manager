@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FileText, Trash2 } from 'lucide-react'
+import { FileText, Trash2, Upload } from 'lucide-react'
 import { Goal } from '@/models/Goal'
 import { Document } from '@/models/Document'
 import { DocumentHandler } from '@/models/DocumentHandler'
@@ -65,9 +65,9 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
         <button
           type="button"
           onClick={() => setShowUpload(s => !s)}
-          className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded text-sm"
+          className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
         >
-          Upload Document
+          <Upload size={16} className="mr-1 sm:mr-2" /> Upload Document
         </button>
       </div>
       {showUpload && (
