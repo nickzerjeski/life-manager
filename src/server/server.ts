@@ -1,11 +1,13 @@
 import http from 'node:http'
 import fs from 'node:fs'
+import axios from 'axios'
 import path from 'node:path'
 import { Goal } from '../models/Goal'
 import { Project } from '../models/Project'
 import { Document } from '../models/Document'
 import { Status } from '../types/Status'
 import { AOL } from '../types/AOL'
+import { extractPdfContent } from '@/util/fileConversion'
 
 let goals: Goal[] = []
 let projects: Project[] = []
@@ -177,6 +179,20 @@ export function createServer() {
       }
 
       /* Generate a dummy project based for the goal */
+      const n8nWebhookUrl = 'https://n8n.nickzerjeski.me/webhook-test/eea94cfd-2d7c-4fdb-addd-6cb200d07d04'
+      const pdfPath = path.join(__dirname, '../data/Course-Info.pdf')
+      const pdfContent = fs.readFileSync(pdfPath).toString('base64')
+      const textContent = await extractPdfContent(pdfContent);
+      const n8nPayload = { content: textContent }
+
+      try {
+        const n8nResponse = await axios.post(n8nWebhookUrl, n8nPayload, {
+          headers: { 'Content-Type': 'application/json' },
+        })
+        console.log('n8n response:', n8nResponse.data)
+      } catch (error) {
+        console.error('Error sending to n8n webhook:', error)
+      }
       // TODO: Create a call to n8n webhook to actually create goal
       const nextId = projects.length ? Math.max(...projects.map(p => p.id)) + 1 : 1
       const project = new Project(
