@@ -50,7 +50,9 @@ const ProjectTab: React.FC<ProjectTabProps> = ({ goal }) => {
             >
               <div>
                 <p className="font-medium text-sm text-gray-800">{project.name}</p>
-                <p className="text-xs text-gray-500">{project.description}</p>
+                <p className="text-xs text-gray-500">
+                  Contributes {project.contributionPct}% to this goal.
+                </p>
                 <p className="text-xs text-gray-600">
                   {project.period[0].toLocaleDateString()} - {project.period[1].toLocaleDateString()}
                 </p>
