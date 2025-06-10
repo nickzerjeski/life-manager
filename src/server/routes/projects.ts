@@ -5,7 +5,6 @@ import axios from 'axios'
 import { data } from '../../data/data'
 import { parseBody, sendRequest } from '../utils'
 import { Project } from '../../models/Project'
-import { Status } from '../../types/Status'
 import { extractPdfContent } from '@/util/fileConversion'
 
 export async function handleProjectRequests(
@@ -65,7 +64,6 @@ export async function handleProjectRequests(
       0,
       100,
       goal.period,
-      Status.ON_TRACK,
       goal
     )
 

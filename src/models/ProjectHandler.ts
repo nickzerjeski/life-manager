@@ -77,7 +77,6 @@ export class ProjectHandler {
           p.current,
           p.objective,
           [new Date(p.period[0]), new Date(p.period[1])],
-          p.status,
           new Goal(
             p.goal.id,
             p.goal.name,
@@ -86,7 +85,6 @@ export class ProjectHandler {
             p.goal.current,
             p.goal.objective,
             [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
-            p.goal.status,
             p.goal.aol
           )
         )
@@ -107,7 +105,6 @@ export class ProjectHandler {
           p.current,
           p.objective,
           [new Date(p.period[0]), new Date(p.period[1])],
-          p.status,
           new Goal(
             p.goal.id,
             p.goal.name,
@@ -116,7 +113,6 @@ export class ProjectHandler {
             p.goal.current,
             p.goal.objective,
             [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
-            p.goal.status,
             p.goal.aol
           )
         )
@@ -143,7 +139,6 @@ export class ProjectHandler {
         p.current,
         p.objective,
         [new Date(p.period[0]), new Date(p.period[1])],
-        p.status,
         new Goal(
           p.goal.id,
           p.goal.name,
@@ -152,7 +147,6 @@ export class ProjectHandler {
           p.goal.current,
           p.goal.objective,
           [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
-          p.goal.status,
           p.goal.aol
         )
       )

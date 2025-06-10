@@ -78,7 +78,6 @@ export class GoalHandler {
           g.current,
           g.objective,
           [new Date(g.period[0]), new Date(g.period[1])],
-          g.status,
           g.aol
         )
     )

@@ -3,7 +3,6 @@ import path from 'node:path'
 import { Goal } from '../models/Goal'
 import { Project } from '../models/Project'
 import { Document } from '../models/Document'
-import { Status } from '../types/Status'
 import { AOL } from '../types/AOL'
 
 export const data = {
@@ -23,7 +22,6 @@ export function initData(): void {
       20,
       100,
       [new Date('2025-06-01'), new Date('2025-09-30')],
-      Status.ON_TRACK,
       AOL.PURPOSE
     ),
     new Goal(
@@ -34,7 +32,6 @@ export function initData(): void {
       10,
       100,
       [new Date('2025-06-15'), new Date('2025-10-15')],
-      Status.AT_RISK,
       AOL.GROWTH
     ),
     new Goal(
@@ -45,7 +42,6 @@ export function initData(): void {
       0,
       100,
       [new Date('2025-07-01'), new Date('2025-11-01')],
-      Status.OFF_TRACK,
       AOL.FINANCES
     ),
   ]
@@ -59,7 +55,6 @@ export function initData(): void {
       30,
       100,
       [new Date('2025-01-01'), new Date('2025-12-31')],
-      Status.ON_TRACK,
       data.goals[1] || data.goals[0]
     ),
     new Project(
@@ -70,7 +65,6 @@ export function initData(): void {
       70,
       100,
       [new Date('2024-06-01'), new Date('2025-06-30')],
-      Status.AT_RISK,
       data.goals[0] || data.goals[1]
     ),
   ]
