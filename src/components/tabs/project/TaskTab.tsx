@@ -43,8 +43,18 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
       {tasks.length > 0 ? (
         <ul className="space-y-2">
           {tasks.map(task => (
-            <li key={task.id} className="bg-white shadow rounded p-3 text-sm text-gray-800">
-              {task.description} - {task.deadline.toLocaleDateString()}
+            <li
+              key={task.id}
+              className="bg-blue-50 border border-blue-200 p-3 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
+            >
+              <div>
+                <p className="font-medium text-sm text-gray-800">{task.description}</p>
+                <p className="text-xs text-gray-600">Due {task.deadline.toLocaleDateString()}</p>
+                <p className="text-xs text-gray-500">Duration {(task.duration / 3600).toFixed(1)}h</p>
+              </div>
+              <span className="bg-blue-200 text-blue-800 flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full">
+                {task.project.name}
+              </span>
             </li>
           ))}
         </ul>
