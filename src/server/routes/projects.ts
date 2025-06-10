@@ -64,7 +64,8 @@ export async function handleProjectRequests(
       0,
       100,
       goal.period,
-      goal
+      goal,
+      100
     )
 
     data.projects.push(project)

@@ -23,7 +23,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 ### Project
 - Always linked to one goal
 - Period lies inside the parent goal period
-- Fields: `id`, `name`, progress metrics, `status`, `tasks[]`, `documents[]`
+- Fields: `id`, `name`, progress metrics, `contributionPct`, `status`, `tasks[]`, `documents[]`
 ### Task
 - Atomic action ≤ 1 440 min
 - Fields: `id`, `name`, `description`, `duration`, `priority`, `dependencyIds[]`, `completed`, optional `projectId`

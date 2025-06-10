@@ -34,6 +34,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     return nextYear.toISOString().slice(0, 10);
   });
   const [goalId, setGoalId] = useState(0);
+  const [contributionPct, setContributionPct] = useState(0);
   useEffect(() => {
     if (goals.length > 0 && goalId === 0) {
       setGoalId(goals[0].id);
@@ -51,7 +52,8 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       current,
       objective,
       [new Date(startDate), new Date(endDate)],
-      goal
+      goal,
+      contributionPct
     );
     await ProjectHandler.getInstance(GoalHandler.getInstance()).createProject(project);
     if (onCreated) await onCreated();
@@ -69,6 +71,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     setStartDate(today);
     setEndDate(yearLater);
     setGoalId(goals[0]?.id ?? 0);
+    setContributionPct(0);
   };
 
   return (
@@ -119,6 +122,15 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Goal Contribution %</label>
+          <input
+            type="number"
+            value={contributionPct}
+            onChange={(e) => setContributionPct(Number(e.target.value))}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div>

@@ -10,6 +10,8 @@ export class Project {
   current: number;
   objective: number;
   period: [Date, Date];
+  /** percentage of this project's contribution to the parent goal */
+  contributionPct: number;
   status: Status;
   goal: Goal;
     
@@ -26,7 +28,7 @@ export class Project {
      * @param goal - Associated goal for the project.
      */
     constructor(id: number, name: string, description: string, start: number, current: number,
-                objective: number, period: [Date, Date], goal: Goal) {
+                objective: number, period: [Date, Date], goal: Goal, contributionPct: number) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -34,6 +36,7 @@ export class Project {
         this.current = current;
         this.objective = objective;
         this.period = period;
+        this.contributionPct = contributionPct;
         this.status = Status.NOT_STARTED;
         this.goal = goal;
         this.updateStatus();
