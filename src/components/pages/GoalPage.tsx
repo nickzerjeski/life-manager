@@ -44,26 +44,30 @@ export default function GoalPage() {
             </button>
           </div>
           <ul className="space-y-4">
-            {goals.map((goal) => (
-              <li
-                key={goal.id}
-                className={`${containerStyle[goal.status]} p-3 border rounded-md flex flex-col
+            {goals.length > 0 ? (
+              goals.map((goal) => (
+                <li
+                  key={goal.id}
+                  className={`${containerStyle[goal.status]} p-3 border rounded-md flex flex-col
                           sm:flex-row justify-between items-start sm:items-center
                           gap-2 cursor-pointer transition-shadow hover:shadow-md `}
-                onClick={() => setSelectedGoal(goal)}
-              >
-                <div>
-                  <p className="font-medium text-sm text-gray-800">{goal.name}</p>
-                  <p className="text-xs text-gray-500">{goal.description}</p>
-                  <p className="text-xs text-gray-600">{goal.period[0].toLocaleDateString()} - {goal.period[1].toLocaleDateString()}</p>
-                </div>
-                <span
-                  className={`${statusLabelStyle[goal.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full `}
+                  onClick={() => setSelectedGoal(goal)}
                 >
-                  {goal.status}
-                </span>
-              </li>
-            ))}
+                  <div>
+                    <p className="font-medium text-sm text-gray-800">{goal.name}</p>
+                    <p className="text-xs text-gray-500">{goal.description}</p>
+                    <p className="text-xs text-gray-600">{goal.period[0].toLocaleDateString()} - {goal.period[1].toLocaleDateString()}</p>
+                  </div>
+                  <span
+                    className={`${statusLabelStyle[goal.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full `}
+                  >
+                    {goal.status}
+                  </span>
+                </li>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-10">No goals found.</p>
+            )}
           </ul>
         </>
       )}
