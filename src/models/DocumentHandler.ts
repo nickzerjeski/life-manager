@@ -78,7 +78,15 @@ export class DocumentHandler {
       throw new Error('Failed to fetch document')
     }
     const data = await res.json()
-    return { name: data.name, type: data.type, content: data.content }
+    let { content } = data
+    if (content && data.type === 'txt') {
+      try {
+        content = atob(content)
+      } catch {
+        // not base64 encoded; use as-is
+      }
+    }
+    return { name: data.name, type: data.type, content }
   }
 
   /** Delete a document by id. */

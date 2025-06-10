@@ -42,6 +42,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
       await handler.uploadDocument(created.id, file)
       setFile(null)
       loadDocuments()
+      setShowUpload(false)
     } catch (err) {
       /* eslint-disable no-console */
       console.error(err)
