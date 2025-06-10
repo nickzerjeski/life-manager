@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import axios from 'axios'
 import { data } from '../../data/data'
-import { parseBody } from '../utils'
+import { parseBody, sendRequest } from '../utils'
 import { Project } from '../../models/Project'
 import { Status } from '../../types/Status'
 import { extractPdfContent } from '@/util/fileConversion'
@@ -52,14 +52,7 @@ export async function handleProjectRequests(
     const textContent = await extractPdfContent(pdfContent)
     const n8nPayload = { content: textContent }
 
-    try {
-      const n8nResponse = await axios.post(n8nWebhookUrl, n8nPayload, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      console.log('n8n response:', n8nResponse.data)
-    } catch (error) {
-      console.error('Error sending to n8n webhook:', error)
-    }
+    console.log(await sendRequest(n8nWebhookUrl, n8nPayload))
 
     const nextId = data.projects.length
       ? Math.max(...data.projects.map(p => p.id)) + 1
