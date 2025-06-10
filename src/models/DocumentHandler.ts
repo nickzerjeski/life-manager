@@ -54,7 +54,14 @@ export class DocumentHandler {
 
   /** Upload file contents for an existing document. */
   async uploadDocument(documentId: number, file: File): Promise<void> {
-    const content = await file.text()
+    let content: string
+    if (file.type.startsWith('text/')) {
+      content = await file.text()
+    } else {
+      const buffer = await file.arrayBuffer()
+      const binary = String.fromCharCode(...new Uint8Array(buffer))
+      content = btoa(binary)
+    }
     const res = await fetch(`${this.baseUrl}/documents/${documentId}/upload`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
