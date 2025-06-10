@@ -1,5 +1,6 @@
 import { AOL } from "@/types/AOL";
 import { Status } from "@/types/Status";
+import { STATUS_CONFIG } from "@/config/statusConfig";
 
 export class Goal {
   id: number;
@@ -25,7 +26,7 @@ export class Goal {
      * @param goal - Associated goal for the project.
      */
     constructor(id: number, name: string, description: string, start: number, current: number,
-                objective: number, period: [Date, Date], status: Status, aol: AOL) {
+                objective: number, period: [Date, Date], aol: AOL) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -33,8 +34,9 @@ export class Goal {
         this.current = current;
         this.objective = objective;
         this.period = period;
-        this.status = status;
+        this.status = Status.NOT_STARTED;
         this.aol = aol;
+        this.updateStatus();
     }
 
     /**
@@ -63,5 +65,41 @@ export class Goal {
         const now = new Date();
         const ms = this.period[1].getTime() - now.getTime();
         return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
+    }
+
+    /** Percentage of time elapsed in the goal period. */
+    get timePercentage(): number {
+        if (this.totalDays === 0) return 100;
+        return (this.daysElapsed / this.totalDays) * 100;
+    }
+
+    /** Recalculate the status based on progress and elapsed time. */
+    updateStatus(): void {
+        if (this.current >= this.objective) {
+            this.status = Status.ACHIEVED;
+            return;
+        }
+
+        const today = new Date();
+        if (today < this.period[0]) {
+            this.status = Status.NOT_STARTED;
+            return;
+        }
+
+        if (this.daysElapsed === 0) {
+            this.status = Status.ON_TRACK;
+            return;
+        }
+
+        const progress = this.progressPercentage;
+        const timePct = this.timePercentage;
+
+        if (progress > timePct) {
+            this.status = Status.ON_TRACK;
+        } else if (progress >= timePct - STATUS_CONFIG.atRiskRangePct) {
+            this.status = Status.AT_RISK;
+        } else {
+            this.status = Status.OFF_TRACK;
+        }
     }
 }

@@ -4,16 +4,15 @@ import { ProjectHandler } from './ProjectHandler'
 import { GoalHandler } from './GoalHandler'
 import { Goal } from './Goal'
 import { Project } from './Project'
-import { Status } from '@/types/Status'
 import { AOL } from '@/types/AOL'
 import { createServer } from '../server/server'
 
 function createGoal(id: number): Goal {
-  return new Goal(id, `g${id}`, '', 0, 0, 1, [new Date(), new Date()], Status.NOT_STARTED, AOL.GROWTH)
+  return new Goal(id, `g${id}`, '', 0, 0, 1, [new Date(), new Date()], AOL.GROWTH)
 }
 
 function createProject(id: number, goal: Goal): Project {
-  return new Project(id, `p${id}`, '', 0, 0, 1, [new Date(), new Date()], Status.NOT_STARTED, goal)
+  return new Project(id, `p${id}`, '', 0, 0, 1, [new Date(), new Date()], goal)
 }
 
 test('createProject adds a project', async () => {

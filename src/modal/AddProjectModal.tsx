@@ -3,7 +3,7 @@ import Modal from '@/components/ui/modal';
 import { Project } from '@/models/Project';
 import { ProjectHandler } from '@/models/ProjectHandler';
 import { GoalHandler } from '@/models/GoalHandler';
-import { Status } from '@/types/Status';
+import { Goal } from '@/models/Goal';
 
 interface AddProjectModalProps {
   isOpen: boolean;
@@ -33,7 +33,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     nextYear.setFullYear(nextYear.getFullYear() + 1);
     return nextYear.toISOString().slice(0, 10);
   });
-  const [status, setStatus] = useState<Status>(Status.NOT_STARTED);
   const [goalId, setGoalId] = useState(0);
   useEffect(() => {
     if (goals.length > 0 && goalId === 0) {
@@ -52,7 +51,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       current,
       objective,
       [new Date(startDate), new Date(endDate)],
-      status,
       goal
     );
     await ProjectHandler.getInstance(GoalHandler.getInstance()).createProject(project);
@@ -70,7 +68,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     const yearLater = nextYear.toISOString().slice(0, 10);
     setStartDate(today);
     setEndDate(yearLater);
-    setStatus(Status.NOT_STARTED);
     setGoalId(goals[0]?.id ?? 0);
   };
 
@@ -142,20 +139,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as Status)}
-            className="w-full p-2 border border-gray-300 rounded"
-          >
-            {Object.values(Status).map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Goal</label>

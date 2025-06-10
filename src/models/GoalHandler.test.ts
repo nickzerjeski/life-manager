@@ -3,7 +3,6 @@ import assert from 'node:assert/strict'
 import { Goal } from './Goal'
 import { GoalHandler } from './GoalHandler'
 import { createServer } from '../server/server'
-import { Status } from '@/types/Status'
 import { AOL } from '@/types/AOL'
 
 function createSampleGoal(id: number): Goal {
@@ -15,7 +14,6 @@ function createSampleGoal(id: number): Goal {
     0,
     1,
     [new Date(), new Date()],
-    Status.NOT_STARTED,
     AOL.HEALTH
   )
 }

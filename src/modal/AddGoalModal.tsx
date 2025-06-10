@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Modal from '@/components/ui/modal';
 import { Goal } from '@/models/Goal';
 import { GoalHandler } from '@/models/GoalHandler';
-import { Status } from '@/types/Status';
 import { AOL } from '@/types/AOL';
 
 interface AddGoalModalProps {
@@ -26,7 +25,6 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
     nextYear.setFullYear(nextYear.getFullYear() + 1);
     return nextYear.toISOString().slice(0, 10);
   });
-  const [status, setStatus] = useState<Status>(Status.NOT_STARTED);
   const [aol, setAol] = useState<AOL>(AOL.GROWTH);
 
   const handleCreate = async () => {
@@ -38,7 +36,6 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
       current,
       objective,
       [new Date(startDate), new Date(endDate)],
-      status,
       aol
     );
     await GoalHandler.getInstance().createGoal(goal);
@@ -56,7 +53,6 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
     const yearLater = nextYear.toISOString().slice(0, 10);
     setStartDate(today);
     setEndDate(yearLater);
-    setStatus(Status.NOT_STARTED);
     setAol(AOL.GROWTH);
   };
 
@@ -128,20 +124,6 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as Status)}
-            className="w-full p-2 border border-gray-300 rounded"
-          >
-            {Object.values(Status).map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Area of Life</label>
