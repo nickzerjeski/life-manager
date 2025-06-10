@@ -1,19 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Calendar, FileText, Trash2, Edit, ChartNoAxesCombined, ListTodo, LucideProps } from 'lucide-react';
+import {
+  ArrowLeft,
+  Calendar,
+  FileText,
+  Trash2,
+  Edit,
+  ChartNoAxesCombined,
+  ListTodo,
+  LucideProps,
+} from 'lucide-react';
 import Modal from '@/components/ui/modal';
 import OverviewTab from '../tabs/goal/OverviewTab';
 import ProjectTab from '../tabs/goal/ProjectTab';
 import TaskTab from '../tabs/goal/TaskTab';
 import DocumentTab from '../tabs/goal/DocumentTab';
+import { Goal } from '@/models/Goal';
+import { GoalHandler } from '@/models/GoalHandler';
 
 interface GoalDetailViewProps {
-  goal: any;
+  goal: Goal;
   onBack: () => void;
+  onDeleted?: () => void;
 }
 
-const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
+const GoalDetailView: React.FC<GoalDetailViewProps> = ({
+  goal,
+  onBack,
+  onDeleted,
+}) => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [editedGoal, setEditedGoal] = useState<any>(goal);
+  const [editedGoal, setEditedGoal] = useState<Goal>(goal);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -25,7 +41,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditedGoal((prev: any) => ({ ...prev, [name]: value }));
+    setEditedGoal(prev => ({ ...prev, [name]: value } as Goal));
   };
 
 
@@ -39,8 +55,17 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({ goal, onBack }) => {
     setIsEditing(false);
   };
 
-  const handleDelete = () => {
-    setShowDeleteConfirm(false);
+  const handleDelete = async () => {
+    try {
+      await GoalHandler.getInstance().deleteGoal(goal.id);
+      if (onDeleted) await onDeleted();
+      onBack();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    } finally {
+      setShowDeleteConfirm(false);
+    }
   };
 
   const renderTabContent = () => {
