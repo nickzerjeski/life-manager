@@ -31,7 +31,35 @@ export class DocumentHandler {
     try {
       const data = await res.json()
       return data.map(
-        (d: any) => new Document(d.id, d.goalId, d.name, d.type, new Date(d.uploadDate))
+        (d: any) =>
+          new Document(
+            d.id,
+            { goalId: d.goalId, projectId: d.projectId },
+            d.name,
+            d.type,
+            new Date(d.uploadDate)
+          )
+      )
+    } catch {
+      return []
+    }
+  }
+
+  /** Fetch all documents belonging to a specific project. */
+  async getDocumentsForProject(projectId: number): Promise<Document[]> {
+    const res = await fetch(`${this.baseUrl}/documents?projectId=${projectId}`)
+    if (!res.ok) return []
+    try {
+      const data = await res.json()
+      return data.map(
+        (d: any) =>
+          new Document(
+            d.id,
+            { goalId: d.goalId, projectId: d.projectId },
+            d.name,
+            d.type,
+            new Date(d.uploadDate)
+          )
       )
     } catch {
       return []
@@ -49,7 +77,13 @@ export class DocumentHandler {
       throw new Error('Failed to create document')
     }
     const data = await res.json()
-    return new Document(data.id, data.goalId, data.name, data.type, new Date(data.uploadDate))
+    return new Document(
+      data.id,
+      { goalId: data.goalId, projectId: data.projectId },
+      data.name,
+      data.type,
+      new Date(data.uploadDate)
+    )
   }
 
   /** Upload file contents for an existing document. */

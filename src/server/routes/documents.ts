@@ -11,9 +11,12 @@ export async function handleDocumentRequests(
 
   if (method === 'GET' && parsed.pathname === '/documents') {
     const goalId = parsed.searchParams.get('goalId')
+    const projectId = parsed.searchParams.get('projectId')
     const result = goalId
       ? data.documents.filter(d => d.goalId === Number(goalId))
-      : data.documents
+      : projectId
+        ? data.documents.filter(d => d.projectId === Number(projectId))
+        : data.documents
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify(result))
     return true
@@ -37,6 +40,7 @@ export async function handleDocumentRequests(
       JSON.stringify({
         id: doc.id,
         goalId: doc.goalId,
+        projectId: doc.projectId,
         name: doc.name,
         type: doc.type,
         uploadDate: doc.uploadDate,
