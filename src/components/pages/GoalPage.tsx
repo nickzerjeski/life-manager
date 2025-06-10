@@ -18,10 +18,20 @@ export default function GoalPage() {
   }, []);
   const [showAdd, setShowAdd] = useState(false);
 
+  const handleDeleted = async () => {
+    const updated = await GoalHandler.getInstance().getGoals();
+    setGoals(updated);
+    setSelectedGoal(null);
+  };
+
   return (
     <section className="mb-6 p-4 sm:p-6 rounded-lg shadow border bg-white">
       {selectedGoal ? (
-        <GoalDetailView goal={selectedGoal} onBack={() => setSelectedGoal(null)} />
+        <GoalDetailView
+          goal={selectedGoal}
+          onBack={() => setSelectedGoal(null)}
+          onDeleted={handleDeleted}
+        />
       ) : (
         <>
           <div className="flex justify-between items-center mb-4">
