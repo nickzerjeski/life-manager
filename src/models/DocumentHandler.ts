@@ -54,7 +54,13 @@ export class DocumentHandler {
 
   /** Upload file contents for an existing document. */
   async uploadDocument(documentId: number, file: File): Promise<void> {
-    const content = await file.text()
+    let content: string
+    if (file.type.startsWith('text/')) {
+      content = await file.text()
+    } else {
+      const buffer = await file.arrayBuffer()
+      content = this.arrayBufferToBase64(buffer)
+    }
     const res = await fetch(`${this.baseUrl}/documents/${documentId}/upload`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -72,7 +78,15 @@ export class DocumentHandler {
       throw new Error('Failed to fetch document')
     }
     const data = await res.json()
-    return { name: data.name, type: data.type, content: data.content }
+    let { content } = data
+    if (content && data.type === 'txt') {
+      try {
+        content = atob(content)
+      } catch {
+        // not base64 encoded; use as-is
+      }
+    }
+    return { name: data.name, type: data.type, content }
   }
 
   /** Delete a document by id. */
@@ -83,5 +97,15 @@ export class DocumentHandler {
     if (!res.ok) {
       throw new Error('Failed to delete document')
     }
+  }
+
+  /** Convert an ArrayBuffer to a base64 encoded string. */
+  private arrayBufferToBase64(buffer: ArrayBuffer): string {
+    let binary = ''
+    const bytes = new Uint8Array(buffer)
+    for (let i = 0; i < bytes.byteLength; i += 1) {
+      binary += String.fromCharCode(bytes[i])
+    }
+    return btoa(binary)
   }
 }

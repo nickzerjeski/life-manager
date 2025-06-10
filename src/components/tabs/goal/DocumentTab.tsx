@@ -14,8 +14,6 @@ interface DocumentTabProps {
 
 const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
   const [documents, setDocuments] = useState<Document[]>([])
-  const [name, setName] = useState('')
-  const [type, setType] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [showUpload, setShowUpload] = useState(false)
   const [activeDoc, setActiveDoc] = useState<Document | null>(null)
@@ -36,14 +34,15 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!file) return
-    const doc = new Document(0, goal.id, name, type, new Date())
+    const fileName = file.name
+    const fileType = fileName.split('.').pop()?.toLowerCase() || ''
+    const doc = new Document(0, goal.id, fileName, fileType, new Date())
     try {
       const created = await handler.createDocument(doc)
       await handler.uploadDocument(created.id, file)
-      setName('')
-      setType('')
       setFile(null)
       loadDocuments()
+      setShowUpload(false)
     } catch (err) {
       /* eslint-disable no-console */
       console.error(err)
@@ -93,18 +92,6 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
           onSubmit={handleSubmit}
           className="bg-white shadow rounded p-4 text-gray-800 space-y-2"
         >
-          <Input
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Name"
-            className="text-sm"
-          />
-          <Input
-            value={type}
-            onChange={e => setType(e.target.value)}
-            placeholder="Type"
-            className="text-sm"
-          />
           <Input type="file" onChange={e => setFile(e.target.files?.[0] || null)} />
           <Button
             type="submit"
@@ -150,13 +137,15 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
       )}
       {activeDoc && (
         <Modal isOpen={!!activeDoc} onClose={closeModal} title={activeDoc.name}>
-          {activeContent && activeDoc.type === 'pdf' ? (
+          {activeDoc.type === 'pdf' && activeContent ? (
             <iframe
               src={`data:application/pdf;base64,${activeContent}`}
               className="w-full h-[80vh]"
             />
-          ) : (
+          ) : activeDoc.type === 'txt' && activeContent ? (
             <pre className="whitespace-pre-wrap text-sm">{activeContent}</pre>
+          ) : (
+            <p className="text-sm">Preview not available.</p>
           )}
         </Modal>
       )}
