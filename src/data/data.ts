@@ -3,11 +3,13 @@ import path from 'node:path'
 import { Goal } from '../models/Goal'
 import { Project } from '../models/Project'
 import { Document } from '../models/Document'
+import { Task } from '../models/Task'
 import { AOL } from '../types/AOL'
 
 export const data = {
   goals: [] as Goal[],
   projects: [] as Project[],
+  tasks: [] as Task[],
   documents: [] as Document[],
   documentFiles: {} as Record<number, { name: string; content: string }>,
 }
@@ -71,9 +73,19 @@ export function initData(): void {
     ),
   ]
 
+  data.tasks = [
+    new Task(
+      1,
+      'Initial planning',
+      new Date('2025-01-15'),
+      data.projects[0],
+      3600
+    ),
+  ]
+
   data.documents = [
-    new Document(1, data.goals[0].id, 'Course-Info.pdf', 'pdf', new Date('2025-06-05')),
-    new Document(2, data.goals[1].id, 'Specification.docx', 'docx', new Date('2025-06-10')),
+    new Document(1, { goalId: data.goals[0].id }, 'Course-Info.pdf', 'pdf', new Date('2025-06-05')),
+    new Document(2, { goalId: data.goals[1].id }, 'Specification.docx', 'docx', new Date('2025-06-10')),
   ]
   const pdfPath = path.join(__dirname, 'Course-Info.pdf')
   const pdfContent = fs.readFileSync(pdfPath).toString('base64')

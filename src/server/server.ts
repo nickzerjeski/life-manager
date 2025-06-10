@@ -3,6 +3,7 @@ import { initData } from '../data/data'
 import { handleGoalRequests } from './routes/goals'
 import { handleProjectRequests } from './routes/projects'
 import { handleDocumentRequests } from './routes/documents'
+import { handleTaskRequests } from './routes/tasks'
 
 initData()
 
@@ -25,6 +26,7 @@ export function createServer() {
     if (await handleGoalRequests(req, res, parsed)) return
     if (await handleProjectRequests(req, res, parsed)) return
     if (await handleDocumentRequests(req, res, parsed)) return
+    if (await handleTaskRequests(req, res, parsed)) return
 
     res.statusCode = 404
     res.end('Not Found')
