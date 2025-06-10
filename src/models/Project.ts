@@ -1,6 +1,6 @@
 import { Status } from "@/types/Status";
 import { Goal } from "@/models/Goal";
-import { STATUS_CONFIG } from "@/config/statusConfig";
+import { APP_CONFIG } from "@/config/appConfig";
 
 export class Project {
   id: number;
@@ -87,7 +87,7 @@ export class Project {
 
         if (progress > timePct) {
             this.status = Status.ON_TRACK;
-        } else if (progress >= timePct - STATUS_CONFIG.atRiskRangePct) {
+        } else if (progress >= timePct - APP_CONFIG.status.atRiskRangePct) {
             this.status = Status.AT_RISK;
         } else {
             this.status = Status.OFF_TRACK;

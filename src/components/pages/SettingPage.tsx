@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import {
+  APP_CONFIG,
+  loadWorkweekConfig,
+  saveWorkweekConfig,
+} from '@/config/appConfig';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -11,13 +16,11 @@ export default function SettingPage() {
   const [end, setEnd] = useState('17:00');
 
   useEffect(() => {
-    const saved = localStorage.getItem('workweek');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setDays(parsed.days || days);
-      setStart(parsed.start || start);
-      setEnd(parsed.end || end);
-    }
+    loadWorkweekConfig();
+    const cfg = APP_CONFIG.workweek;
+    setDays(cfg.days);
+    setStart(cfg.start);
+    setEnd(cfg.end);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -28,7 +31,7 @@ export default function SettingPage() {
   };
 
   const save = () => {
-    localStorage.setItem('workweek', JSON.stringify({ days, start, end }));
+    saveWorkweekConfig({ days, start, end });
   };
 
   return (
