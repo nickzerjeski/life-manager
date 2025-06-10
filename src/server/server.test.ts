@@ -71,6 +71,7 @@ test('POST /projects creates a project', async () => {
     objective: 1,
     period: [new Date(), new Date()],
     status: 'Not Started',
+    contributionPct: 10,
     goal: {
       id: 1,
       name: 'g',
@@ -98,6 +99,7 @@ test('DELETE /projects removes a project', async () => {
     objective: 1,
     period: [new Date(), new Date()],
     status: 'Not Started',
+    contributionPct: 10,
     goal: {
       id: 1,
       name: 'g',

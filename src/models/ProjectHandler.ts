@@ -86,7 +86,8 @@ export class ProjectHandler {
             p.goal.objective,
             [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
             p.goal.aol
-          )
+          ),
+          p.contributionPct
         )
     )
   }
@@ -114,7 +115,8 @@ export class ProjectHandler {
             p.goal.objective,
             [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
             p.goal.aol
-          )
+          ),
+          p.contributionPct
         )
     )
   }
@@ -148,7 +150,8 @@ export class ProjectHandler {
           p.goal.objective,
           [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
           p.goal.aol
-        )
+        ),
+        p.contributionPct
       )
     return Array.isArray(data) ? data.map(map) : [map(data)]
   }

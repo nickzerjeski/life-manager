@@ -55,7 +55,8 @@ export function initData(): void {
       30,
       100,
       [new Date('2025-01-01'), new Date('2025-12-31')],
-      data.goals[1] || data.goals[0]
+      data.goals[1] || data.goals[0],
+      50
     ),
     new Project(
       2,
@@ -65,7 +66,8 @@ export function initData(): void {
       70,
       100,
       [new Date('2024-06-01'), new Date('2025-06-30')],
-      data.goals[0] || data.goals[1]
+      data.goals[0] || data.goals[1],
+      50
     ),
   ]
 
