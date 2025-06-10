@@ -59,8 +59,7 @@ export class DocumentHandler {
       content = await file.text()
     } else {
       const buffer = await file.arrayBuffer()
-      const binary = String.fromCharCode(...new Uint8Array(buffer))
-      content = btoa(binary)
+      content = this.arrayBufferToBase64(buffer)
     }
     const res = await fetch(`${this.baseUrl}/documents/${documentId}/upload`, {
       method: 'POST',
@@ -90,5 +89,15 @@ export class DocumentHandler {
     if (!res.ok) {
       throw new Error('Failed to delete document')
     }
+  }
+
+  /** Convert an ArrayBuffer to a base64 encoded string. */
+  private arrayBufferToBase64(buffer: ArrayBuffer): string {
+    let binary = ''
+    const bytes = new Uint8Array(buffer)
+    for (let i = 0; i < bytes.byteLength; i += 1) {
+      binary += String.fromCharCode(bytes[i])
+    }
+    return btoa(binary)
   }
 }
