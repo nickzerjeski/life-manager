@@ -13,7 +13,7 @@ This document outlines the high‑level goals and architecture of the **LifeMana
 - Authentication via Google OAuth with JWT‑based sessions.
 
 ## Architecture Overview
-- **Client**: React, Next.js and Tailwind CSS.
+- **Client**: React with Vite and Tailwind CSS.
 - **Server**: Node.js REST API with n8n orchestrating OpenAI workflows.
 - **Storage**: PostgreSQL for metadata and an S3‑compatible bucket for documents.
 - **Calendar**: Google Calendar API for free/busy lookups and event creation.

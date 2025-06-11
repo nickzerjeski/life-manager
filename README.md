@@ -67,7 +67,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - `POST /documents/upload-url` (presign PUT)
 - `POST /calendar/sync`
 ## Tech Stack
-- Client: React, TypeScript, Next.js, Tailwind CSS
+- Client: React, TypeScript, Vite, Tailwind CSS
 - Backend: Language-agnostic REST (reference Node.js), n8n for AI orchestration
 - AI: OpenAI Chat Completions (gpt-4o) and embeddings
 - Storage: PostgreSQL for metadata, S3-compatible bucket for documents
@@ -78,7 +78,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 1. Install dependencies with `npm install`.
 2. Run the backend server using `npm run server` and keep it running.
    Verify it is reachable with `curl http://localhost:3001/goals`.
-3. In another terminal start the dev server with `npm run dev`.
+3. In another terminal start the Vite dev server with `npm run dev`.
 4. Lint with `npm run lint`.
 5. Build production assets with `npm run build`.
 

@@ -4,7 +4,7 @@
 Guides contributors on repository structure and coding style.
 
 ## Directory guide
-- `src/` – React and Next.js application code
+- `src/` – React application code (bundled with Vite)
   - `app/` – page routing and layout files
   - `components/` – reusable UI pieces
   - `models/` – TypeScript domain models
@@ -13,8 +13,8 @@ Guides contributors on repository structure and coding style.
 - `docs/` – project documentation
 
 ## Commands
-- `npm run dev`      – Next.js dev server
-- `npm run build`    – Production PWA build
+- `npm run dev`      – Vite dev server
+- `npm run build`    – Production build with Vite
 - `npm run lint`     – ESLint
 - `npm run electron` – Desktop shell
 
