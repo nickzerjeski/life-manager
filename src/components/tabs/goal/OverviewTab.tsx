@@ -1,6 +1,6 @@
 import React from 'react';
 import { Goal } from '@/models/Goal';
-import { Doughnut, Bar, Line } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -99,12 +99,6 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ goal }) => {
         <Doughnut data={daysData} className="max-w-xs" />
         <p className="mt-2 text-sm font-medium text-gray-700">{daysPassed} / {totalDays} days</p>
       </div>
-      {historyData && (
-        <div className="bg-white shadow rounded p-4">
-          <h3 className="text-sm font-semibold mb-2">Milestones</h3>
-          <Line data={historyData} className="h-40" />
-        </div>
-      )}
     </div>
   );
 };
