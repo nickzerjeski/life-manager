@@ -8,6 +8,19 @@ export async function handleTopicRequests(
 ): Promise<boolean> {
   const { method } = req
 
+  if (method === 'GET' && /\/topics\/\d+\/markdown/.test(parsed.pathname)) {
+    const id = Number(parsed.pathname.split('/')[2])
+    const content = data.topicMarkdown[id]
+    if (content === undefined) {
+      res.statusCode = 404
+      res.end('Not Found')
+    } else {
+      res.setHeader('Content-Type', 'application/json')
+      res.end(JSON.stringify({ content }))
+    }
+    return true
+  }
+
   if (method === 'GET' && parsed.pathname === '/topics') {
     const projectId = parsed.searchParams.get('projectId')
     const result = projectId

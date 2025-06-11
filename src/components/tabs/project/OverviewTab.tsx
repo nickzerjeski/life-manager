@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { Project } from '@/models/Project'
 import { Topic } from '@/models/Topic'
 import { Chat } from '@/models/Chat'
@@ -16,6 +17,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
   const [chats, setChats] = useState<Chat[]>([])
   const [activeChat, setActiveChat] = useState<Chat | null>(null)
   const [chatCounts, setChatCounts] = useState<Record<number, number>>({})
+  const [markdown, setMarkdown] = useState('')
   const topicHandler = React.useMemo(() => TopicHandler.getInstance(), [])
   const chatHandler = React.useMemo(() => ChatHandler.getInstance(), [])
 
@@ -40,8 +42,12 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
 
   const openTopic = async (topic: Topic) => {
     setActiveTopic(topic)
-    const list = await chatHandler.getChatsForTopic(topic.id)
+    const [list, md] = await Promise.all([
+      chatHandler.getChatsForTopic(topic.id),
+      topicHandler.getMarkdownForTopic(topic.id),
+    ])
     setChats(list)
+    setMarkdown(md)
   }
 
   return (
@@ -64,8 +70,17 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
       </div>
 
       {activeTopic && (
-        <Modal isOpen={!!activeTopic} onClose={() => { setActiveTopic(null); setChats([]) }} title={activeTopic.name}>
-          <div className="space-y-2">
+        <Modal
+          isOpen={!!activeTopic}
+          onClose={() => {
+            setActiveTopic(null)
+            setChats([])
+            setMarkdown('')
+          }}
+          title={activeTopic.name}
+        >
+          <div className="space-y-4">
+            <ReactMarkdown className="text-sm text-gray-800">{markdown}</ReactMarkdown>
             {chats.map(chat => (
               <div
                 key={chat.id}

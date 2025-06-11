@@ -16,6 +16,7 @@ export const data = {
   documentFiles: {} as Record<number, { name: string; content: string }>,
   topics: [] as Topic[],
   chats: [] as Chat[],
+  topicMarkdown: {} as Record<number, string>,
 }
 
 export function initData(): void {
@@ -222,4 +223,12 @@ export function initData(): void {
   const pdfPath = path.join(__dirname, 'Course-Info.pdf')
   const pdfContent = fs.readFileSync(pdfPath).toString('base64')
   data.documentFiles = { 1: { name: 'Course-Info.pdf', content: pdfContent } }
+
+  const md1 = fs.readFileSync(path.join(__dirname, 'topics', 'graph-algorithms.md'), 'utf8')
+  const md2 = fs.readFileSync(
+    path.join(__dirname, 'topics', 'approximation-algorithms.md'),
+    'utf8'
+  )
+  const md3 = fs.readFileSync(path.join(__dirname, 'topics', 'randomized-algorithms.md'), 'utf8')
+  data.topicMarkdown = { 1: md1, 2: md2, 3: md3 }
 }

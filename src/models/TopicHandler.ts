@@ -78,4 +78,11 @@ export class TopicHandler {
       )
     )
   }
+
+  async getMarkdownForTopic(topicId: number): Promise<string> {
+    const res = await fetch(`${this.baseUrl}/topics/${topicId}/markdown`)
+    if (!res.ok) return ''
+    const data = (await res.json()) as { content: string }
+    return data.content
+  }
 }
