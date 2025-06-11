@@ -1,7 +1,40 @@
-import { Chat } from './Chat'
+import { Chat, ChatMessage } from './Chat'
 import { Topic } from './Topic'
 import { Project } from './Project'
 import { Goal } from './Goal'
+
+interface TopicDTO {
+  id: number
+  name: string
+  project: {
+    id: number
+    name: string
+    description: string
+    start: number
+    current: number
+    objective: number
+    period: [string, string]
+    goal: {
+      id: number
+      name: string
+      description: string
+      start: number
+      current: number
+      objective: number
+      period: [string, string]
+      aol: string
+    }
+    contributionPct: number
+  }
+}
+
+interface ChatDTO {
+  id: number
+  title: string
+  description: string
+  messages: ChatMessage[]
+  topic: TopicDTO
+}
 
 export class ChatHandler {
   private static instance: ChatHandler | null = null
@@ -25,9 +58,9 @@ export class ChatHandler {
   async getChatsForTopic(topicId: number): Promise<Chat[]> {
     const res = await fetch(`${this.baseUrl}/chats?topicId=${topicId}`)
     if (!res.ok) return []
-    const data = await res.json()
-    return data.map((c: any) =>
-      new Chat(
+    const data = (await res.json()) as ChatDTO[]
+    return data.map(c => {
+      return new Chat(
         c.id,
         c.title,
         c.description,
@@ -57,6 +90,7 @@ export class ChatHandler {
           )
         )
       )
-    )
+    })
   }
 }
+

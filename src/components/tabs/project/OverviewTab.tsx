@@ -15,6 +15,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null)
   const [chats, setChats] = useState<Chat[]>([])
   const [activeChat, setActiveChat] = useState<Chat | null>(null)
+  const [chatCounts, setChatCounts] = useState<Record<number, number>>({})
   const topicHandler = React.useMemo(() => TopicHandler.getInstance(), [])
   const chatHandler = React.useMemo(() => ChatHandler.getInstance(), [])
 
@@ -24,6 +25,18 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
       .then(setTopics)
       .catch(() => setTopics([]))
   }, [project.id, topicHandler])
+
+  useEffect(() => {
+    if (topics.length === 0) return
+    Promise.all(
+      topics.map(async t => {
+        const list = await chatHandler.getChatsForTopic(t.id)
+        return [t.id, list.length] as const
+      })
+    ).then(entries => {
+      setChatCounts(Object.fromEntries(entries))
+    })
+  }, [topics, chatHandler])
 
   const openTopic = async (topic: Topic) => {
     setActiveTopic(topic)
@@ -38,9 +51,14 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
           <div
             key={t.id}
             onClick={() => openTopic(t)}
-            className="bg-white shadow rounded p-4 border cursor-pointer hover:shadow-md"
+            className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow flex flex-col gap-2"
           >
-            <h3 className="text-lg font-semibold">{t.name}</h3>
+            <h3 className="font-medium text-gray-800">{t.name}</h3>
+            <div className="flex space-x-1">
+              {Array.from({ length: chatCounts[t.id] || 0 }).map((_, i) => (
+                <span key={i} className="w-2 h-2 bg-blue-600 rounded-full" />
+              ))}
+            </div>
           </div>
         ))}
       </div>
@@ -52,10 +70,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
               <div
                 key={chat.id}
                 onClick={() => setActiveChat(chat)}
-                className="bg-white shadow rounded p-4 border cursor-pointer hover:shadow-md"
+                className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow"
               >
-                <h4 className="font-medium">{chat.title}</h4>
-                <p className="text-sm text-gray-600">{chat.description}</p>
+                <h4 className="font-medium text-sm text-gray-800">{chat.title}</h4>
+                <p className="text-xs text-gray-600">{chat.description}</p>
               </div>
             ))}
           </div>

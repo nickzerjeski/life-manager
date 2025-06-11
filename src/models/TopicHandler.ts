@@ -2,6 +2,31 @@ import { Topic } from './Topic'
 import { Project } from './Project'
 import { Goal } from './Goal'
 
+interface TopicDTO {
+  id: number
+  name: string
+  project: {
+    id: number
+    name: string
+    description: string
+    start: number
+    current: number
+    objective: number
+    period: [string, string]
+    goal: {
+      id: number
+      name: string
+      description: string
+      start: number
+      current: number
+      objective: number
+      period: [string, string]
+      aol: string
+    }
+    contributionPct: number
+  }
+}
+
 export class TopicHandler {
   private static instance: TopicHandler | null = null
 
@@ -25,8 +50,8 @@ export class TopicHandler {
   async getTopicsForProject(projectId: number): Promise<Topic[]> {
     const res = await fetch(`${this.baseUrl}/topics?projectId=${projectId}`)
     if (!res.ok) return []
-    const data = await res.json()
-    return data.map((t: any) =>
+    const data = (await res.json()) as TopicDTO[]
+    return data.map(t =>
       new Topic(
         t.id,
         t.name,
@@ -46,9 +71,9 @@ export class TopicHandler {
             t.project.goal.current,
             t.project.goal.objective,
             [new Date(t.project.goal.period[0]), new Date(t.project.goal.period[1])],
-            t.project.goal.aol
+            t.project.goal.aol,
           ),
-          t.project.contributionPct
+          t.project.contributionPct,
         )
       )
     )
