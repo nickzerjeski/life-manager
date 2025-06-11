@@ -1,4 +1,3 @@
-'use client';
 import DashboardContent from '@/components/ui/dashboard-content';
 import { GoalHandler } from '@/models/GoalHandler';
 import { ProjectHandler } from '@/models/ProjectHandler';
