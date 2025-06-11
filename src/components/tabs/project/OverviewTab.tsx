@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { Project } from '@/models/Project'
 import { Topic } from '@/models/Topic'
 import { Chat } from '@/models/Chat'
@@ -80,7 +81,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
           title={activeTopic.name}
         >
           <div className="space-y-4">
-            <ReactMarkdown className="text-sm text-gray-800">{markdown}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} className="text-sm text-gray-800">
+              {markdown}
+            </ReactMarkdown>
             {chats.map(chat => (
               <div
                 key={chat.id}
