@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { Project } from '@/models/Project'
 import { Topic } from '@/models/Topic'
 import { Chat } from '@/models/Chat'
@@ -80,7 +81,38 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
           title={activeTopic.name}
         >
           <div className="space-y-4">
-            <ReactMarkdown className="text-sm text-gray-800">{markdown}</ReactMarkdown>
+            <ReactMarkdown
+              className="prose max-w-none text-gray-800"
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ node, ...props }) => (
+                  <h1
+                    className="text-xl font-bold border-b border-gray-200 pb-1 mt-4 first:mt-0"
+                    {...props}
+                  />
+                ),
+                h2: ({ node, ...props }) => (
+                  <h2
+                    className="text-lg font-semibold border-b border-gray-200 pb-1 mt-3 first:mt-0"
+                    {...props}
+                  />
+                ),
+                table: ({ node, ...props }) => (
+                  <table
+                    className="min-w-full border border-gray-300 text-sm"
+                    {...props}
+                  />
+                ),
+                th: ({ node, ...props }) => (
+                  <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
+                ),
+                td: ({ node, ...props }) => (
+                  <td className="border px-2 py-1" {...props} />
+                ),
+              }}
+            >
+              {markdown}
+            </ReactMarkdown>
             {chats.map(chat => (
               <div
                 key={chat.id}
