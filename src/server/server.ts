@@ -4,6 +4,8 @@ import { handleGoalRequests } from './routes/goals'
 import { handleProjectRequests } from './routes/projects'
 import { handleDocumentRequests } from './routes/documents'
 import { handleTaskRequests } from './routes/tasks'
+import { handleTopicRequests } from './routes/topics'
+import { handleChatRequests } from './routes/chats'
 
 initData()
 
@@ -27,6 +29,8 @@ export function createServer() {
     if (await handleProjectRequests(req, res, parsed)) return
     if (await handleDocumentRequests(req, res, parsed)) return
     if (await handleTaskRequests(req, res, parsed)) return
+    if (await handleTopicRequests(req, res, parsed)) return
+    if (await handleChatRequests(req, res, parsed)) return
 
     res.statusCode = 404
     res.end('Not Found')
