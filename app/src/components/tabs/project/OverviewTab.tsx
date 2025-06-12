@@ -52,6 +52,12 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
     setMarkdown(md)
   }
 
+  useEffect(() => {
+    if (markdown && (window as any).MathJax?.typeset) {
+      (window as any).MathJax.typeset()
+    }
+  }, [markdown])
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
