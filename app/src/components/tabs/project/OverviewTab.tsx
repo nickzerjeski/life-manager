@@ -7,6 +7,7 @@ import { Chat } from '@shared/models/Chat'
 import { TopicHandler } from '@shared/models/TopicHandler'
 import { ChatHandler } from '@shared/models/ChatHandler'
 import Modal from '@/components/ui/modal'
+import ChatBubble from '@/components/ui/chat-bubble'
 
 interface OverviewTabProps {
   project: Project
@@ -133,7 +134,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
             {activeChat.messages.map((m, idx) => (
               <p key={idx}>
                 <span className="font-semibold mr-2">{m.sender}:</span>
-                {m.text}
+                <ChatBubble>{m.text}</ChatBubble>
               </p>
             ))}
           </div>
