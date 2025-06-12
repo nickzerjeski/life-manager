@@ -7,7 +7,7 @@ import { Chat } from '@shared/models/Chat'
 import { TopicHandler } from '@shared/models/TopicHandler'
 import { ChatHandler } from '@shared/models/ChatHandler'
 import Modal from '@/components/ui/modal'
-import ChatBubble from '@/components/ui/chat-bubble'
+import ChatView from '@/components/views/ChatView'
 
 interface OverviewTabProps {
   project: Project
@@ -136,14 +136,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
 
       {activeChat && (
         <Modal isOpen={!!activeChat} onClose={() => setActiveChat(null)} title={activeChat.title}>
-          <div className="space-y-2 text-sm">
-            {activeChat.messages.map((m, idx) => (
-              <p key={idx}>
-                <span className="font-semibold mr-2">{m.sender}:</span>
-                <ChatBubble>{m.text}</ChatBubble>
-              </p>
-            ))}
-          </div>
+          <ChatView chat={activeChat} />
         </Modal>
       )}
     </div>
