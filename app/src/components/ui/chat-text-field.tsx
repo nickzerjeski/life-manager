@@ -15,27 +15,20 @@ const ChatTextField: React.FC<ChatTextFieldProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-      <div className="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+    <div className="w-full mb-2 border border-gray-200 rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+      <div className="px-4 py-0 bg-white rounded-t-xl dark:bg-gray-800">
         <label htmlFor="comment" className="sr-only">Your comment</label>
         <textarea
           id="comment"
-          rows={4}
-          className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
+          rows={3}
+          className="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 resize-none"
           placeholder="Ask anything"
           required
           value={text}
           onChange={e => setText(e.target.value)}
         />
       </div>
-      <div className="flex items-center justify-between px-3 py-2 border-t border-gray-200 dark:border-gray-600">
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
-        >
-          <SendHorizontal />
-        </button>
+      <div className="flex items-center justify-between px-3 py-1 bg-white rounded-b-xl dark:bg-gray-800">
         <div className="flex space-x-1 rtl:space-x-reverse">
           <button type="button" className="p-2 text-gray-500 rounded-sm hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
             <svg className="w-4 h-4" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,19 +36,14 @@ const ChatTextField: React.FC<ChatTextFieldProps> = ({ onSubmit }) => {
             </svg>
             <span className="sr-only">Attach file</span>
           </button>
-          <button type="button" className="p-2 text-gray-500 rounded-sm hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-            <svg className="w-4 h-4" viewBox="0 0 16 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z" />
-            </svg>
-            <span className="sr-only">Set location</span>
-          </button>
-          <button type="button" className="p-2 text-gray-500 rounded-sm hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-            <svg className="w-4 h-4" viewBox="0 0 20 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-            </svg>
-            <span className="sr-only">Upload image</span>
-          </button>
         </div>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="p-2 text-white bg-blue-600 rounded-full hover:bg-blue-700 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900"
+        >
+          <SendHorizontal className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
