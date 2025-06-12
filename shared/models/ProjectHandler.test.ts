@@ -5,7 +5,9 @@ import { GoalHandler } from './GoalHandler'
 import { Goal } from './Goal'
 import { Project } from './Project'
 import { AOL } from '../types/AOL'
-import { createServer } from '../server/server'
+// Use the same HTTP server as the application for test isolation. The server
+// resides two directories up from this test file.
+import { createServer } from '../../server/src/server'
 
 function createGoal(id: number): Goal {
   return new Goal(id, `g${id}`, '', 0, 0, 1, [new Date(), new Date()], AOL.GROWTH)

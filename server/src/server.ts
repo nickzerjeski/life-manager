@@ -1,4 +1,10 @@
 import http from 'node:http'
+
+/**
+ * Entry point for the HTTP API server. This file wires together all route
+ * handlers and exposes a `createServer` helper used both in production and in
+ * tests.
+ */
 import { initData } from './data/data'
 import { handleGoalRequests } from './routes/goals'
 import { handleProjectRequests } from './routes/projects'
@@ -9,6 +15,11 @@ import { handleChatRequests } from './routes/chats'
 
 initData()
 
+/**
+ * Creates and returns an HTTP server instance with all API routes attached.
+ * The server is CORS enabled and designed to be used both during development
+ * and inside the automated test suite.
+ */
 export function createServer() {
   return http.createServer(async (req, res) => {
     const { method, url } = req

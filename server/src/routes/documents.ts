@@ -2,6 +2,9 @@ import http from 'node:http'
 import { parseBody } from '../utils'
 import { data } from '../data/data'
 
+/**
+ * Handles document CRUD operations and file uploads.
+ */
 export async function handleDocumentRequests(
   req: http.IncomingMessage,
   res: http.ServerResponse,

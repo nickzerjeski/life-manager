@@ -1,5 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
+
+/**
+ * Simple in-memory data store used by the development server. All data is
+ * loaded from static files on startup and never persisted to disk. This keeps
+ * the server stateless and easy to reset between tests.
+ */
 import { Goal } from '../../../shared/models/Goal'
 import { Project } from '../../../shared/models/Project'
 import { Document } from '../../../shared/models/Document'
@@ -8,6 +14,9 @@ import { Topic } from '../../../shared/models/Topic'
 import { Chat } from '../../../shared/models/Chat'
 import { AOL } from '../../../shared/types/AOL'
 
+/**
+ * Central object holding all mocked domain entities during runtime.
+ */
 export const data = {
   goals: [] as Goal[],
   projects: [] as Project[],
@@ -19,6 +28,11 @@ export const data = {
   topicMarkdown: {} as Record<number, string>,
 }
 
+/**
+ * Populate the in-memory store with a deterministic set of demo data.
+ * This makes it easier to run the application without a real database and
+ * provides consistent fixtures for the test suite.
+ */
 export function initData(): void {
   data.goals = [
     new Goal(

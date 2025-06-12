@@ -2,6 +2,11 @@ import http from 'node:http'
 import { parseBody } from '../utils'
 import { data } from '../data/data'
 
+/**
+ * Processes requests to the `/goals` endpoint. Each conditional branch
+ * handles a specific HTTP verb and path combination. Returning `true`
+ * indicates that a response has already been sent.
+ */
 export async function handleGoalRequests(
   req: http.IncomingMessage,
   res: http.ServerResponse,

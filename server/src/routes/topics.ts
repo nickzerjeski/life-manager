@@ -1,6 +1,9 @@
 import http from 'node:http'
 import { data } from '../data/data'
 
+/**
+ * Handles `/topics` related API calls.
+ */
 export async function handleTopicRequests(
   req: http.IncomingMessage,
   res: http.ServerResponse,

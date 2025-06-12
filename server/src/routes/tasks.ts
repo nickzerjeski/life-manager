@@ -3,6 +3,9 @@ import { parseBody } from '../utils'
 import { data } from '../data/data'
 import { Task } from '../../../shared/models/Task'
 
+/**
+ * Handles `/tasks` routes. Returns `true` if a request is processed.
+ */
 export async function handleTaskRequests(
   req: http.IncomingMessage,
   res: http.ServerResponse,
