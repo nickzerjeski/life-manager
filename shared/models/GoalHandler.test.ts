@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { Goal } from './Goal'
 import { GoalHandler } from './GoalHandler'
 import { createServer } from '../server/server'
-import { AOL } from '@/types/AOL'
+import { AOL } from '../types/AOL'
 
 function createSampleGoal(id: number): Goal {
   return new Goal(

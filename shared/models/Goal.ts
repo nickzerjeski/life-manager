@@ -1,6 +1,6 @@
-import { AOL } from "@/types/AOL";
-import { Status } from "@/types/Status";
-import { APP_CONFIG } from "@/config/appConfig";
+import { AOL } from "../types/AOL";
+import { Status } from "../types/Status";
+import { APP_CONFIG } from "../utils/appConfig";
 
 export class Goal {
   id: number;

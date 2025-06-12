@@ -1,6 +1,6 @@
 import { Goal } from '@shared/models/Goal';
 import { useEffect, useState } from 'react';
-import GoalDetailView from '../views/GoalDetailView';
+import GoalDetailView from '../components/views/GoalDetailView';
 import { GoalHandler } from '@shared/models/GoalHandler';
 import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
 import { Plus } from 'lucide-react';

@@ -6,7 +6,7 @@ import {
   APP_CONFIG,
   loadWorkweekConfig,
   saveWorkweekConfig,
-} from '@/config/appConfig';
+} from '@shared/utils/appConfig';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 

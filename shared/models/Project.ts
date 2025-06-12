@@ -1,6 +1,6 @@
-import { Status } from "@/types/Status";
-import { Goal } from "@/models/Goal";
-import { APP_CONFIG } from "@/config/appConfig";
+import { Status } from "../types/Status";
+import { Goal } from "./Goal";
+import { APP_CONFIG } from "../utils/appConfig";
 
 export class Project {
   id: number;

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"tsx server/src/server.ts\" \"vite --config app/vite.config.mts\"",
+    "dev": "concurrently \"tsx --tsconfig server/tsconfig.json server/src/server.ts\" \"vite --config app/vite.config.mts\"",
     "genkit:dev": "genkit start -- tsx server/src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch server/src/ai/dev.ts",
     "build": "vite build --config app/vite.config.mts",
@@ -11,7 +11,7 @@
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit -p app/tsconfig.json && tsc --noEmit -p server/tsconfig.json",
     "test": "tsx --test",
-    "server": "tsx server/src/server.ts"
+    "server": "tsx --tsconfig server/tsconfig.json server/src/server.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.0.4",

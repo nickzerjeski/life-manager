@@ -4,8 +4,8 @@ import path from 'node:path'
 import axios from 'axios'
 import { data } from '../data/data'
 import { parseBody, sendRequest } from '../utils'
-import { Project } from '@shared/models/Project'
-import { extractPdfContent } from '@shared/utils/fileConversion'
+import { Project } from '../../../shared/models/Project'
+import { extractPdfContent } from '../../../shared/utils/fileConversion'
 
 export async function handleProjectRequests(
   req: http.IncomingMessage,

@@ -4,7 +4,7 @@ import { ProjectHandler } from "@shared/models/ProjectHandler";
 import { containerStyle, statusLabelStyle } from "@/styles/statusStyles";
 import AddProjectModal from "@/modals/AddProjectModal";
 import { Project } from "@shared/models/Project";
-import ProjectDetailView from "../views/ProjectDetailView";
+import ProjectDetailView from "../components/views/ProjectDetailView";
 
 
 /* ---------- main component ---------- */

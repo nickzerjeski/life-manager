@@ -4,7 +4,7 @@ import { ProjectHandler } from './ProjectHandler'
 import { GoalHandler } from './GoalHandler'
 import { Goal } from './Goal'
 import { Project } from './Project'
-import { AOL } from '@/types/AOL'
+import { AOL } from '../types/AOL'
 import { createServer } from '../server/server'
 
 function createGoal(id: number): Goal {

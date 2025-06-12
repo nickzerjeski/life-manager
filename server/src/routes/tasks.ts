@@ -1,7 +1,7 @@
 import http from 'node:http'
 import { parseBody } from '../utils'
 import { data } from '../data/data'
-import { Task } from '@shared/models/Task'
+import { Task } from '../../../shared/models/Task'
 
 export async function handleTaskRequests(
   req: http.IncomingMessage,

@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { Goal } from '@shared/models/Goal'
-import { Project } from '@shared/models/Project'
-import { Document } from '@shared/models/Document'
-import { Task } from '@shared/models/Task'
-import { Topic } from '@shared/models/Topic'
-import { Chat } from '@shared/models/Chat'
-import { AOL } from '@shared/types/AOL'
+import { Goal } from '../../../shared/models/Goal'
+import { Project } from '../../../shared/models/Project'
+import { Document } from '../../../shared/models/Document'
+import { Task } from '../../../shared/models/Task'
+import { Topic } from '../../../shared/models/Topic'
+import { Chat } from '../../../shared/models/Chat'
+import { AOL } from '../../../shared/types/AOL'
 
 export const data = {
   goals: [] as Goal[],

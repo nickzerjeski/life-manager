@@ -1,5 +1,5 @@
 import http from 'node:http'
-import { initData } from '../data/data'
+import { initData } from './data/data'
 import { handleGoalRequests } from './routes/goals'
 import { handleProjectRequests } from './routes/projects'
 import { handleDocumentRequests } from './routes/documents'

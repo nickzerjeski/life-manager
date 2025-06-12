@@ -36,7 +36,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
     if (!file) return
     const fileName = file.name
     const fileType = fileName.split('.').pop()?.toLowerCase() || ''
-    const doc = new Document(0, goal.id, fileName, fileType, new Date())
+    const doc = new Document(0, { goalId: goal.id }, fileName, fileType, new Date())
     try {
       const created = await handler.createDocument(doc)
       await handler.uploadDocument(created.id, file)

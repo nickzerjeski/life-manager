@@ -1,4 +1,4 @@
-import { Goal } from "@/models/Goal"
+import { Goal } from "./Goal"
 
 /**
  * GoalHandler manages goals persisted on the backend server.
