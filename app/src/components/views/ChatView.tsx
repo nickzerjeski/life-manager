@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Chat, ChatMessage } from '@shared/models/Chat'
 import ChatBubble from '@/components/ui/chat-bubble'
 import CleanChatBubble from '@/components/ui/clean-chat-bubble'
@@ -10,6 +10,7 @@ interface ChatViewProps {
 
 const ChatView: React.FC<ChatViewProps> = ({ chat }) => {
   const [messages, setMessages] = useState<ChatMessage[]>(chat.messages)
+  const bottomRef = useRef<HTMLDivElement>(null)
 
   const handleSubmit = (text: string) => {
     if (!text.trim()) return
@@ -20,21 +21,30 @@ const ChatView: React.FC<ChatViewProps> = ({ chat }) => {
     ])
   }
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
   return (
-    <div className="space-y-2 text-sm">
-      {messages.map((m, idx) => (
-        <div
-          key={idx}
-          className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-        >
-          {m.sender === 'user' ? (
-            <ChatBubble>{m.text}</ChatBubble>
-          ) : (
-            <CleanChatBubble>{m.text}</CleanChatBubble>
-          )}
-        </div>
-      ))}
-      <ChatTextField onSubmit={handleSubmit} />
+    <div className="flex flex-col h-[60vh]">
+      <div className="flex flex-col flex-grow space-y-2 text-sm overflow-y-auto mb-2">
+        {messages.map((m, idx) => (
+          <div
+            key={idx}
+            className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+          >
+            {m.sender === 'user' ? (
+              <ChatBubble>{m.text}</ChatBubble>
+            ) : (
+              <CleanChatBubble>{m.text}</CleanChatBubble>
+            )}
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+      <div className="sticky bottom-0 bg-white pt-2">
+        <ChatTextField onSubmit={handleSubmit} />
+      </div>
     </div>
   )
 }
