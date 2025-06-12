@@ -1,3 +1,6 @@
+/**
+ * Minimal Genkit AI instance used for local development.
+ */
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 

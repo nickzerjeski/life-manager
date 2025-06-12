@@ -6,6 +6,10 @@ import { data } from '../data/data'
 import { parseBody, sendRequest } from '../utils'
 import { Project } from '../../../shared/models/Project'
 import { extractPdfContent } from '../../../shared/utils/fileConversion'
+/**
+ * Handles `/projects` requests. Returns `true` if a matching route was
+ * processed so the main server can exit early.
+ */
 
 export async function handleProjectRequests(
   req: http.IncomingMessage,

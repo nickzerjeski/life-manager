@@ -1,6 +1,9 @@
 import http from 'node:http'
 import { data } from '../data/data'
 
+/**
+ * Handle chat query endpoints.
+ */
 export async function handleChatRequests(
   req: http.IncomingMessage,
   res: http.ServerResponse,

@@ -1,3 +1,6 @@
+/**
+ * Integration tests for the HTTP server using Node test runner.
+ */
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import http from 'node:http'
