@@ -15,8 +15,8 @@ const ChatTextField: React.FC<ChatTextFieldProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-      <div className="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+    <div className="w-full mb-4 border border-gray-200 rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+      <div className="px-4 py-2 bg-white rounded-t-xl dark:bg-gray-800">
         <label htmlFor="comment" className="sr-only">Your comment</label>
         <textarea
           id="comment"
@@ -28,14 +28,7 @@ const ChatTextField: React.FC<ChatTextFieldProps> = ({ onSubmit }) => {
           onChange={e => setText(e.target.value)}
         />
       </div>
-      <div className="flex items-center justify-between px-3 py-2 border-t border-gray-200 dark:border-gray-600">
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
-        >
-          <SendHorizontal />
-        </button>
+      <div className="flex items-center justify-between px-3 py-2">
         <div className="flex space-x-1 rtl:space-x-reverse">
           <button type="button" className="p-2 text-gray-500 rounded-sm hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
             <svg className="w-4 h-4" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -56,6 +49,13 @@ const ChatTextField: React.FC<ChatTextFieldProps> = ({ onSubmit }) => {
             <span className="sr-only">Upload image</span>
           </button>
         </div>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
+        >
+          <SendHorizontal />
+        </button>
       </div>
     </div>
   );
