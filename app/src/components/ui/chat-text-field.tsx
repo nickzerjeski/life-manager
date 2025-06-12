@@ -28,7 +28,7 @@ const ChatTextField: React.FC<ChatTextFieldProps> = ({ onSubmit }) => {
           onChange={e => setText(e.target.value)}
         />
       </div>
-      <div className="flex items-center justify-between px-3 py-2">
+      <div className="flex items-center justify-between px-3 py-2 bg-white rounded-b-xl dark:bg-gray-800">
         <div className="flex space-x-1 rtl:space-x-reverse">
           <button type="button" className="p-2 text-gray-500 rounded-sm hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
             <svg className="w-4 h-4" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,9 +52,9 @@ const ChatTextField: React.FC<ChatTextFieldProps> = ({ onSubmit }) => {
         <button
           type="button"
           onClick={handleSubmit}
-          className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900"
+          className="p-2 text-white bg-blue-600 rounded-full hover:bg-blue-700 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900"
         >
-          <SendHorizontal />
+          <SendHorizontal className="w-4 h-4" />
         </button>
       </div>
     </div>
