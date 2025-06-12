@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"tsx src/server/server.ts\" \"vite\"",
-    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
-    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
-    "build": "vite build",
-    "start": "vite preview",
+    "dev": "concurrently \"tsx server/src/server.ts\" \"vite --config app/vite.config.mts\"",
+    "genkit:dev": "genkit start -- tsx server/src/ai/dev.ts",
+    "genkit:watch": "genkit start -- tsx --watch server/src/ai/dev.ts",
+    "build": "vite build --config app/vite.config.mts",
+    "start": "vite preview --config app/vite.config.mts",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit -p app/tsconfig.json && tsc --noEmit -p server/tsconfig.json",
     "test": "tsx --test",
-    "server": "tsx src/server/server.ts"
+    "server": "tsx server/src/server.ts"
   },
   "dependencies": {
     "@genkit-ai/googleai": "^1.0.4",
