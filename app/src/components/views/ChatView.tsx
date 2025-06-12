@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { Chat, ChatMessage } from '@shared/models/Chat'
 import ChatBubble from '@/components/ui/chat-bubble'
 import CleanChatBubble from '@/components/ui/clean-chat-bubble'
@@ -14,15 +16,22 @@ const ChatView: React.FC<ChatViewProps> = ({ chat }) => {
 
   const handleSubmit = (text: string) => {
     if (!text.trim()) return
-    setMessages((prev) => [
+    setMessages(prev => [
       ...prev,
       { sender: 'user', text },
-      { sender: 'assistant', text: 'Lorem ipsum dolor sit amet.' },
+      {
+        sender: 'assistant',
+        text:
+          'This is $a^2+b^2=c^2$ a inline equation $$ \\int_a^b f(x)\\,dx = F(b) - F(a) $$\n\n| Name     | Age | Occupation   |\n|----------|-----|--------------|\n| Alice    | 30  | Engineer     |\n| Bob      | 25  | Designer     |\n| Charlie  | 35  | Manager      |',
+      },
     ])
   }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if ((window as any).MathJax?.typeset) {
+      ;(window as any).MathJax.typeset()
+    }
   }, [messages])
 
   return (
@@ -34,9 +43,37 @@ const ChatView: React.FC<ChatViewProps> = ({ chat }) => {
             className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             {m.sender === 'user' ? (
-              <ChatBubble>{m.text}</ChatBubble>
+              <ChatBubble>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+                  table: ({ node, ...props }) => (
+                    <table className="min-w-full border border-gray-300 text-sm" {...props} />
+                  ),
+                  th: ({ node, ...props }) => (
+                    <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
+                  ),
+                  td: ({ node, ...props }) => (
+                    <td className="border px-2 py-1" {...props} />
+                  ),
+                }}>
+                  {m.text}
+                </ReactMarkdown>
+              </ChatBubble>
             ) : (
-              <CleanChatBubble>{m.text}</CleanChatBubble>
+              <CleanChatBubble>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+                  table: ({ node, ...props }) => (
+                    <table className="min-w-full border border-gray-300 text-sm" {...props} />
+                  ),
+                  th: ({ node, ...props }) => (
+                    <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
+                  ),
+                  td: ({ node, ...props }) => (
+                    <td className="border px-2 py-1" {...props} />
+                  ),
+                }}>
+                  {m.text}
+                </ReactMarkdown>
+              </CleanChatBubble>
             )}
           </div>
         ))}
