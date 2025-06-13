@@ -84,4 +84,9 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  /* Remove backticks around inline code produced by the typography plugin */
+  .prose code::before,
+  .prose code::after {
+    content: '';
+  }
 }
