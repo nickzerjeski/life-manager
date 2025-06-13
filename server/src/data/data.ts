@@ -181,6 +181,36 @@ export function initData(): void {
       data.projects[2],
       7200,
       'not_started'
+    ),
+    new ManualTask(
+      8,
+      'Select paper topics',
+      'Choose seminar paper topics',
+      new Date('2024-09-05'),
+      data.projects[2],
+      1800,
+      [],
+      new Date('2024-09-05')
+    ),
+    new ManualTask(
+      9,
+      'Submit paper summary',
+      'Write summary for selected paper',
+      new Date('2024-09-15'),
+      data.projects[2],
+      3600,
+      [],
+      new Date('2024-09-16')
+    ),
+    new ManualTask(
+      10,
+      'Complete exercises',
+      'Solve algorithm practice problems',
+      new Date('2024-09-20'),
+      data.projects[2],
+      5400,
+      [],
+      new Date('2024-09-21')
     )
   ]
 

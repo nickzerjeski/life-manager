@@ -59,7 +59,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
                 task instanceof AutomatedTask
                   ? automationStyle[task.status]
                   : manualStyle
-              } p-3 rounded-md flex justify-between items-start sm:items-center gap-2`}
+              } p-3 rounded-md flex justify-between items-center gap-2`}
             >
               <div className="flex-1">
                 <p className="font-medium text-sm text-gray-800">{task.name}</p>
