@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Project } from '@shared/models/Project'
 import { Task, ManualTask, AutomatedTask, AutomationState } from '@shared/models/Task'
 import { TaskHandler } from '@shared/models/TaskHandler'
-import { Check, Sparkles } from 'lucide-react'
+import { Check, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
 import { Timeline } from '@/components/ui/timeline'
 import { StatusIndicator } from '@/components/ui/status-indicator'
 import Modal from '@/components/ui/modal'
@@ -25,6 +25,7 @@ interface TaskTabProps {
 const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [activeChat, setActiveChat] = useState<Chat | null>(null)
+  const [showTimeline, setShowTimeline] = useState(true)
   const handler = React.useMemo(() => TaskHandler.getInstance(), [])
 
   const sortTasks = (list: Task[]) =>
@@ -126,19 +127,28 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
 
       {tasks.some(t => t.completedAt) && (
         <div>
-          <h5 className="text-md font-semibold text-gray-700 mt-4">Timeline</h5>
-          <Timeline
-            entries={tasks
-              .filter(t => t.completedAt)
-              .sort((a, b) =>
-                b.completedAt!.getTime() - a.completedAt!.getTime()
-              )
-              .map(t => ({
-                title: t.name,
-                description: t.description,
-                date: t.completedAt!.toLocaleDateString(),
-              }))}
-          />
+          <button
+            type="button"
+            onClick={() => setShowTimeline(v => !v)}
+            className="flex items-center justify-between w-full mt-4"
+          >
+            <h5 className="text-md font-semibold text-gray-700">Timeline</h5>
+            {showTimeline ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          {showTimeline && (
+            <Timeline
+              entries={tasks
+                .filter(t => t.completedAt)
+                .sort((a, b) =>
+                  b.completedAt!.getTime() - a.completedAt!.getTime()
+                )
+                .map(t => ({
+                  title: t.name,
+                  description: t.description,
+                  date: t.completedAt!.toLocaleDateString(),
+                }))}
+            />
+          )}
         </div>
       )}
 
