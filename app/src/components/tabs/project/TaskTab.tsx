@@ -5,6 +5,10 @@ import { TaskHandler } from '@shared/models/TaskHandler'
 import { Check, Sparkles } from 'lucide-react'
 import { Timeline } from '@/components/ui/timeline'
 import { StatusIndicator } from '@/components/ui/status-indicator'
+import Modal from '@/components/ui/modal'
+import ChatView from '@/components/views/ChatView'
+import { Chat } from '@shared/models/Chat'
+import { Topic } from '@shared/models/Topic'
 
 const manualStyle = 'bg-blue-50 border border-blue-200'
 const automationStyle: Record<AutomationState, string> = {
@@ -20,23 +24,45 @@ interface TaskTabProps {
 
 const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
   const [tasks, setTasks] = useState<Task[]>([])
+  const [activeChat, setActiveChat] = useState<Chat | null>(null)
   const handler = React.useMemo(() => TaskHandler.getInstance(), [])
+
+  const sortTasks = (list: Task[]) =>
+    [...list].sort((a, b) => {
+      const aDate = a.completedAt ?? a.deadline
+      const bDate = b.completedAt ?? b.deadline
+      return bDate.getTime() - aDate.getTime()
+    })
 
   useEffect(() => {
     handler
       .getTasksForProject(project.id)
-      .then(setTasks)
+      .then(list => setTasks(sortTasks(list)))
       .catch(() => setTasks([]))
   }, [project.id, handler])
 
   const generate = async () => {
     try {
       const generated = await handler.generateTasks(project.id)
-      setTasks(prev => [...prev, ...generated])
+      setTasks(prev => sortTasks([...prev, ...generated]))
     } catch (err) {
       /* eslint-disable no-console */
       console.error(err)
     }
+  }
+
+  const completeTask = (task: Task) => {
+    if (task.completedAt) return
+    const updated = tasks.map(t =>
+      t.id === task.id ? { ...t, completedAt: new Date() } : t
+    )
+    setTasks(sortTasks(updated))
+  }
+
+  const openTask = (task: Task) => {
+    const dummyTopic = new Topic(0, 'Task Chat', '', project)
+    const chat = new Chat(task.id, task.name, task.description, [], dummyTopic)
+    setActiveChat(chat)
   }
 
   return (
@@ -55,11 +81,12 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           {tasks.map(task => (
             <li
               key={task.id}
+              onClick={() => openTask(task)}
               className={`${
                 task instanceof AutomatedTask
                   ? automationStyle[task.status]
                   : manualStyle
-              } p-3 rounded-md flex justify-between items-center gap-2`}
+              } p-3 rounded-md flex justify-between items-center gap-2 cursor-pointer`}
             >
               <div className="flex-1">
                 <p className="font-medium text-sm text-gray-800">{task.name}</p>
@@ -69,13 +96,20 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
                 <p className="text-xs text-gray-500">Duration {(task.duration / 3600).toFixed(1)}h</p>
               </div>
               <div className="flex gap-2 items-center">
-                {task instanceof ManualTask && (
+                {task instanceof ManualTask && !task.completedAt && (
                   <button
                     type="button"
+                    onClick={e => {
+                      e.stopPropagation()
+                      completeTask(task)
+                    }}
                     className="p-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
                   >
                     <Check size={16} />
                   </button>
+                )}
+                {task instanceof ManualTask && task.completedAt && (
+                  <Check size={16} className="text-green-600" />
                 )}
                 {task instanceof AutomatedTask && (
                   <StatusIndicator status={task.status} />
@@ -94,6 +128,9 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           <Timeline
             entries={tasks
               .filter(t => t.completedAt)
+              .sort((a, b) =>
+                b.completedAt!.getTime() - a.completedAt!.getTime()
+              )
               .map(t => ({
                 title: t.name,
                 description: t.description,
@@ -101,6 +138,12 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
               }))}
           />
         </div>
+      )}
+
+      {activeChat && (
+        <Modal isOpen={!!activeChat} onClose={() => setActiveChat(null)} title={activeChat.title}>
+          <ChatView chat={activeChat} />
+        </Modal>
       )}
     </div>
   )
