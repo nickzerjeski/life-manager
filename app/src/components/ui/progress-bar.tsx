@@ -4,16 +4,18 @@ type ProgbarProps = {
 };
 
 export const Progbar = ({ name, progress }: ProgbarProps) => {
+    const clamped = Math.min(100, progress);
+
     return (
         <>
             <div className="flex justify-between mb-1">
                 <span className="text-base font-medium text-blue-700 dark:text-white">{name}</span>
-                <span className="text-sm font-medium text-blue-700 dark:text-white">{progress}%</span>
+                <span className="text-sm font-medium text-blue-700 dark:text-white">{clamped}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                 <div
                     className="bg-blue-600 h-2.5 rounded-full"
-                    style={{ width: `${progress}%` }}
+                    style={{ width: `${clamped}%` }}
                 ></div>
             </div>
         </>
