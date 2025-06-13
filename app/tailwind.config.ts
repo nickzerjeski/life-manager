@@ -9,9 +9,17 @@ export default {
     "./src/styles/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
-  		colors: {
-  			background: 'hsl(var(--background))',
+        extend: {
+                typography: {
+                        DEFAULT: {
+                                css: {
+                                        'code::before': { content: 'none' },
+                                        'code::after': { content: 'none' },
+                                },
+                        },
+                },
+                colors: {
+                        background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
