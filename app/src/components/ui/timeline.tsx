@@ -15,7 +15,7 @@ interface TimelineProps {
 
 export const Timeline: React.FC<TimelineProps> = ({ entries }) => {
   return (
-    <div>
+    <div className="p-2">
       <ol className="relative border-s border-gray-200 dark:border-gray-700">
         {entries.map((entry, idx) => (
           <li key={idx} className="mb-10 ms-6">
