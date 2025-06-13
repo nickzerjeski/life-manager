@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react'
 import { Topic } from '@shared/models/Topic'
 import { Chat } from '@shared/models/Chat'
 
@@ -20,6 +20,7 @@ const TopicDetailView: React.FC<TopicDetailViewProps> = ({
   onBack,
   onOpenChat,
 }) => {
+  const [showChats, setShowChats] = useState(false)
   useEffect(() => {
     if ((window as any).MathJax?.typeset) {
       ;(window as any).MathJax.typeset()
@@ -51,18 +52,32 @@ const TopicDetailView: React.FC<TopicDetailViewProps> = ({
       >
         {markdown}
       </ReactMarkdown>
-      <div className="space-y-2">
-        {chats.map(chat => (
-          <div
-            key={chat.id}
-            onClick={() => onOpenChat(chat)}
-            className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow"
+      {chats.length > 0 && (
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowChats(v => !v)}
+            className="flex items-center justify-between mt-4 w-full"
           >
-            <h4 className="font-medium text-sm text-gray-800">{chat.title}</h4>
-            <p className="text-xs text-gray-600">{chat.description}</p>
-          </div>
-        ))}
-      </div>
+            <h4 className="text-md font-semibold text-gray-700 m-0">Chats</h4>
+            {showChats ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </button>
+          {showChats && (
+            <div className="space-y-2 mt-2">
+              {chats.map(chat => (
+                <div
+                  key={chat.id}
+                  onClick={() => onOpenChat(chat)}
+                  className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow"
+                >
+                  <h4 className="font-medium text-sm text-gray-800">{chat.title}</h4>
+                  <p className="text-xs text-gray-600">{chat.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

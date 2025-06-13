@@ -25,7 +25,7 @@ interface TaskTabProps {
 const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [activeChat, setActiveChat] = useState<Chat | null>(null)
-  const [showTimeline, setShowTimeline] = useState(true)
+  const [showTimeline, setShowTimeline] = useState(false)
   const handler = React.useMemo(() => TaskHandler.getInstance(), [])
 
   const sortTasks = (list: Task[]) =>
@@ -130,9 +130,9 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           <button
             type="button"
             onClick={() => setShowTimeline(v => !v)}
-            className="flex items-center justify-between mt-4"
+            className="flex items-center justify-between mt-4 w-full"
           >
-            <h5 className="text-md font-semibold text-gray-700">Finished Tasks</h5>
+            <h5 className="text-md font-semibold text-gray-700 m-0">Finished Tasks</h5>
             {showTimeline ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
           {showTimeline && (
