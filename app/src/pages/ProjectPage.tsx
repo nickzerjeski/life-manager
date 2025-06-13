@@ -66,11 +66,11 @@ export default function ProjectPage() {
                 <div
                   key={project.id}
                   onClick={() => setSelectedProject(project)}
-                  className={`${containerStyle[project.status]} p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer border border-gray-200`}
+                  className={`${containerStyle[project.status]} p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer border border-gray-200 flex flex-col h-full`}
                 >
                   <h2 className="text-lg font-semibold">{project.name}</h2>
                   <p className="text-sm text-gray-600 line-clamp-3">{project.shortDescription}</p>
-                  <span className={`${statusLabelStyle[project.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full `}>
+                  <span className={`${statusLabelStyle[project.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full mt-auto`}> 
                     {project.status}
                   </span>
                 </div>

@@ -135,9 +135,24 @@ export function initData(): void {
   ]
 
   data.topics = [
-    new Topic(1, 'Graph Algorithms', data.projects[2]),
-    new Topic(2, 'Approximation Algorithms', data.projects[2]),
-    new Topic(3, 'Randomized Algorithms', data.projects[2]),
+    new Topic(
+      1,
+      'Graph Algorithms',
+      'Explores fundamental graph algorithms and their applications.',
+      data.projects[2]
+    ),
+    new Topic(
+      2,
+      'Approximation Algorithms',
+      'Discusses strategies for near-optimal solutions to hard problems.',
+      data.projects[2]
+    ),
+    new Topic(
+      3,
+      'Randomized Algorithms',
+      'Examines algorithms that rely on randomization techniques.',
+      data.projects[2]
+    ),
   ]
 
   data.chats = [

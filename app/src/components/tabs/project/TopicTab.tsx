@@ -18,7 +18,6 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null)
   const [chats, setChats] = useState<Chat[]>([])
   const [activeChat, setActiveChat] = useState<Chat | null>(null)
-  const [chatCounts, setChatCounts] = useState<Record<number, number>>({})
   const [markdown, setMarkdown] = useState('')
   const topicHandler = React.useMemo(() => TopicHandler.getInstance(), [])
   const chatHandler = React.useMemo(() => ChatHandler.getInstance(), [])
@@ -30,17 +29,6 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
       .catch(() => setTopics([]))
   }, [project.id, topicHandler])
 
-  useEffect(() => {
-    if (topics.length === 0) return
-    Promise.all(
-      topics.map(async t => {
-        const list = await chatHandler.getChatsForTopic(t.id)
-        return [t.id, list.length] as const
-      })
-    ).then(entries => {
-      setChatCounts(Object.fromEntries(entries))
-    })
-  }, [topics, chatHandler])
 
   const openTopic = async (topic: Topic) => {
     setActiveTopic(topic)
@@ -69,11 +57,7 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
               className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow flex flex-col gap-2"
             >
               <h3 className="font-medium text-gray-800">{t.name}</h3>
-              <div className="flex space-x-1">
-                {Array.from({ length: chatCounts[t.id] || 0 }).map((_, i) => (
-                  <span key={i} className="w-2 h-2 bg-blue-600 rounded-full" />
-                ))}
-              </div>
+              <p className="text-sm text-gray-600 line-clamp-2">{t.shortDescription}</p>
             </div>
           ))}
         </div>

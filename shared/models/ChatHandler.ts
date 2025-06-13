@@ -6,6 +6,7 @@ import { Goal } from './Goal'
 interface TopicDTO {
   id: number
   name: string
+  shortDescription: string
   project: {
     id: number
     name: string
@@ -68,6 +69,7 @@ export class ChatHandler {
         new Topic(
           c.topic.id,
           c.topic.name,
+          c.topic.shortDescription,
           new Project(
             c.topic.project.id,
             c.topic.project.name,
