@@ -20,6 +20,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       .catch(() => setGoals([]));
   }, []);
   const [name, setName] = useState('');
+  const [shortDescription, setShortDescription] = useState('');
   const [description, setDescription] = useState('');
   const [start, setStart] = useState(0);
   const [current, setCurrent] = useState(0);
@@ -47,6 +48,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     const project = new Project(
       Date.now(),
       name,
+      shortDescription,
       description,
       start,
       current,
@@ -60,6 +62,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     onClose();
     // reset fields
     setName('');
+    setShortDescription('');
     setDescription('');
     setStart(0);
     setCurrent(0);
@@ -77,20 +80,29 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add Project">
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+        <input
+          type="text"
+          value={shortDescription}
+          onChange={(e) => setShortDescription(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
           />
         </div>

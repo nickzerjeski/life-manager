@@ -64,6 +64,7 @@ export async function handleProjectRequests(
       nextId,
       'Generated Project',
       'Auto generated project',
+      'Auto generated project',
       0,
       0,
       100,

@@ -5,6 +5,7 @@ import { APP_CONFIG } from "../utils/appConfig";
 export class Project {
   id: number;
   name: string;
+  shortDescription: string;
   description: string;
   start: number;
   current: number;
@@ -27,10 +28,21 @@ export class Project {
      * @param status - Current status of the project.
      * @param goal - Associated goal for the project.
      */
-    constructor(id: number, name: string, description: string, start: number, current: number,
-                objective: number, period: [Date, Date], goal: Goal, contributionPct: number) {
+    constructor(
+        id: number,
+        name: string,
+        shortDescription: string,
+        description: string,
+        start: number,
+        current: number,
+        objective: number,
+        period: [Date, Date],
+        goal: Goal,
+        contributionPct: number
+    ) {
         this.id = id;
         this.name = name;
+        this.shortDescription = shortDescription;
         this.description = description;
         this.start = start;
         this.current = current;

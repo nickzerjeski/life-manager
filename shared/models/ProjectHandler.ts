@@ -72,6 +72,7 @@ export class ProjectHandler {
         new Project(
           p.id,
           p.name,
+          p.shortDescription,
           p.description,
           p.start,
           p.current,
@@ -101,6 +102,7 @@ export class ProjectHandler {
         new Project(
           p.id,
           p.name,
+          p.shortDescription,
           p.description,
           p.start,
           p.current,
@@ -136,6 +138,7 @@ export class ProjectHandler {
       new Project(
         p.id,
         p.name,
+        p.shortDescription,
         p.description,
         p.start,
         p.current,
