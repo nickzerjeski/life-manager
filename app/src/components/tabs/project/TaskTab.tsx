@@ -52,9 +52,20 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
                 <p className="text-xs text-gray-600">Due {task.deadline.toLocaleDateString()}</p>
                 <p className="text-xs text-gray-500">Duration {(task.duration / 3600).toFixed(1)}h</p>
               </div>
-              <span className="bg-blue-200 text-blue-800 flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full">
-                {task.project.name}
-              </span>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className="p-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  <Sparkles size={16} />
+                </button>
+                <button
+                  type="button"
+                  className="p-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  <Sparkles size={16} />
+                </button>
+              </div>
             </li>
           ))}
         </ul>

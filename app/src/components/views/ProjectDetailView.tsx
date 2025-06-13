@@ -5,10 +5,12 @@ import {
   Calendar,
   ChartNoAxesCombined,
   LucideProps,
+  Tags,
 } from 'lucide-react'
 import { Project } from '@shared/models/Project'
 import OverviewTab from '../tabs/project/OverviewTab'
 import TaskTab from '../tabs/project/TaskTab'
+import TopicTab from '../tabs/project/TopicTab'
 import DocumentTab from '../tabs/project/DocumentTab'
 
 interface ProjectDetailViewProps {
@@ -31,6 +33,8 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onBack }
         return <OverviewTab project={currentProject} />
       case 'tasks':
         return <TaskTab project={currentProject} />
+      case 'topics':
+        return <TopicTab project={currentProject} />
       case 'documents':
         return <DocumentTab project={currentProject} />
       default:
@@ -68,6 +72,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onBack }
         <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
           <TabButton tabId="overview" label="Overview" icon={ChartNoAxesCombined} />
           <TabButton tabId="tasks" label="Tasks" icon={Calendar} />
+          <TabButton tabId="topics" label="Topics" icon={Tags} />
           <TabButton tabId="documents" label="Documents" icon={FileText} />
         </nav>
       </div>
