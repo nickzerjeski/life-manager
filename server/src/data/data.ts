@@ -82,6 +82,7 @@ export function initData(): void {
       1,
       'Solar Farm Expansion',
       'Expand the regional solar farm to 150\u202FMW capacity to support grid stability and meet renewable\u2011energy targets.',
+      fs.readFileSync(path.join(__dirname, 'projects', 'solar-farm-expansion.md'), 'utf8'),
       0,
       30,
       100,
@@ -93,6 +94,7 @@ export function initData(): void {
       2,
       'ERP Roll\u2011out',
       'Implement a company\u2011wide ERP solution to unify finance, supply\u2011chain, and HR operations across all business units.',
+      fs.readFileSync(path.join(__dirname, 'projects', 'erp-rollout.md'), 'utf8'),
       0,
       70,
       100,
@@ -103,6 +105,7 @@ export function initData(): void {
     new Project(
       3,
       'Advanced Algorithms',
+      'Study advanced algorithms in depth.',
       fs.readFileSync(
         path.join(__dirname, 'projects', 'advanced-algorithms.md'),
         'utf8'

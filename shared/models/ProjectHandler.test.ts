@@ -14,7 +14,18 @@ function createGoal(id: number): Goal {
 }
 
 function createProject(id: number, goal: Goal): Project {
-  return new Project(id, `p${id}`, '', 0, 0, 1, [new Date(), new Date()], goal, 10)
+  return new Project(
+    id,
+    `p${id}`,
+    '',
+    '',
+    0,
+    0,
+    1,
+    [new Date(), new Date()],
+    goal,
+    10,
+  )
 }
 
 test('createProject adds a project', async () => {

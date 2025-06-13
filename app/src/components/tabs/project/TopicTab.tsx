@@ -60,22 +60,26 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {topics.map(t => (
-          <div
-            key={t.id}
-            onClick={() => openTopic(t)}
-            className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow flex flex-col gap-2"
-          >
-            <h3 className="font-medium text-gray-800">{t.name}</h3>
-            <div className="flex space-x-1">
-              {Array.from({ length: chatCounts[t.id] || 0 }).map((_, i) => (
-                <span key={i} className="w-2 h-2 bg-blue-600 rounded-full" />
-              ))}
+      {topics.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {topics.map(t => (
+            <div
+              key={t.id}
+              onClick={() => openTopic(t)}
+              className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow flex flex-col gap-2"
+            >
+              <h3 className="font-medium text-gray-800">{t.name}</h3>
+              <div className="flex space-x-1">
+                {Array.from({ length: chatCounts[t.id] || 0 }).map((_, i) => (
+                  <span key={i} className="w-2 h-2 bg-blue-600 rounded-full" />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500 italic text-sm">No topics for this project.</p>
+      )}
 
       {activeTopic && (
         <Modal

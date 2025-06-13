@@ -71,6 +71,7 @@ export class ChatHandler {
           new Project(
             c.topic.project.id,
             c.topic.project.name,
+            c.topic.project.shortDescription,
             c.topic.project.description,
             c.topic.project.start,
             c.topic.project.current,

@@ -58,6 +58,7 @@ export class TopicHandler {
         new Project(
           t.project.id,
           t.project.name,
+          t.project.shortDescription,
           t.project.description,
           t.project.start,
           t.project.current,

@@ -21,7 +21,9 @@ export default function ProjectPage() {
   const [search, setSearch] = useState("");
 
   const filtered = projects.filter((p) =>
-    `${p.name} ${p.description}`.toLowerCase().includes(search.toLowerCase()),
+    `${p.name} ${p.shortDescription} ${p.description}`
+      .toLowerCase()
+      .includes(search.toLowerCase()),
   );
 
   return (
@@ -67,7 +69,7 @@ export default function ProjectPage() {
                   className={`${containerStyle[project.status]} p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer border border-gray-200`}
                 >
                   <h2 className="text-lg font-semibold">{project.name}</h2>
-                  <p className="text-sm text-gray-600 line-clamp-3">{project.description}</p>
+                  <p className="text-sm text-gray-600 line-clamp-3">{project.shortDescription}</p>
                   <span className={`${statusLabelStyle[project.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full `}>
                     {project.status}
                   </span>
