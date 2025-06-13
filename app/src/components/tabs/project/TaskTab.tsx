@@ -106,7 +106,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
                       e.stopPropagation()
                       completeTask(task)
                     }}
-                    className="p-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                    className="p-1 rounded-full border-2 border-blue-600 bg-blue-300 text-white hover:bg-blue-600"
                   >
                     <Check size={16} />
                   </button>
