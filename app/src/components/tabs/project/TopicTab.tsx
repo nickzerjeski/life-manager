@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { Project } from '@shared/models/Project'
 import { Topic } from '@shared/models/Topic'
 import { Chat } from '@shared/models/Chat'
@@ -8,6 +6,7 @@ import { TopicHandler } from '@shared/models/TopicHandler'
 import { ChatHandler } from '@shared/models/ChatHandler'
 import Modal from '@/components/ui/modal'
 import ChatView from '@/components/views/ChatView'
+import TopicDetailView from '@/components/views/TopicDetailView'
 
 interface TopicTabProps {
   project: Project
@@ -48,78 +47,37 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
 
   return (
     <div className="space-y-4">
-      {topics.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {topics.map(t => (
-            <div
-              key={t.id}
-              onClick={() => openTopic(t)}
-              className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow flex flex-col gap-2"
-            >
-              <h3 className="font-medium text-gray-800">{t.name}</h3>
-              <p className="text-sm text-gray-600 line-clamp-2">{t.shortDescription}</p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500 italic text-sm">No topics for this project.</p>
-      )}
-
-      {activeTopic && (
-        <Modal
-          isOpen={!!activeTopic}
-          onClose={() => {
+      {activeTopic ? (
+        <TopicDetailView
+          topic={activeTopic}
+          markdown={markdown}
+          chats={chats}
+          onBack={() => {
             setActiveTopic(null)
             setChats([])
             setMarkdown('')
           }}
-          title={activeTopic.name}
-        >
-          <div className="space-y-4">
-            <ReactMarkdown
-              className="prose max-w-none text-gray-800"
-              remarkPlugins={[remarkGfm]}
-              components={{
-                h1: ({ node, ...props }) => (
-                  <h1
-                    className="text-xl font-bold border-b border-gray-200 pb-1 mt-4 first:mt-0"
-                    {...props}
-                  />
-                ),
-                h2: ({ node, ...props }) => (
-                  <h2
-                    className="text-lg font-semibold border-b border-gray-200 pb-1 mt-3 first:mt-0"
-                    {...props}
-                  />
-                ),
-                table: ({ node, ...props }) => (
-                  <table
-                    className="min-w-full border border-gray-300 text-sm"
-                    {...props}
-                  />
-                ),
-                th: ({ node, ...props }) => (
-                  <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
-                ),
-                td: ({ node, ...props }) => (
-                  <td className="border px-2 py-1" {...props} />
-                ),
-              }}
-            >
-              {markdown}
-            </ReactMarkdown>
-            {chats.map(chat => (
-              <div
-                key={chat.id}
-                onClick={() => setActiveChat(chat)}
-                className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow"
-              >
-                <h4 className="font-medium text-sm text-gray-800">{chat.title}</h4>
-                <p className="text-xs text-gray-600">{chat.description}</p>
-              </div>
-            ))}
-          </div>
-        </Modal>
+          onOpenChat={chat => setActiveChat(chat)}
+        />
+      ) : (
+        <>
+          {topics.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topics.map(t => (
+                <div
+                  key={t.id}
+                  onClick={() => openTopic(t)}
+                  className="bg-blue-50 border border-blue-200 p-3 rounded-md cursor-pointer hover:shadow flex flex-col gap-2"
+                >
+                  <h3 className="font-medium text-gray-800">{t.name}</h3>
+                  <p className="text-sm text-gray-600 line-clamp-2">{t.shortDescription}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 italic text-sm">No topics for this project.</p>
+          )}
+        </>
       )}
 
       {activeChat && (

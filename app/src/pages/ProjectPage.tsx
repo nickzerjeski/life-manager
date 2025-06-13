@@ -70,7 +70,9 @@ export default function ProjectPage() {
                 >
                   <h2 className="text-lg font-semibold">{project.name}</h2>
                   <p className="text-sm text-gray-600 line-clamp-3">{project.shortDescription}</p>
-                  <span className={`${statusLabelStyle[project.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full mt-auto`}> 
+                  <span
+                    className={`${statusLabelStyle[project.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full mt-auto self-start`}
+                  >
                     {project.status}
                   </span>
                 </div>
