@@ -138,6 +138,14 @@ export function initData(): void {
       [],
       new Date('2024-09-12')
     ),
+    new ManualTask(
+      7,
+      'Prepare slides',
+      'Draft presentation slides',
+      new Date('2024-10-10'),
+      data.projects[2],
+      5400
+    ),
     new AutomatedTask(
       3,
       'Dataset preprocessing',

@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Project } from '@shared/models/Project'
-import { Task, ManualTask, AutomatedTask } from '@shared/models/Task'
+import { Task, ManualTask, AutomatedTask, AutomationState } from '@shared/models/Task'
 import { TaskHandler } from '@shared/models/TaskHandler'
 import { Sparkles } from 'lucide-react'
 import { Timeline } from '@/components/ui/timeline'
 import { StatusIndicator } from '@/components/ui/status-indicator'
+
+const manualStyle = 'bg-blue-50 border border-blue-200'
+const automationStyle: Record<AutomationState, string> = {
+  running: 'bg-green-50 border border-green-200',
+  attention: 'bg-orange-50 border border-orange-200',
+  not_started: 'bg-gray-50 border border-gray-200',
+  failed: 'bg-red-50 border border-red-200',
+}
 
 interface TaskTabProps {
   project: Project
@@ -47,11 +55,17 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           {tasks.map(task => (
             <li
               key={task.id}
-              className="bg-blue-50 border border-blue-200 p-3 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
+              className={`${
+                task instanceof AutomatedTask
+                  ? automationStyle[task.status]
+                  : manualStyle
+              } p-3 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2`}
             >
               <div>
                 <p className="font-medium text-sm text-gray-800">{task.name}</p>
-                <p className="text-xs text-gray-600">{task.description}</p>
+                {task.completedAt && (
+                  <p className="text-xs text-gray-600">{task.description}</p>
+                )}
                 <p className="text-xs text-gray-600">Due {task.deadline.toLocaleDateString()}</p>
                 <p className="text-xs text-gray-500">Duration {(task.duration / 3600).toFixed(1)}h</p>
               </div>
