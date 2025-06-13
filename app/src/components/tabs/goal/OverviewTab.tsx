@@ -88,7 +88,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ goal }) => {
   } : null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div className="bg-white shadow rounded p-4 flex flex-col items-center">
         <h3 className="text-sm font-semibold mb-2">Overall Progress</h3>
         <Doughnut data={progressData} className="max-w-xs" />
