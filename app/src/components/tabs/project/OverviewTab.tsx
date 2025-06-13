@@ -5,6 +5,7 @@ import { Project } from '@shared/models/Project'
 import { TaskHandler } from '@shared/models/TaskHandler'
 import { TopicHandler } from '@shared/models/TopicHandler'
 import { DocumentHandler } from '@shared/models/DocumentHandler'
+import { APP_CONFIG } from '@shared/utils/appConfig'
 import { Progbar } from '@/components/ui/progress-bar'
 import { Separator } from '@/components/ui/separator'
 
@@ -32,6 +33,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
 
   const progress = Math.round(project.progressPercentage)
   const time = Math.round(project.timePercentage)
+  const riskRange = APP_CONFIG.status.atRiskRangePct
+  const riskStart = Math.max(0, time - riskRange)
+  const riskEnd = Math.min(100, time + riskRange)
 
   useEffect(() => {
     if ((window as any).MathJax?.typeset) {
@@ -59,7 +63,12 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
       </div>
       <div className="space-y-2">
         <Progbar name="Time" progress={time} />
-        <Progbar name="Progress" progress={progress} />
+        <Progbar
+          name="Progress"
+          progress={progress}
+          marker={time}
+          range={[riskStart, riskEnd]}
+        />
       </div>
       <Separator className="my-2" />
       <ReactMarkdown
