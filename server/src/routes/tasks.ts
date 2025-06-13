@@ -1,7 +1,7 @@
 import http from 'node:http'
 import { parseBody } from '../utils'
 import { data } from '../data/data'
-import { Task } from '../../../shared/models/Task'
+import { Task, ManualTask } from '../../../shared/models/Task'
 
 /**
  * Handles `/tasks` routes. Returns `true` if a request is processed.
@@ -45,7 +45,14 @@ export async function handleTaskRequests(
     const nextId = data.tasks.length
       ? Math.max(...data.tasks.map(t => t.id)) + 1
       : 1
-    const task = new Task(nextId, 'Generated Task', project.period[1], project, 3600)
+    const task = new ManualTask(
+      nextId,
+      'Generated Task',
+      'Generated task description',
+      project.period[1],
+      project,
+      3600
+    )
     data.tasks.push(task)
     res.statusCode = 201
     res.setHeader('Content-Type', 'application/json')

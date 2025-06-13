@@ -9,7 +9,7 @@ import path from 'node:path'
 import { Goal } from '../../../shared/models/Goal'
 import { Project } from '../../../shared/models/Project'
 import { Document } from '../../../shared/models/Document'
-import { Task } from '../../../shared/models/Task'
+import { Task, ManualTask, AutomatedTask, AutomationState } from '../../../shared/models/Task'
 import { Topic } from '../../../shared/models/Topic'
 import { Chat } from '../../../shared/models/Chat'
 import { AOL } from '../../../shared/types/AOL'
@@ -120,13 +120,98 @@ export function initData(): void {
   ]
 
   data.tasks = [
-    new Task(
+    new ManualTask(
       1,
       'Initial planning',
+      'Plan the overall project steps',
       new Date('2025-01-15'),
       data.projects[0],
       3600
     ),
+    new ManualTask(
+      2,
+      'Read papers',
+      'Review key research papers',
+      new Date('2024-09-10'),
+      data.projects[2],
+      7200,
+      [],
+      new Date('2024-09-12')
+    ),
+    new ManualTask(
+      7,
+      'Prepare slides',
+      'Draft presentation slides',
+      new Date('2024-10-10'),
+      data.projects[2],
+      5400
+    ),
+    new AutomatedTask(
+      3,
+      'Dataset preprocessing',
+      'Run preprocessing pipeline',
+      new Date('2024-09-12'),
+      data.projects[2],
+      5400,
+      'running'
+    ),
+    new AutomatedTask(
+      4,
+      'Model tuning',
+      'Automated hyperparameter tuning',
+      new Date('2024-10-01'),
+      data.projects[2],
+      5400,
+      'attention'
+    ),
+    new AutomatedTask(
+      5,
+      'Result compilation',
+      'Compile algorithm benchmarks',
+      new Date('2024-11-01'),
+      data.projects[2],
+      3600,
+      'failed'
+    ),
+    new AutomatedTask(
+      6,
+      'Generate report',
+      'Create final report automatically',
+      new Date('2024-12-01'),
+      data.projects[2],
+      7200,
+      'not_started'
+    ),
+    new ManualTask(
+      8,
+      'Select paper topics',
+      'Choose seminar paper topics',
+      new Date('2024-09-05'),
+      data.projects[2],
+      1800,
+      [],
+      new Date('2024-09-05')
+    ),
+    new ManualTask(
+      9,
+      'Submit paper summary',
+      'Write summary for selected paper',
+      new Date('2024-09-15'),
+      data.projects[2],
+      3600,
+      [],
+      new Date('2024-09-16')
+    ),
+    new ManualTask(
+      10,
+      'Complete exercises',
+      'Solve algorithm practice problems',
+      new Date('2024-09-20'),
+      data.projects[2],
+      5400,
+      [],
+      new Date('2024-09-21')
+    )
   ]
 
   data.documents = [

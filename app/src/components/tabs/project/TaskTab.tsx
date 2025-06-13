@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Project } from '@shared/models/Project'
-import { Task } from '@shared/models/Task'
+import { Task, ManualTask, AutomatedTask, AutomationState } from '@shared/models/Task'
 import { TaskHandler } from '@shared/models/TaskHandler'
 import { Sparkles } from 'lucide-react'
+import { Timeline } from '@/components/ui/timeline'
+import { StatusIndicator } from '@/components/ui/status-indicator'
+
+const manualStyle = 'bg-blue-50 border border-blue-200'
+const automationStyle: Record<AutomationState, string> = {
+  running: 'bg-green-50 border border-green-200',
+  attention: 'bg-orange-50 border border-orange-200',
+  not_started: 'bg-gray-50 border border-gray-200',
+  failed: 'bg-red-50 border border-red-200',
+}
 
 interface TaskTabProps {
   project: Project
@@ -45,32 +55,53 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           {tasks.map(task => (
             <li
               key={task.id}
-              className="bg-blue-50 border border-blue-200 p-3 rounded-md flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2"
+              className={`${
+                task instanceof AutomatedTask
+                  ? automationStyle[task.status]
+                  : manualStyle
+              } p-3 rounded-md flex justify-between items-center gap-2`}
             >
-              <div>
-                <p className="font-medium text-sm text-gray-800">{task.description}</p>
+              <div className="flex-1">
+                <p className="font-medium text-sm text-gray-800">{task.name}</p>
+                {task.completedAt && !(task instanceof ManualTask) && (
+                  <p className="text-xs text-gray-600">{task.description}</p>
+                )}
                 <p className="text-xs text-gray-600">Due {task.deadline.toLocaleDateString()}</p>
                 <p className="text-xs text-gray-500">Duration {(task.duration / 3600).toFixed(1)}h</p>
               </div>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="p-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
-                >
-                  <Sparkles size={16} />
-                </button>
-                <button
-                  type="button"
-                  className="p-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
-                >
-                  <Sparkles size={16} />
-                </button>
+              <div className="flex gap-2 items-center">
+                {task instanceof ManualTask && (
+                  <button
+                    type="button"
+                    className="p-1 rounded-full bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    <Sparkles size={16} />
+                  </button>
+                )}
+                {task instanceof AutomatedTask && (
+                  <StatusIndicator status={task.status} />
+                )}
               </div>
             </li>
           ))}
         </ul>
       ) : (
         <p className="text-gray-500 italic text-sm">No tasks for this project.</p>
+      )}
+
+      {tasks.some(t => t.completedAt) && (
+        <div>
+          <h5 className="text-md font-semibold text-gray-700 mt-4">Timeline</h5>
+          <Timeline
+            entries={tasks
+              .filter(t => t.completedAt)
+              .map(t => ({
+                title: t.name,
+                description: t.description,
+                date: t.completedAt!.toLocaleDateString(),
+              }))}
+          />
+        </div>
       )}
     </div>
   )
