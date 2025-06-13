@@ -103,7 +103,10 @@ export function initData(): void {
     new Project(
       3,
       'Advanced Algorithms',
-      'Graduate course on advanced algorithm design and analysis',
+      fs.readFileSync(
+        path.join(__dirname, 'projects', 'advanced-algorithms.md'),
+        'utf8'
+      ),
       0,
       0,
       100,
