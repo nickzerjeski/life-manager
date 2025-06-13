@@ -66,7 +66,6 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
         <Progbar
           name="Progress"
           progress={progress}
-          marker={time}
           range={[riskStart, riskEnd]}
         />
       </div>

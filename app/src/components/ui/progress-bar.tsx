@@ -2,10 +2,9 @@ type ProgbarProps = {
   name: string
   progress: number
   range?: [number, number]
-  marker?: number
 }
 
-export const Progbar = ({ name, progress, range, marker }: ProgbarProps) => {
+export const Progbar = ({ name, progress, range }: ProgbarProps) => {
   const clamped = Math.min(100, progress)
 
   const [start, end] = range || []
@@ -14,8 +13,6 @@ export const Progbar = ({ name, progress, range, marker }: ProgbarProps) => {
   const clampedEnd =
     end !== undefined ? Math.max(clampedStart || 0, Math.min(100, end)) : undefined
 
-  const clampedMarker =
-    marker !== undefined ? Math.max(0, Math.min(100, marker)) : undefined
 
   return (
     <>
@@ -30,20 +27,14 @@ export const Progbar = ({ name, progress, range, marker }: ProgbarProps) => {
       <div className="relative w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
         {clampedStart !== undefined && (
           <div
-            className="pointer-events-none absolute inset-y-0 w-px border-r border-dashed border-yellow-600"
+            className="pointer-events-none absolute inset-y-0 w-0.5 border-r-2 border-dashed border-yellow-600"
             style={{ left: `${clampedStart}%` }}
           />
         )}
         {clampedEnd !== undefined && (
           <div
-            className="pointer-events-none absolute inset-y-0 w-px border-r border-dashed border-yellow-600"
+            className="pointer-events-none absolute inset-y-0 w-0.5 border-r-2 border-dashed border-yellow-600"
             style={{ left: `${clampedEnd}%` }}
-          />
-        )}
-        {clampedMarker !== undefined && (
-          <div
-            className="absolute top-0 bottom-0 w-0.5 bg-red-500"
-            style={{ left: `${clampedMarker}%` }}
           />
         )}
         <div
