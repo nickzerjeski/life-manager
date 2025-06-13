@@ -81,7 +81,17 @@ body {
   * {
     @apply border-border;
   }
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Remove backticks around inline code produced by the typography plugin */
+  .prose code::before,
+  .prose code::after {
+    content: none;
   }
 }

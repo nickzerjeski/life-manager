@@ -9,7 +9,7 @@ ProjectHandler.getInstance(goals);
 export default function Home() {
 /* ---------- single source of truth for client list ---------- */
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8 font-sans">
+    <div className="h-full overflow-y-auto bg-gray-100 p-4 md:p-8 font-sans">
       <main className="container mx-auto max-w-7xl space-y-8">
         <DashboardContent />
       </main>

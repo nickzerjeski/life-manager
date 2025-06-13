@@ -15,7 +15,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
   const { activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen } = useAppShell();
 
   return (
-    <div className="relative min-h-screen md:flex">
+    <div className="relative h-screen flex flex-col md:flex-row overflow-hidden">
       {/* ----- mobile top bar ----- */}
       <div className="md:hidden flex justify-between items-center p-4 bg-white border-b sticky top-0 z-20">
         <h1 className="text-lg font-bold text-blue-700">Lifemanager</h1>
@@ -97,7 +97,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
       </nav>
 
       {/* ----- main area ----- */}
-      <main className="flex-1 bg-gray-50 overflow-y-auto pt-16 md:pt-0">{children}</main>
+      <main className="flex-1 h-full bg-gray-50 overflow-y-auto pt-16 md:pt-0">{children}</main>
     </div>
   );
 }
