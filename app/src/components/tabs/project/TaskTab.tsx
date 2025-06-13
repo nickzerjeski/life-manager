@@ -76,9 +76,11 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           <Sparkles size={16} className="mr-1 sm:mr-2" /> Generate Tasks
         </button>
       </div>
-      {tasks.length > 0 ? (
+      {tasks.filter(t => !t.completedAt).length > 0 ? (
         <ul className="space-y-2">
-          {tasks.map(task => (
+          {tasks
+            .filter(t => !t.completedAt)
+            .map(task => (
             <li
               key={task.id}
               onClick={() => openTask(task)}
