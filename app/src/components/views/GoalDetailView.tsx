@@ -94,8 +94,10 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
   const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon }) => (
     <button
       onClick={() => setActiveTab(tabId)}
-      className={`flex flex-shrink-0 items-center px-4 py-2 text-sm font-medium rounded-md transition ${
-        activeTab === tabId ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+      className={`flex flex-1 flex-shrink-0 items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition ${
+        activeTab === tabId
+          ? 'bg-blue-100 text-blue-700'
+          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
       }`}
     >
       <Icon size={18} className="mr-2" />
