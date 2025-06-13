@@ -27,13 +27,13 @@ export const Progbar = ({ name, progress, range }: ProgbarProps) => {
       <div className="relative w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 overflow-hidden">
         {clampedStart !== undefined && (
           <div
-            className="pointer-events-none absolute inset-y-0 w-0.5 border-r-2 border-dashed border-yellow-600"
+            className="pointer-events-none absolute inset-y-0 w-0.5 border-r-1 border-dashed border-blue-700 opacity-25"
             style={{ left: `${clampedStart}%` }}
           />
         )}
         {clampedEnd !== undefined && (
           <div
-            className="pointer-events-none absolute inset-y-0 w-0.5 border-r-2 border-dashed border-yellow-600"
+            className="pointer-events-none absolute inset-y-0 w-0.5 border-r-1 border-dashed border-blue-700 opacity-25"
             style={{ left: `${clampedEnd}%` }}
           />
         )}

@@ -14,7 +14,7 @@ export interface AppConfig {
 }
 
 export const APP_CONFIG: AppConfig = {
-  status: { atRiskRangePct: 10 },
+  status: { atRiskRangePct: 5 },
   workweek: { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], start: '08:00', end: '17:00' },
 };
 

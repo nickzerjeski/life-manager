@@ -45,7 +45,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-around border-b border-gray-200 pb-4">
+      <div className="flex justify-around pb-4">
         <div className="flex flex-col items-center flex-1">
           <span className="text-2xl font-bold text-gray-800">{counts.tasks}</span>
           <span className="text-sm text-gray-600">Tasks</span>
@@ -62,7 +62,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
         </div>
       </div>
       <div className="space-y-2">
-        <Progbar name="Time" progress={time} />
+        <Progbar name="Time Passed" progress={time} />
         <Progbar
           name="Progress"
           progress={progress}
