@@ -57,7 +57,7 @@ const TopicDetailView: React.FC<TopicDetailViewProps> = ({
           <button
             type="button"
             onClick={() => setShowChats(v => !v)}
-            className="flex items-center justify-between mt-4 w-full"
+            className="flex items-center gap-1 mt-4"
           >
             <h4 className="text-md font-semibold text-gray-700 m-0">Chats</h4>
             {showChats ? <ChevronUp size={16} /> : <ChevronDown size={16} />}

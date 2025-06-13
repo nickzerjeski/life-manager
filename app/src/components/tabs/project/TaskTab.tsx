@@ -130,7 +130,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           <button
             type="button"
             onClick={() => setShowTimeline(v => !v)}
-            className="flex items-center justify-between mt-4 w-full"
+            className="flex items-center gap-1 mt-4"
           >
             <h5 className="text-md font-semibold text-gray-700 m-0">Finished Tasks</h5>
             {showTimeline ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
