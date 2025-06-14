@@ -4,7 +4,7 @@ This is the stup guide for the RAG agent in n8n.
 
 ## Requirements
 
-- Have **Supabase** installed (includes PostgreSQL and REST API)
+- Have **Supabase** installed (includes PostgreSQL and REST API) and the n8n container added to its docker network
 - Have **n8n** installed
 - Have **OpenAI Credential** set up
 
