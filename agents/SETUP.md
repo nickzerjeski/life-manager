@@ -27,10 +27,10 @@ This is the stup guide for the RAG agent in n8n.
 - Name: `Local Supabase Postgres`
 - Type: `PostgreSQL`
 - Fields:
-  - Host: `localhost`
-  - Port: `5432`
-  - User: `postgres`
-  - Password: `password`
+  - Host: `supabase-db`
   - Database `postgres`
+  - User: `postgres`
+  - Password: `POSTGRES_PASSWORD`
+  - Port: `5432`
 
 Note that n8n and supabase have to run on the same host machine in order for this setup to work.
