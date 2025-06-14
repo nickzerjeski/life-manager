@@ -21,8 +21,8 @@ This is the stup guide for the RAG agent in n8n.
 - Name: `Local Supabase API`
 - Type: `Supabase API`
 - Fields:
-  - URL: `host:8000`
-  - API Key: `anon`, `service_role` key
+  - URL: `https://sb.nickzerjeski.me`
+  - API Key: `ANON_KEY` or `SERVICE_ROLE_KEY`
 ### Postgres
 - Name: `Local Supabase Postgres`
 - Type: `PostgreSQL`
