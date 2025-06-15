@@ -1,6 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 import { AppShellProvider, useAppShell } from './app-shell-context';
 
 /* ----- icons mapping for sidebar items ----- */
@@ -89,7 +90,10 @@ function ShellInner({ children }: { children: React.ReactNode }) {
             <Settings className="w-5 h-5 mr-3" />
             Einstellungen
           </button>
-          <button className="w-full flex items-center px-3 py-2.5 rounded-md text-sm text-gray-600 hover:bg-gray-100">
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="w-full flex items-center px-3 py-2.5 rounded-md text-sm text-gray-600 hover:bg-gray-100"
+          >
             <LogOut className="w-5 h-5 mr-3" />
             Ausloggen
           </button>
