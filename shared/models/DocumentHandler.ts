@@ -98,7 +98,7 @@ export class DocumentHandler {
     const res = await fetch(`${this.baseUrl}/documents/${documentId}/upload`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: file.name, content }),
+      body: JSON.stringify({ name: file.name, content, mimeType: file.type }),
     })
     if (!res.ok) {
       throw new Error('Failed to upload document')

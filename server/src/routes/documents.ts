@@ -1,6 +1,18 @@
 import http from 'node:http'
-import { parseBody } from '../utils'
+import { parseBody, sendRequest } from '../utils'
 import { data } from '../data/data'
+import { supabase } from '../supabaseClient'
+
+let supabaseClient = supabase
+let sendRequestFn = sendRequest
+
+export function setSupabaseClient(client: typeof supabase): void {
+  supabaseClient = client
+}
+
+export function setSendRequest(fn: typeof sendRequest): void {
+  sendRequestFn = fn
+}
 
 /**
  * Handles document CRUD operations and file uploads.
@@ -75,7 +87,54 @@ export async function handleDocumentRequests(
     const parts = parsed.pathname.split('/')
     const id = Number(parts[2])
     const body = await parseBody(req)
-    const file = JSON.parse(body)
+    const file = JSON.parse(body) as { name: string; content: string; mimeType: string }
+    const doc = data.documents.find(d => d.id === id)
+    if (!doc) {
+      res.statusCode = 404
+      res.end('Not Found')
+      return true
+    }
+
+    // Upload to Supabase bucket, creating the bucket if necessary
+    const bucketName = 'documents'
+    const { data: buckets } = await supabaseClient.storage.listBuckets()
+    const exists = buckets?.some(b => b.name === bucketName)
+    if (!exists) {
+      const { error: createError } = await supabaseClient.storage.createBucket(bucketName, { public: true })
+      if (createError) {
+        res.statusCode = 500
+        res.end('Bucket creation failed')
+        return true
+      }
+    }
+
+    const path = `goal-${doc.goalId || 'none'}/project-${doc.projectId || 'none'}/${file.name}`
+    const { error } = await supabaseClient.storage
+      .from(bucketName)
+      .upload(path, Buffer.from(file.content, 'base64'), {
+        contentType: file.mimeType,
+        upsert: true,
+      })
+    if (error) {
+      res.statusCode = 500
+      res.end('Upload failed')
+      return true
+    }
+
+    const { data: urlData } = supabaseClient.storage.from(bucketName).getPublicUrl(path)
+
+    // Send payload to n8n webhook
+    const n8nWebhookUrl = 'https://n8n.nickzerjeski.me/webhook-test/eea94cfd-2d7c-4fdb-addd-6cb200d07d04'
+    const payload = {
+      id,
+      url: urlData.publicUrl,
+      data: { fileName: file.name, mimeType: file.mimeType, data: file.content },
+    }
+    if (!process.env.SKIP_WEBHOOK) {
+      await sendRequestFn(n8nWebhookUrl, payload)
+    }
+
+    // Store locally for demo purposes
     data.documentFiles[id] = { name: file.name, content: file.content }
     res.statusCode = 201
     res.end()
