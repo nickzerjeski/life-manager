@@ -84,18 +84,33 @@ export async function handleDocumentRequests(
       return true
     }
 
-    // Upload to Supabase bucket
+    // Upload to Supabase bucket, creating the bucket if necessary
+    const bucketName = 'documents'
+    const { data: buckets } = await supabase.storage.listBuckets()
+    const exists = buckets?.some(b => b.name === bucketName)
+    if (!exists) {
+      const { error: createError } = await supabase.storage.createBucket(bucketName, { public: true })
+      if (createError) {
+        res.statusCode = 500
+        res.end('Bucket creation failed')
+        return true
+      }
+    }
+
     const path = `goal-${doc.goalId || 'none'}/project-${doc.projectId || 'none'}/${file.name}`
     const { error } = await supabase.storage
-      .from('documents')
-      .upload(path, Buffer.from(file.content, 'base64'), { contentType: file.mimeType, upsert: true })
+      .from(bucketName)
+      .upload(path, Buffer.from(file.content, 'base64'), {
+        contentType: file.mimeType,
+        upsert: true,
+      })
     if (error) {
       res.statusCode = 500
       res.end('Upload failed')
       return true
     }
 
-    const { data: urlData } = supabase.storage.from('documents').getPublicUrl(path)
+    const { data: urlData } = supabase.storage.from(bucketName).getPublicUrl(path)
 
     // Send payload to n8n webhook
     const n8nWebhookUrl = 'https://n8n.nickzerjeski.me/webhook-test/eea94cfd-2d7c-4fdb-addd-6cb200d07d04'
