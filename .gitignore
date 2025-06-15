@@ -39,5 +39,5 @@ next-env.d.ts
 
 .genkit/*
 
-.env
+.env.*
 .vscode
