@@ -1,91 +1,55 @@
+import supabase from '../db/supabase'
 import { Topic } from './Topic'
 import { Project } from './Project'
 import { Goal } from './Goal'
 
-interface TopicDTO {
-  id: number
-  name: string
-  shortDescription: string
-  project: {
-    id: number
-    name: string
-    description: string
-    start: number
-    current: number
-    objective: number
-    period: [string, string]
-    goal: {
-      id: number
-      name: string
-      description: string
-      start: number
-      current: number
-      objective: number
-      period: [string, string]
-      aol: string
-    }
-    contributionPct: number
-  }
-}
-
 export class TopicHandler {
   private static instance: TopicHandler | null = null
 
-  private baseUrl: string
-
-  private constructor(baseUrl: string) {
-    this.baseUrl = baseUrl
-  }
-
-  static getInstance(baseUrl = 'http://localhost:3001'): TopicHandler {
-    if (!TopicHandler.instance) {
-      TopicHandler.instance = new TopicHandler(baseUrl)
-    }
+  static getInstance(): TopicHandler {
+    if (!TopicHandler.instance) TopicHandler.instance = new TopicHandler()
     return TopicHandler.instance
   }
 
-  static reset(): void {
-    TopicHandler.instance = null
-  }
+  static reset(): void { TopicHandler.instance = null }
 
-  async getTopicsForProject(projectId: number): Promise<Topic[]> {
-    const res = await fetch(`${this.baseUrl}/topics?projectId=${projectId}`)
-    if (!res.ok) return []
-    const data = (await res.json()) as TopicDTO[]
-    return data.map(t =>
-      new Topic(
-        t.id,
-        t.name,
-        t.shortDescription,
-        new Project(
-          t.project.id,
-          t.project.name,
-          t.project.shortDescription,
-          t.project.description,
-          t.project.start,
-          t.project.current,
-          t.project.objective,
-          [new Date(t.project.period[0]), new Date(t.project.period[1])],
-          new Goal(
-            t.project.goal.id,
-            t.project.goal.name,
-            t.project.goal.description,
-            t.project.goal.start,
-            t.project.goal.current,
-            t.project.goal.objective,
-            [new Date(t.project.goal.period[0]), new Date(t.project.goal.period[1])],
-            t.project.goal.aol,
-          ),
-          t.project.contributionPct,
-        )
+  private constructor() {}
+
+  async getTopicsForProject(projectId: string): Promise<Topic[]> {
+    const { data, error } = await supabase
+      .from('topics')
+      .select('*, projects!inner(*, goals!inner(*))')
+      .eq('project_id', projectId)
+    if (error || !data) return []
+    return data.map(t => new Topic(
+      t.id,
+      t.name,
+      t.short_description ?? '',
+      new Project(
+        t.projects.id,
+        t.projects.name,
+        t.projects.short_description ?? '',
+        t.projects.description ?? '',
+        t.projects.start,
+        t.projects.current,
+        t.projects.objective,
+        [new Date(t.projects.period_from), new Date(t.projects.period_to)],
+        new Goal(
+          t.projects.goals.id,
+          t.projects.goals.name,
+          t.projects.goals.description,
+          t.projects.goals.start,
+          t.projects.goals.current,
+          t.projects.goals.objective,
+          [new Date(t.projects.goals.period_from), new Date(t.projects.goals.period_to)],
+          t.projects.goals.area_of_life,
+        ),
+        t.projects.contribution_pct,
       )
-    )
+    ))
   }
 
-  async getMarkdownForTopic(topicId: number): Promise<string> {
-    const res = await fetch(`${this.baseUrl}/topics/${topicId}/markdown`)
-    if (!res.ok) return ''
-    const data = (await res.json()) as { content: string }
-    return data.content
+  async getMarkdownForTopic(_topicId: string): Promise<string> {
+    return ''
   }
 }

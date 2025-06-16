@@ -3,6 +3,7 @@ import { SpeedDial } from '@/components/ui/speed-dial'
 import FolderModal from '@/modals/FolderModal'
 import { useState } from 'react'
 import supabase from '../../supabase'
+import { mockGoal, mockProject, mockTopic, mockTask } from '../../mockData'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function HabitPage() {
@@ -17,17 +18,7 @@ export default function HabitPage() {
       .from('goals')
       .insert({
         user_id: userId,
-        name: 'Mock Goal',
-        description: 'Inserted from HabitPage',
-        start: 0,
-        current: 0,
-        objective: 1,
-        period_from: new Date().toISOString().slice(0, 10),
-        period_to: new Date(Date.now() + 7 * 86400000)
-          .toISOString()
-          .slice(0, 10),
-        status: 'Not Started',
-        area_of_life: 'Health',
+        ...mockGoal,
       })
       .select()
       .single()
@@ -42,16 +33,9 @@ export default function HabitPage() {
       .insert({
         user_id: userId,
         goal_id: goal.id,
-        name: 'Mock Project',
-        short_description: 'Seed project',
-        description: 'Inserted from HabitPage',
-        start: 0,
-        current: 0,
-        objective: 1,
-        period_from: goal.period_from,
-        period_to: goal.period_to,
-        contribution_pct: 100,
-        status: 'Not Started',
+        ...mockProject,
+        period_from: mockProject.period_from,
+        period_to: mockProject.period_to,
       })
       .select()
       .single()
@@ -64,18 +48,13 @@ export default function HabitPage() {
     await supabase.from('topics').insert({
       user_id: userId,
       project_id: project.id,
-      name: 'Mock Topic',
-      short_description: 'Seed topic',
+      ...mockTopic,
     })
 
     await supabase.from('tasks').insert({
       user_id: userId,
       project_id: project.id,
-      name: 'Mock Task',
-      description: 'Seed task',
-      deadline: new Date().toISOString(),
-      duration: 60,
-      priority: 1,
+      ...mockTask,
     })
   }
 

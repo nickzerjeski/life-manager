@@ -3,7 +3,7 @@ import { Status } from "../types/Status";
 import { APP_CONFIG } from "../utils/appConfig";
 
 export class Goal {
-  id: number;
+  id: string;
   name: string;
   description: string;
   start: number;
@@ -25,7 +25,7 @@ export class Goal {
      * @param status - Current status of the project.
      * @param goal - Associated goal for the project.
      */
-    constructor(id: number, name: string, description: string, start: number, current: number,
+    constructor(id: string, name: string, description: string, start: number, current: number,
                 objective: number, period: [Date, Date], aol: AOL) {
         this.id = id;
         this.name = name;

@@ -29,7 +29,7 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
 
   const handleCreate = async () => {
     const goal = new Goal(
-      Date.now(),
+      Date.now().toString(),
       name,
       description,
       start,

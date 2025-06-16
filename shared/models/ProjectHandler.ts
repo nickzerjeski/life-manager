@@ -1,161 +1,94 @@
+import supabase from '../db/supabase'
 import { Project } from './Project'
 import { Goal } from './Goal'
-import { GoalHandler } from './GoalHandler'
 
-/**
- * ProjectHandler manages projects and ensures they reference existing goals.
- */
 export class ProjectHandler {
   private static instance: ProjectHandler | null = null
 
-  private goalHandler: GoalHandler
-  private baseUrl: string
-
-  private constructor(goalHandler: GoalHandler, baseUrl: string) {
-    this.goalHandler = goalHandler
-    this.baseUrl = baseUrl
-  }
-
-  static getInstance(goalHandler?: GoalHandler, baseUrl = 'http://localhost:3001'): ProjectHandler {
-    if (!ProjectHandler.instance) {
-      if (!goalHandler) {
-        throw new Error('ProjectHandler requires a GoalHandler instance on first call')
-      }
-      ProjectHandler.instance = new ProjectHandler(goalHandler, baseUrl)
-    }
+  static getInstance(): ProjectHandler {
+    if (!ProjectHandler.instance) ProjectHandler.instance = new ProjectHandler()
     return ProjectHandler.instance
   }
 
-  /** Reset the singleton instance (primarily for tests). */
-  static reset(): void {
-    ProjectHandler.instance = null
-  }
+  static reset(): void { ProjectHandler.instance = null }
 
-  /** Add a new project after validating its goal exists. */
+  private constructor() {}
+
   async createProject(project: Project): Promise<void> {
-    const goals = await this.goalHandler.getGoals()
-    if (!goals.some((g) => g.id === project.goal.id)) {
-      throw new Error('Invalid goal for project')
-    }
-    await fetch(`${this.baseUrl}/projects`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(project),
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('projects').insert({
+      user_id: user.id,
+      goal_id: project.goal.id,
+      name: project.name,
+      short_description: project.shortDescription,
+      description: project.description,
+      start: project.start,
+      current: project.current,
+      objective: project.objective,
+      period_from: project.period[0].toISOString().slice(0,10),
+      period_to: project.period[1].toISOString().slice(0,10),
+      contribution_pct: project.contributionPct,
+      status: project.status,
     })
   }
 
-  /** Remove a project by id. */
-  async deleteProject(id: number): Promise<void> {
-    await fetch(`${this.baseUrl}/projects/${id}`, { method: 'DELETE' })
+  async deleteProject(id: string): Promise<void> {
+    await supabase.from('projects').delete().eq('id', id)
   }
 
-  /** Remove all projects from the handler. Primarily for testing. */
-  async clearProjects(): Promise<void> {
-    await fetch(`${this.baseUrl}/admin/clearProjects`, { method: 'POST' })
-  }
-
-  /** Replace projects with provided list. Useful for testing. */
-  async setProjects(projects: Project[]): Promise<void> {
-    await fetch(`${this.baseUrl}/admin/setProjects`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(projects),
-    })
-  }
-
-  /** Get all stored projects. */
   async getProjects(): Promise<Project[]> {
-    const res = await fetch(`${this.baseUrl}/projects`)
-    const data = await res.json()
-    return data.map(
-      (p: any) =>
-        new Project(
-          p.id,
-          p.name,
-          p.shortDescription,
-          p.description,
-          p.start,
-          p.current,
-          p.objective,
-          [new Date(p.period[0]), new Date(p.period[1])],
-          new Goal(
-            p.goal.id,
-            p.goal.name,
-            p.goal.description,
-            p.goal.start,
-            p.goal.current,
-            p.goal.objective,
-            [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
-            p.goal.aol
-          ),
-          p.contributionPct
-        )
-    )
+    const { data, error } = await supabase.from('projects').select('*, goals!inner(*)')
+    if (error || !data) return []
+    return data.map(p => new Project(
+      p.id,
+      p.name,
+      p.short_description ?? '',
+      p.description ?? '',
+      p.start,
+      p.current,
+      p.objective,
+      [new Date(p.period_from), new Date(p.period_to)],
+      new Goal(
+        p.goals.id,
+        p.goals.name,
+        p.goals.description,
+        p.goals.start,
+        p.goals.current,
+        p.goals.objective,
+        [new Date(p.goals.period_from), new Date(p.goals.period_to)],
+        p.goals.area_of_life,
+      ),
+      p.contribution_pct,
+    ))
   }
 
-  /** Get projects associated with a specific goal id. */
-  async getProjectsForGoal(goalId: number): Promise<Project[]> {
-    const res = await fetch(`${this.baseUrl}/projects?goalId=${goalId}`)
-    const data = await res.json()
-    return data.map(
-      (p: any) =>
-        new Project(
-          p.id,
-          p.name,
-          p.shortDescription,
-          p.description,
-          p.start,
-          p.current,
-          p.objective,
-          [new Date(p.period[0]), new Date(p.period[1])],
-          new Goal(
-            p.goal.id,
-            p.goal.name,
-            p.goal.description,
-            p.goal.start,
-            p.goal.current,
-            p.goal.objective,
-            [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
-            p.goal.aol
-          ),
-          p.contributionPct
-        )
-    )
-  }
-
-  /** Request project generation for a goal. */
-  async generateProjects(goalId: number): Promise<Project[]> {
-    const res = await fetch(`${this.baseUrl}/projects/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ goalId })
-    })
-    if (!res.ok) {
-      throw new Error('Failed to generate projects')
-    }
-    const data = await res.json()
-    const map = (p: any) =>
-      new Project(
-        p.id,
-        p.name,
-        p.shortDescription,
-        p.description,
-        p.start,
-        p.current,
-        p.objective,
-        [new Date(p.period[0]), new Date(p.period[1])],
-        new Goal(
-          p.goal.id,
-          p.goal.name,
-          p.goal.description,
-          p.goal.start,
-          p.goal.current,
-          p.goal.objective,
-          [new Date(p.goal.period[0]), new Date(p.goal.period[1])],
-          p.goal.aol
-        ),
-        p.contributionPct
-      )
-    return Array.isArray(data) ? data.map(map) : [map(data)]
+  async getProjectsForGoal(goalId: string): Promise<Project[]> {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*, goals!inner(*)')
+      .eq('goal_id', goalId)
+    if (error || !data) return []
+    return data.map(p => new Project(
+      p.id,
+      p.name,
+      p.short_description ?? '',
+      p.description ?? '',
+      p.start,
+      p.current,
+      p.objective,
+      [new Date(p.period_from), new Date(p.period_to)],
+      new Goal(
+        p.goals.id,
+        p.goals.name,
+        p.goals.description,
+        p.goals.start,
+        p.goals.current,
+        p.goals.objective,
+        [new Date(p.goals.period_from), new Date(p.goals.period_to)],
+        p.goals.area_of_life,
+      ),
+      p.contribution_pct,
+    ))
   }
 }

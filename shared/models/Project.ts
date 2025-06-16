@@ -3,7 +3,7 @@ import { Goal } from "./Goal";
 import { APP_CONFIG } from "../utils/appConfig";
 
 export class Project {
-  id: number;
+  id: string;
   name: string;
   shortDescription: string;
   description: string;
@@ -29,7 +29,7 @@ export class Project {
      * @param goal - Associated goal for the project.
      */
     constructor(
-        id: number,
+        id: string,
         name: string,
         shortDescription: string,
         description: string,

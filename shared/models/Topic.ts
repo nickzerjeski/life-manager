@@ -1,12 +1,12 @@
 import { Project } from './Project'
 
 export class Topic {
-  id: number
+  id: string
   name: string
   shortDescription: string
   project: Project
 
-  constructor(id: number, name: string, shortDescription: string, project: Project) {
+  constructor(id: string, name: string, shortDescription: string, project: Project) {
     this.id = id
     this.name = name
     this.shortDescription = shortDescription

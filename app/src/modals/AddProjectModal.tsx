@@ -34,10 +34,10 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     nextYear.setFullYear(nextYear.getFullYear() + 1);
     return nextYear.toISOString().slice(0, 10);
   });
-  const [goalId, setGoalId] = useState(0);
+  const [goalId, setGoalId] = useState('');
   const [contributionPct, setContributionPct] = useState(0);
   useEffect(() => {
-    if (goals.length > 0 && goalId === 0) {
+    if (goals.length > 0 && !goalId) {
       setGoalId(goals[0].id);
     }
   }, [goals, goalId]);
@@ -46,7 +46,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     const goal = goals.find((g) => g.id === goalId) || goals[0];
     if (!goal) return;
     const project = new Project(
-      Date.now(),
+      Date.now().toString(),
       name,
       shortDescription,
       description,
@@ -168,7 +168,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
           <label className="block text-sm font-medium text-gray-700 mb-1">Goal</label>
           <select
             value={goalId}
-            onChange={(e) => setGoalId(Number(e.target.value))}
+            onChange={(e) => setGoalId(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
           >
             {goals.map((g) => (
