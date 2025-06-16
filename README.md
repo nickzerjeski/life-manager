@@ -30,6 +30,11 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 ### Document
 - Types accepted: PDF, Markdown, plain text
 - Stored in cloud bucket; metadata keeps `id`, `filename`, `contentType`, and ownership reference
+- Files live in a `documents` bucket structured as:
+  - `documents/<user-id>/<goal-id>/<goal-name>.md`
+  - `documents/<user-id>/<goal-id>/<project-id>/<project-name>.md`
+  - `documents/<user-id>/<goal-id>/<project-id>/<topic-id>/<topic-name>.md`
+  Uploaded files for a goal go under `documents/<user-id>/<goal-id>/` and files for a project under `documents/<user-id>/<goal-id>/<project-id>/`.
 ## AI Pipeline
 1. Trigger – User presses Start Goal; client POSTs `/ai/expand-goal` with goal ID and document references.
 2. Workflow – n8n retrieves documents, feeds cleaned text and metadata to OpenAI.

@@ -17,7 +17,9 @@ export class ProjectHandler {
   async createProject(project: Project): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-    await supabase.from('projects').insert({
+    const { data } = await supabase
+      .from('projects')
+      .insert({
       user_id: user.id,
       goal_id: project.goal.id,
       name: project.name,
@@ -30,7 +32,17 @@ export class ProjectHandler {
       period_to: project.period[1].toISOString().slice(0,10),
       contribution_pct: project.contributionPct,
       status: project.status,
-    })
+      })
+      .select()
+      .single()
+
+    if (data) {
+      const path = `${user.id}/${data.goal_id}/${data.id}/${data.name}.md`
+      const blob = new Blob([
+        `# ${data.name}\n\n${data.description || ''}`,
+      ], { type: 'text/markdown' })
+      await supabase.storage.from('documents').upload(path, blob, { upsert: true })
+    }
   }
 
   async deleteProject(id: string): Promise<void> {

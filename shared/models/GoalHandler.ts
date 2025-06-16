@@ -18,7 +18,9 @@ export class GoalHandler {
   async createGoal(goal: Goal): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-    await supabase.from('goals').insert({
+    const { data } = await supabase
+      .from('goals')
+      .insert({
       user_id: user.id,
       name: goal.name,
       description: goal.description,
@@ -29,7 +31,17 @@ export class GoalHandler {
       period_to: goal.period[1].toISOString().slice(0,10),
       status: goal.status,
       area_of_life: goal.aol,
-    })
+      })
+      .select()
+      .single()
+
+    if (data) {
+      const path = `${user.id}/${data.id}/${data.name}.md`
+      const blob = new Blob([
+        `# ${data.name}\n\n${data.description || ''}`,
+      ], { type: 'text/markdown' })
+      await supabase.storage.from('documents').upload(path, blob, { upsert: true })
+    }
   }
 
   async deleteGoal(id: string): Promise<void> {

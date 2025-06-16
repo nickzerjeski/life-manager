@@ -15,6 +15,29 @@ export class TopicHandler {
 
   private constructor() {}
 
+  async createTopic(topic: Topic): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const { data } = await supabase
+      .from('topics')
+      .insert({
+        user_id: user.id,
+        project_id: topic.project.id,
+        name: topic.name,
+        short_description: topic.shortDescription,
+      })
+      .select()
+      .single()
+
+    if (data) {
+      const path = `${user.id}/${topic.project.goal.id}/${topic.project.id}/${data.id}/${data.name}.md`
+      const blob = new Blob([
+        `# ${data.name}\n\n${data.short_description || ''}`,
+      ], { type: 'text/markdown' })
+      await supabase.storage.from('documents').upload(path, blob, { upsert: true })
+    }
+  }
+
   async getTopicsForProject(projectId: string): Promise<Topic[]> {
     const { data, error } = await supabase
       .from('topics')
@@ -49,7 +72,18 @@ export class TopicHandler {
     ))
   }
 
-  async getMarkdownForTopic(_topicId: string): Promise<string> {
-    return ''
+  async getMarkdownForTopic(topicId: string): Promise<string> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return ''
+    const { data } = await supabase
+      .from('topics')
+      .select('name, project_id, projects(goal_id)')
+      .eq('id', topicId)
+      .single()
+    if (!data) return ''
+    const path = `${user.id}/${data.projects.goal_id}/${data.project_id}/${topicId}/${data.name}.md`
+    const { data: file } = await supabase.storage.from('documents').download(path)
+    if (!file) return ''
+    return await file.text()
   }
 }
