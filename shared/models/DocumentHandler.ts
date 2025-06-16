@@ -1,3 +1,4 @@
+import supabase from '../db/supabase'
 import { Document } from './Document'
 
 export class DocumentHandler {
@@ -24,7 +25,16 @@ export class DocumentHandler {
     return _document
   }
 
-  async uploadDocument(_documentId: string, _file: File): Promise<void> {}
+  async uploadDocument(documentId: string, file: File): Promise<void> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) throw new Error('User not authenticated')
+
+    const path = `${user.id}/${documentId}/${file.name}`
+    const { error } = await supabase.storage.from('documents').upload(path, file)
+    if (error) throw error
+  }
 
   async getDocument(_id: string): Promise<{ name: string; type: string; content: string | null }> {
     return { name: '', type: '', content: null }
