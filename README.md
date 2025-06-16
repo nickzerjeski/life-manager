@@ -28,8 +28,8 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - Atomic action ≤ 1 440 min
 - Fields: `id`, `name`, `description`, `duration`, `priority`, `dependencyIds[]`, `completed`, optional `projectId`
 ### Document
-- Types accepted: PDF, Markdown, plain text
-- Stored in cloud bucket; metadata keeps `id`, `filename`, `contentType`, and ownership reference
+- Types accepted: PDF, Markdown, plain text and excel spreadsheets
+- Stored in cloud bucket; Interacting with these files is referenced in `/docs/supabase-bucket-operations.md`
 - Files live in a `documents` bucket structured as:
   - `documents/<user-id>/<goal-id>/`
   - `documents/<user-id>/<goal-id>/<project-id>/`
