@@ -12,3 +12,11 @@ create table public.tasks (
   inserted_at timestamp with time zone default now()
 );
 alter table public.tasks enable row level security;
+
+--- Add a policy to allow users to manage their own tasks
+create policy "Users can manage their tasks"
+on public.tasks
+for all
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);

@@ -13,3 +13,11 @@ create table public.goals (
   inserted_at timestamp with time zone default now()
 );
 alter table public.goals enable row level security;
+
+--- Add a policy to allow users to manage their own goals
+create policy "Users can manage their goals"
+on public.goals
+for all
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
