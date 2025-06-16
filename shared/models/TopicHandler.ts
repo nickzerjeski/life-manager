@@ -30,7 +30,8 @@ export class TopicHandler {
       .single()
 
     if (data) {
-      const path = `${user.id}/${topic.project.goal.id}/${topic.project.id}/${data.id}/${data.name}.md`
+      const safeName = encodeURIComponent(data.name)
+      const path = `${user.id}/${topic.project.goal.id}/${topic.project.id}/${data.id}/${safeName}.md`
       const blob = new Blob([
         `# ${data.name}\n\n${data.short_description || ''}`,
       ], { type: 'text/markdown' })
@@ -81,7 +82,8 @@ export class TopicHandler {
       .eq('id', topicId)
       .single()
     if (!data) return ''
-    const path = `${user.id}/${data.projects.goal_id}/${data.project_id}/${topicId}/${data.name}.md`
+    const safeName = encodeURIComponent(data.name)
+    const path = `${user.id}/${data.projects.goal_id}/${data.project_id}/${topicId}/${safeName}.md`
     const { data: file } = await supabase.storage.from('documents').download(path)
     if (!file) return ''
     return await file.text()

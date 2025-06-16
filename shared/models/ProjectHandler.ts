@@ -37,7 +37,8 @@ export class ProjectHandler {
       .single()
 
     if (data) {
-      const path = `${user.id}/${data.goal_id}/${data.id}/${data.name}.md`
+      const safeName = encodeURIComponent(data.name)
+      const path = `${user.id}/${data.goal_id}/${data.id}/${safeName}.md`
       const blob = new Blob([
         `# ${data.name}\n\n${data.description || ''}`,
       ], { type: 'text/markdown' })
