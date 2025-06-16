@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { supabase } from '@/lib/supabaseClient'
+import supabase from '../../supabase'
 
 interface Props {
   onShowLogin: () => void

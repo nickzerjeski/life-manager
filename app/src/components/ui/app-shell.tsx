@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home } from 'lucide-react';
-import { supabase } from '@/lib/supabaseClient';
+import supabase from '../../../supabase';
 import { AppShellProvider, useAppShell } from './app-shell-context';
 
 /* ----- icons mapping for sidebar items ----- */
