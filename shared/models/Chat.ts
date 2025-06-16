@@ -6,14 +6,14 @@ export interface ChatMessage {
 }
 
 export class Chat {
-  id: number
+  id: string
   title: string
   description: string
   messages: ChatMessage[]
   topic: Topic
 
   constructor(
-    id: number,
+    id: string,
     title: string,
     description: string,
     messages: ChatMessage[],

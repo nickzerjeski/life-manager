@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Project } from '@shared/models/Project'
 import { Topic } from '@shared/models/Topic'
-import { Chat } from '@shared/models/Chat'
 import { TopicHandler } from '@shared/models/TopicHandler'
-import { ChatHandler } from '@shared/models/ChatHandler'
 import Modal from '@/components/ui/modal'
-import ChatView from '@/components/views/ChatView'
 import TopicDetailView from '@/components/views/TopicDetailView'
 
 interface TopicTabProps {
@@ -15,11 +12,10 @@ interface TopicTabProps {
 const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
   const [topics, setTopics] = useState<Topic[]>([])
   const [activeTopic, setActiveTopic] = useState<Topic | null>(null)
-  const [chats, setChats] = useState<Chat[]>([])
-  const [activeChat, setActiveChat] = useState<Chat | null>(null)
+  const [chats] = useState([])
+  const [activeChat, setActiveChat] = useState<null>(null)
   const [markdown, setMarkdown] = useState('')
   const topicHandler = React.useMemo(() => TopicHandler.getInstance(), [])
-  const chatHandler = React.useMemo(() => ChatHandler.getInstance(), [])
 
   useEffect(() => {
     topicHandler
@@ -31,11 +27,7 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
 
   const openTopic = async (topic: Topic) => {
     setActiveTopic(topic)
-    const [list, md] = await Promise.all([
-      chatHandler.getChatsForTopic(topic.id),
-      topicHandler.getMarkdownForTopic(topic.id),
-    ])
-    setChats(list)
+    const md = await topicHandler.getMarkdownForTopic(topic.id)
     setMarkdown(md)
   }
 
@@ -51,13 +43,12 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
         <TopicDetailView
           topic={activeTopic}
           markdown={markdown}
-          chats={chats}
+          chats={[]}
           onBack={() => {
             setActiveTopic(null)
-            setChats([])
             setMarkdown('')
           }}
-          onOpenChat={chat => setActiveChat(chat)}
+          onOpenChat={() => {}}
         />
       ) : (
         <>
@@ -80,9 +71,9 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
         </>
       )}
 
-      {activeChat && (
-        <Modal isOpen={!!activeChat} onClose={() => setActiveChat(null)} title={activeChat.title}>
-          <ChatView chat={activeChat} />
+      {false && (
+        <Modal isOpen={!!activeChat} onClose={() => setActiveChat(null)} title="">
+          <ChatView chat={activeChat as any} />
         </Modal>
       )}
     </div>

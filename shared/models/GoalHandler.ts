@@ -1,85 +1,52 @@
-import { Goal } from "./Goal"
+import supabase from '../db/supabase'
+import { Goal } from './Goal'
 
-/**
- * GoalHandler manages goals persisted on the backend server.
- */
 export class GoalHandler {
   private static instance: GoalHandler | null = null
 
-  private baseUrl: string
-
-  private constructor(baseUrl: string) {
-    this.baseUrl = baseUrl
-  }
-
-  static getInstance(baseUrl = 'http://localhost:3001'): GoalHandler {
-    if (!GoalHandler.instance) {
-      GoalHandler.instance = new GoalHandler(baseUrl)
-    }
+  static getInstance(): GoalHandler {
+    if (!GoalHandler.instance) GoalHandler.instance = new GoalHandler()
     return GoalHandler.instance
   }
 
-  /** Reset the singleton instance (primarily for tests). */
   static reset(): void {
     GoalHandler.instance = null
   }
 
-  /**
-   * Adds a new goal to the handler.
-   * @param goal Goal instance to store
-   */
+  private constructor() {}
+
   async createGoal(goal: Goal): Promise<void> {
-    await fetch(`${this.baseUrl}/goals`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(goal),
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('goals').insert({
+      user_id: user.id,
+      name: goal.name,
+      description: goal.description,
+      start: goal.start,
+      current: goal.current,
+      objective: goal.objective,
+      period_from: goal.period[0].toISOString().slice(0,10),
+      period_to: goal.period[1].toISOString().slice(0,10),
+      status: goal.status,
+      area_of_life: goal.aol,
     })
   }
 
-  /**
-   * Removes a goal by id.
-   * @param id Identifier of the goal to delete
-   */
-  async deleteGoal(id: number): Promise<void> {
-    await fetch(`${this.baseUrl}/goals/${id}`, { method: 'DELETE' })
+  async deleteGoal(id: string): Promise<void> {
+    await supabase.from('goals').delete().eq('id', id)
   }
 
-  /**
-   * Removes all goals from the handler. Primarily used for tests.
-   */
-  async clearGoals(): Promise<void> {
-    await fetch(`${this.baseUrl}/admin/clearGoals`, { method: 'POST' })
-  }
-
-  /**
-   * Replace all goals with the provided list. Useful for testing.
-   */
-  async setGoals(goals: Goal[]): Promise<void> {
-    await fetch(`${this.baseUrl}/admin/setGoals`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(goals),
-    })
-  }
-
-  /**
-   * Returns all stored goals.
-   */
   async getGoals(): Promise<Goal[]> {
-    const res = await fetch(`${this.baseUrl}/goals`)
-    const data = await res.json()
-    return data.map(
-      (g: any) =>
-        new Goal(
-          g.id,
-          g.name,
-          g.description,
-          g.start,
-          g.current,
-          g.objective,
-          [new Date(g.period[0]), new Date(g.period[1])],
-          g.aol
-        )
-    )
+    const { data } = await supabase.from('goals').select('*')
+    return (data || []).map(g => new Goal(
+      g.id,
+      g.name,
+      g.description,
+      g.start,
+      g.current,
+      g.objective,
+      [new Date(g.period_from), new Date(g.period_to)],
+      g.area_of_life,
+    ))
   }
 }

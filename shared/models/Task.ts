@@ -1,7 +1,7 @@
 import { Project } from './Project'
 
 export class Task {
-  id: number
+  id: string
   name: string
   description: string
   deadline: Date
@@ -19,7 +19,7 @@ export class Task {
      * @param dependencies - List of tasks that this task depends on.
     */
     constructor(
-        id: number,
+        id: string,
         name: string,
         description: string,
         deadline: Date,
@@ -55,7 +55,7 @@ export class AutomatedTask extends Task {
     status: AutomationState
 
     constructor(
-        id: number,
+        id: string,
         name: string,
         description: string,
         deadline: Date,

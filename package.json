@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"tsx --tsconfig server/tsconfig.json server/src/server.ts\" \"vite app --config app/vite.config.mts\"",
+    "dev": "vite app --config app/vite.config.mts",
     "genkit:dev": "genkit start -- tsx server/src/ai/dev.ts",
     "genkit:watch": "genkit start -- tsx --watch server/src/ai/dev.ts",
     "build": "vite build app --config app/vite.config.mts",

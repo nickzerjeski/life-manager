@@ -1,14 +1,14 @@
 export class Document {
-  id: number;
-  goalId?: number;
-  projectId?: number;
+  id: string;
+  goalId?: string;
+  projectId?: string;
   name: string;
   type: string;
   uploadDate: Date;
 
   constructor(
-    id: number,
-    options: { goalId?: number; projectId?: number },
+    id: string,
+    options: { goalId?: string; projectId?: string },
     name: string,
     type: string,
     uploadDate: Date
