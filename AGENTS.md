@@ -4,13 +4,7 @@
 Guides contributors on repository structure and coding style.
 
 ## Directory guide
-- `src/` – React application code (bundled with Vite)
-  - `app/` – page routing and layout files
-  - `components/` – reusable UI pieces
-  - `models/` – TypeScript domain models
-  - `ai/` – AI workflow helpers
-  - `hooks/` – custom React hooks
-- `docs/` – project documentation
+TODO
 
 ## Commands
 - `npm run dev`      – Vite dev server
