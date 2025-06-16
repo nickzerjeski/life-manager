@@ -7,3 +7,11 @@ create table public.topics (
   inserted_at timestamp with time zone default now()
 );
 alter table public.topics enable row level security;
+
+--- Add a policy to allow users to manage their own topics
+create policy "Users can manage their topics"
+on public.topics
+for all
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
