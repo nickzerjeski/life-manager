@@ -21,10 +21,10 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ project }) => {
 
   const loadDocuments = React.useCallback(() => {
     handler
-      .getDocumentsForProject(project.id)
+      .getDocumentsForProject(project.goal.id, project.id)
       .then(setDocuments)
       .catch(console.error)
-  }, [project.id, handler])
+  }, [project.goal.id, project.id, handler])
 
   useEffect(() => {
     loadDocuments()
@@ -33,12 +33,11 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ project }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!file) return
-    const fileName = file.name
-    const fileType = fileName.split('.').pop()?.toLowerCase() || ''
-    const doc = new Document(0, { projectId: project.id }, fileName, fileType, new Date())
     try {
-      const created = await handler.createDocument(doc)
-      await handler.uploadDocument(created.id, file)
+      await handler.uploadDocument(
+        `${project.goal.id}/${project.id}/${file.name}`,
+        file
+      )
       setFile(null)
       loadDocuments()
       setShowUpload(false)
@@ -48,7 +47,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ project }) => {
     }
   }
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await handler.deleteDocument(id)
       loadDocuments()

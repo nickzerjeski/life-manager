@@ -1,3 +1,4 @@
+import supabase from '../db/supabase'
 import { Document } from './Document'
 
 export class DocumentHandler {
@@ -12,23 +13,69 @@ export class DocumentHandler {
 
   private constructor() {}
 
-  async getDocumentsForGoal(_goalId: string): Promise<Document[]> {
-    return []
+  private async list(prefix: string): Promise<Document[]> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return []
+    const path = `${user.id}/${prefix}`
+    const { data, error } = await supabase.storage
+      .from('documents')
+      .list(path)
+    if (error || !data) return []
+    return data.map(
+      f =>
+        new Document(
+          `${path}/${f.name}`,
+          {},
+          f.name,
+          f.name.split('.').pop()?.toLowerCase() || '',
+          new Date(f.updated_at)
+        )
+    )
   }
 
-  async getDocumentsForProject(_projectId: string): Promise<Document[]> {
-    return []
+  async getDocumentsForGoal(goalId: string): Promise<Document[]> {
+    return this.list(`${goalId}`)
   }
 
-  async createDocument(_document: Document): Promise<Document> {
-    return _document
+  async getDocumentsForProject(goalId: string, projectId: string): Promise<Document[]> {
+    return this.list(`${goalId}/${projectId}`)
   }
 
-  async uploadDocument(_documentId: string, _file: File): Promise<void> {}
-
-  async getDocument(_id: string): Promise<{ name: string; type: string; content: string | null }> {
-    return { name: '', type: '', content: null }
+  async uploadDocument(relativePath: string, file: File): Promise<void> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.storage
+      .from('documents')
+      .upload(`${user.id}/${relativePath}`, file, { upsert: true })
   }
 
-  async deleteDocument(_id: string): Promise<void> {}
+  async getDocument(fullPath: string): Promise<{ name: string; type: string; content: string | null }> {
+    const { data, error } = await supabase.storage.from('documents').download(fullPath)
+    if (error || !data) return { name: '', type: '', content: null }
+    const type = fullPath.split('.').pop()?.toLowerCase() || ''
+    if (type === 'txt') {
+      return { name: fullPath.split('/').pop() || '', type, content: await data.text() }
+    }
+    if (type === 'pdf') {
+      const reader = new FileReader()
+      const promise = new Promise<string>((resolve, reject) => {
+        reader.onerror = () => reject(reader.error)
+        reader.onloadend = () => {
+          const res = reader.result as string
+          resolve(res.split(',')[1])
+        }
+      })
+      reader.readAsDataURL(data)
+      return { name: fullPath.split('/').pop() || '', type, content: await promise }
+    }
+    return { name: fullPath.split('/').pop() || '', type, content: null }
+  }
+
+  async deleteDocument(fullPath: string): Promise<void> {
+    await supabase.storage.from('documents').remove([fullPath])
+  }
 }
