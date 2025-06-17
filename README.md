@@ -31,9 +31,9 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - Types accepted: PDF, Markdown, plain text and excel spreadsheets
 - Stored in cloud bucket; Interacting with these files is referenced in `/docs/supabase-bucket-operations.md`
 - Files live in a `documents` bucket structured as:
-  - `documents/<user-id>/<goal-id>/`
-  - `documents/<user-id>/<goal-id>/<project-id>/`
-  - `documents/<user-id>/<goal-id>/<project-id>/<topic-id>/`
+  - `<user-id>/<goal-id>/` for all goal related files.
+  - `<user-id>/<goal-id>/<project-id>/` for all project related files.
+  - `<user-id>/<goal-id>/<project-id>/<topic-id>/` for all topic related files.
 ## AI Pipeline
 1. Trigger – User presses Start Goal; client POSTs `/ai/expand-goal` with goal ID and document references.
 2. Workflow – n8n retrieves documents, feeds cleaned text and metadata to OpenAI.
