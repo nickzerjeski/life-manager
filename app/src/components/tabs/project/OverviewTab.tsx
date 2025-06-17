@@ -23,13 +23,13 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
     Promise.all([
       taskHandler.getTasksForProject(project.id),
       topicHandler.getTopicsForProject(project.id),
-      documentHandler.getDocumentsForProject(project.id),
+      documentHandler.getDocumentsForProject(project.goal.id, project.id),
     ])
       .then(([t, tp, d]) =>
         setCounts({ tasks: t.length, topics: tp.length, documents: d.length })
       )
       .catch(() => setCounts({ tasks: 0, topics: 0, documents: 0 }))
-  }, [project.id, taskHandler, topicHandler, documentHandler])
+  }, [project.goal.id, project.id, taskHandler, topicHandler, documentHandler])
 
   const progress = Math.round(project.progressPercentage)
   const time = Math.round(project.timePercentage)

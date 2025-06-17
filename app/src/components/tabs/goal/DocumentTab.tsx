@@ -34,12 +34,8 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!file) return
-    const fileName = file.name
-    const fileType = fileName.split('.').pop()?.toLowerCase() || ''
-    const doc = new Document(0, { goalId: goal.id }, fileName, fileType, new Date())
     try {
-      const created = await handler.createDocument(doc)
-      await handler.uploadDocument(created.id, file)
+      await handler.uploadDocument(`${goal.id}/${file.name}`, file)
       setFile(null)
       loadDocuments()
       setShowUpload(false)
@@ -49,7 +45,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
     }
   }
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await handler.deleteDocument(id)
       loadDocuments()
