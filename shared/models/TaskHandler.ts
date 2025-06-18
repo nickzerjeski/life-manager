@@ -18,7 +18,7 @@ export class TaskHandler {
   async getTasksForProject(projectId: string): Promise<Task[]> {
     const { data, error } = await supabase
       .from('tasks')
-      .select('*, projects!inner(goal_id, name, short_description, description, start, current, objective, period_from, period_to, contribution_pct, goals:goals(id, name, description, start, current, objective, period_from, period_to, area_of_life))')
+      .select('*, projects!inner(goal_id, name, description, start, current, objective, period_from, period_to, contribution_pct, goals:goals(id, name, description, start, current, objective, period_from, period_to, area_of_life))')
       .eq('project_id', projectId)
     if (error || !data) return []
     return data.map(t => {
@@ -27,7 +27,6 @@ export class TaskHandler {
       const project = new Project(
         p.goal_id, // id will be overwritten below after supabase fix
         p.name,
-        p.short_description ?? '',
         p.description ?? '',
         p.start,
         p.current,

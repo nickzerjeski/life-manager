@@ -20,7 +20,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       .catch(() => setGoals([]));
   }, []);
   const [name, setName] = useState('');
-  const [shortDescription, setShortDescription] = useState('');
   const [description, setDescription] = useState('');
   const [start, setStart] = useState(0);
   const [current, setCurrent] = useState(0);
@@ -48,7 +47,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     const project = new Project(
       Date.now().toString(),
       name,
-      shortDescription,
       description,
       start,
       current,
@@ -62,7 +60,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     onClose();
     // reset fields
     setName('');
-    setShortDescription('');
     setDescription('');
     setStart(0);
     setCurrent(0);
@@ -86,15 +83,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
-        <input
-          type="text"
-          value={shortDescription}
-          onChange={(e) => setShortDescription(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded"
         />
       </div>
