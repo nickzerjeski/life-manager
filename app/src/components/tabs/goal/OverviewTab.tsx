@@ -1,104 +1,81 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Goal } from '@shared/models/Goal';
-import { Doughnut } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  TimeScale,
-} from 'chart.js';
-import 'chartjs-adapter-date-fns';
-import { differenceInCalendarDays } from 'date-fns';
-
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  TimeScale
-);
+import { ProjectHandler } from '@shared/models/ProjectHandler';
+import { DocumentHandler } from '@shared/models/DocumentHandler';
+import { APP_CONFIG } from '@shared/utils/appConfig';
+import { Progbar } from '@/components/ui/progress-bar';
+import { Separator } from '@/components/ui/separator';
 
 interface OverviewTabProps {
   goal: Goal;
 }
 
 const OverviewTab: React.FC<OverviewTabProps> = ({ goal }) => {
-  const progress = Math.max(
-    0,
-    Math.min(
-      ((goal.current - goal.start) / (goal.objective - goal.start)) * 100,
-      100
-    )
-  );
+  const [counts, setCounts] = useState({ projects: 0, documents: 0 });
+  const [markdown, setMarkdown] = useState('');
+  const projectHandler = React.useMemo(() => ProjectHandler.getInstance(), []);
+  const documentHandler = React.useMemo(() => DocumentHandler.getInstance(), []);
 
-  const totalDays = differenceInCalendarDays(goal.period[1], goal.period[0]);
-  const daysPassed = Math.max(
-    0,
-    Math.min(
-      differenceInCalendarDays(new Date(), goal.period[0]),
-      totalDays
-    )
-  );
-  const daysLeft = Math.max(totalDays - daysPassed, 0);
+  useEffect(() => {
+    Promise.all([
+      projectHandler.getProjectsForGoal(goal.id),
+      documentHandler.getDocumentsForGoal(goal.id),
+    ])
+      .then(([p, d]) => setCounts({ projects: p.length, documents: d.length }))
+      .catch(() => setCounts({ projects: 0, documents: 0 }));
+    documentHandler
+      .getMarkdownForGoal(goal.id)
+      .then(setMarkdown)
+      .catch(() => setMarkdown(''));
+  }, [goal.id, projectHandler, documentHandler]);
 
-  const progressData = {
-    labels: ['Progress', 'Remaining'],
-    datasets: [
-      {
-        data: [progress, 100 - progress],
-        backgroundColor: ['#2563eb', '#e5e7eb'],
-        borderWidth: 0,
-      },
-    ],
-  };
+  const progress = Math.round(goal.progressPercentage);
+  const time = Math.round(goal.timePercentage);
+  const riskRange = APP_CONFIG.status.atRiskRangePct;
+  const riskStart = Math.max(0, time - riskRange);
+  const riskEnd = Math.min(100, time + riskRange);
 
-  const daysData = {
-    labels: ['Days Passed', 'Days Left'],
-    datasets: [
-      {
-        data: [daysPassed, daysLeft],
-        backgroundColor: ['#2563eb', '#d1d5db'],
-        borderWidth: 0,
-      },
-    ],
-  };
-
-  const history: { date: string; value: number }[] | undefined = (goal as any).history;
-  const historyData = history && history.length > 0 ? {
-    labels: history.map(h => h.date),
-    datasets: [
-      {
-        label: 'Progress',
-        data: history.map(h => h.value),
-        borderColor: '#2563eb',
-        backgroundColor: 'rgba(37,99,235,0.2)',
-        tension: 0.3,
-      },
-    ],
-  } : null;
+  useEffect(() => {
+    if ((window as any).MathJax?.typeset) {
+      (window as any).MathJax.typeset();
+    }
+  }, [markdown]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div className="bg-white shadow rounded p-4 flex flex-col items-center">
-        <h3 className="text-sm font-semibold mb-2">Overall Progress</h3>
-        <Doughnut data={progressData} className="max-w-xs" />
-        <p className="mt-2 text-sm font-medium text-gray-700">{progress.toFixed(1)}%</p>
+    <div className="space-y-4">
+      <div className="flex item-stretch justify-around pb-4">
+        <div className="flex flex-col items-center flex-1">
+          <span className="text-2xl font-bold text-gray-800">{counts.projects}</span>
+          <span className="text-sm text-gray-600">Projects</span>
+        </div>
+        <Separator orientation="vertical" className="mx-2" />
+        <div className="flex flex-col items-center flex-1">
+          <span className="text-2xl font-bold text-gray-800">{counts.documents}</span>
+          <span className="text-sm text-gray-600">Documents</span>
+        </div>
       </div>
-      <div className="bg-white shadow rounded p-4 flex flex-col items-center">
-        <h3 className="text-sm font-semibold mb-2">Time Progress</h3>
-        <Doughnut data={daysData} className="max-w-xs" />
-        <p className="mt-2 text-sm font-medium text-gray-700">{daysPassed} / {totalDays} days</p>
+      <div className="space-y-2">
+        <Progbar name="Time Passed" progress={time} />
+        <Progbar name="Progress" progress={progress} range={[riskStart, riskEnd]} />
       </div>
+      <Separator className="my-2" />
+      <ReactMarkdown
+        className="prose max-w-none text-gray-800"
+        remarkPlugins={[remarkGfm]}
+        components={{
+          table: ({ node, ...props }) => (
+            <table className="min-w-full border border-gray-300 text-sm" {...props} />
+          ),
+          th: ({ node, ...props }) => (
+            <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
+          ),
+          td: ({ node, ...props }) => <td className="border px-2 py-1" {...props} />,
+        }}
+      >
+        {markdown || goal.description}
+      </ReactMarkdown>
     </div>
   );
 };

@@ -23,7 +23,9 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
   const loadDocuments = React.useCallback(() => {
     handler
       .getDocumentsForGoal(goal.id)
-      .then(setDocuments)
+      .then(d =>
+        setDocuments(d.filter(doc => doc.name !== `${goal.id}.md`))
+      )
       .catch(console.error)
   }, [goal.id, handler])
 
