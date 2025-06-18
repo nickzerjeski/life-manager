@@ -1,4 +1,5 @@
 import supabase from '../../supabase'
+import axios from 'axios'
 import { Document } from './Document'
 
 export class DocumentHandler {
@@ -50,9 +51,45 @@ export class DocumentHandler {
       data: { user },
     } = await supabase.auth.getUser()
     if (!user) return
+    const fullPath = `${user.id}/${relativePath}`
     await supabase.storage
       .from('documents')
-      .upload(`${user.id}/${relativePath}`, file, { upsert: true })
+      .upload(fullPath, file, { upsert: true })
+
+    const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL
+    if (webhookUrl) {
+      try {
+        const { data } = supabase.storage
+          .from('documents')
+          .getPublicUrl(fullPath)
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onerror = () => reject(reader.error)
+          reader.onloadend = () => {
+            const res = reader.result as string
+            resolve(res.split(',')[1])
+          }
+          reader.readAsDataURL(file)
+        })
+
+        const [goalId, projectId] = relativePath.split('/')
+
+        await axios.post(webhookUrl, {
+          id: fullPath,
+          goal_id: goalId,
+          project_id: projectId,
+          url: data.publicUrl,
+          data: {
+            fileName: file.name,
+            mimeType: file.type,
+            data: base64,
+          },
+        })
+      } catch (err) {
+        /* eslint-disable no-console */
+        console.error(err)
+      }
+    }
   }
 
   async getDocument(fullPath: string): Promise<{ name: string; type: string; content: string | null }> {
