@@ -15,6 +15,7 @@ interface OverviewTabProps {
 
 const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
   const [counts, setCounts] = useState({ tasks: 0, topics: 0, documents: 0 })
+  const [markdown, setMarkdown] = useState('')
   const taskHandler = React.useMemo(() => TaskHandler.getInstance(), [])
   const topicHandler = React.useMemo(() => TopicHandler.getInstance(), [])
   const documentHandler = React.useMemo(() => DocumentHandler.getInstance(), [])
@@ -29,6 +30,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
         setCounts({ tasks: t.length, topics: tp.length, documents: d.length })
       )
       .catch(() => setCounts({ tasks: 0, topics: 0, documents: 0 }))
+    documentHandler
+      .getMarkdownForProject(project.goal.id, project.id)
+      .then(setMarkdown)
+      .catch(() => setMarkdown(''))
   }, [project.goal.id, project.id, taskHandler, topicHandler, documentHandler])
 
   const progress = Math.round(project.progressPercentage)
@@ -41,7 +46,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
     if ((window as any).MathJax?.typeset) {
       ;(window as any).MathJax.typeset()
     }
-  }, [project.description])
+  }, [markdown])
 
   return (
     <div className="space-y-4">
@@ -83,7 +88,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
           td: ({ node, ...props }) => <td className="border px-2 py-1" {...props} />,
         }}
       >
-        {project.description}
+        {markdown || project.description}
       </ReactMarkdown>
     </div>
   )

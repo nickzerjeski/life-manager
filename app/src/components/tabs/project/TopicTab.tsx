@@ -27,7 +27,11 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
 
   const openTopic = async (topic: Topic) => {
     setActiveTopic(topic)
-    const md = await topicHandler.getMarkdownForTopic(topic.id)
+    const md = await topicHandler.getMarkdownForTopic(
+      topic.project.goal.id,
+      topic.project.id,
+      topic.id
+    )
     setMarkdown(md)
   }
 

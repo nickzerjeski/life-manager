@@ -2,6 +2,7 @@ import supabase from '../db/supabase'
 import { Topic } from './Topic'
 import { Project } from './Project'
 import { Goal } from './Goal'
+import { DocumentHandler } from './DocumentHandler'
 
 export class TopicHandler {
   private static instance: TopicHandler | null = null
@@ -49,7 +50,13 @@ export class TopicHandler {
     ))
   }
 
-  async getMarkdownForTopic(_topicId: string): Promise<string> {
-    return ''
+  async getMarkdownForTopic(
+    goalId: string,
+    projectId: string,
+    topicId: string
+  ): Promise<string> {
+    return DocumentHandler.getInstance().getMarkdown(
+      `${goalId}/${projectId}/${topicId}/${topicId}.md`
+    )
   }
 }
