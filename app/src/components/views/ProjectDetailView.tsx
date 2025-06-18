@@ -8,8 +8,8 @@ import {
   Tags,
   Trash2,
 } from 'lucide-react'
-import { Project } from '@shared/models/Project'
-import { ProjectHandler } from '@shared/models/ProjectHandler'
+import { Project } from '@/models/Project'
+import { ProjectHandler } from '@/models/ProjectHandler'
 import OverviewTab from '../tabs/project/OverviewTab'
 import TaskTab from '../tabs/project/TaskTab'
 import TopicTab from '../tabs/project/TopicTab'

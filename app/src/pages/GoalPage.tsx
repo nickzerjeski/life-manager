@@ -1,7 +1,7 @@
-import { Goal } from '@shared/models/Goal';
+import { Goal } from '@/models/Goal';
 import { useEffect, useState } from 'react';
 import GoalDetailView from '../components/views/GoalDetailView';
-import { GoalHandler } from '@shared/models/GoalHandler';
+import { GoalHandler } from '@/models/GoalHandler';
 import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
 import { Plus } from 'lucide-react';
 import AddGoalModal from '@/modals/AddGoalModal';

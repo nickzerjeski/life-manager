@@ -5,7 +5,7 @@ import { GoalHandler } from './GoalHandler'
 // Import the HTTP server used for integration style tests. The path needs to
 // traverse two directories up to reach the server implementation.
 import { createServer } from '../../server/src/server'
-import { AOL } from '../types/AOL'
+import { AOL } from './AOL'
 
 function createSampleGoal(id: number): Goal {
   return new Goal(

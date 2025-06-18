@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { Chat, ChatMessage } from '@shared/models/Chat'
+import { Chat, ChatMessage } from '@/models/Chat'
 import ChatBubble from '@/components/ui/chat-bubble'
 import CleanChatBubble from '@/components/ui/clean-chat-bubble'
 import ChatTextField from '../ui/chat-text-field'

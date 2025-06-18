@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Goal } from '@shared/models/Goal';
-import { Project } from '@shared/models/Project';
-import { ProjectHandler } from '@shared/models/ProjectHandler';
+import { Goal } from '@/models/Goal';
+import { Project } from '@/models/Project';
+import { ProjectHandler } from '@/models/ProjectHandler';
 import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
 import { Sparkles } from 'lucide-react';
 

@@ -14,8 +14,8 @@ import OverviewTab from '../tabs/goal/OverviewTab';
 import ProjectTab from '../tabs/goal/ProjectTab';
 import TaskTab from '../tabs/goal/TaskTab';
 import DocumentTab from '../tabs/goal/DocumentTab';
-import { Goal } from '@shared/models/Goal';
-import { GoalHandler } from '@shared/models/GoalHandler';
+import { Goal } from '@/models/Goal';
+import { GoalHandler } from '@/models/GoalHandler';
 
 interface GoalDetailViewProps {
   goal: Goal;

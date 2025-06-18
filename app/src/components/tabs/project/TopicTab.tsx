@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Project } from '@shared/models/Project'
-import { Topic } from '@shared/models/Topic'
-import { TopicHandler } from '@shared/models/TopicHandler'
+import { Project } from '@/models/Project'
+import { Topic } from '@/models/Topic'
+import { TopicHandler } from '@/models/TopicHandler'
 import Modal from '@/components/ui/modal'
 import TopicDetailView from '@/components/views/TopicDetailView'
 

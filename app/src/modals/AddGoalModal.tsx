@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Modal from '@/components/ui/modal';
-import { Goal } from '@shared/models/Goal';
-import { GoalHandler } from '@shared/models/GoalHandler';
-import { AOL } from '@shared/types/AOL';
+import { Goal } from '@/models/Goal';
+import { GoalHandler } from '@/models/GoalHandler';
+import { AOL } from '@/models/AOL';
 
 interface AddGoalModalProps {
   isOpen: boolean;

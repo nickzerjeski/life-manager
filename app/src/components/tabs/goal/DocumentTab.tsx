@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { FileText, Trash2, Upload } from 'lucide-react'
-import { Goal } from '@shared/models/Goal'
-import { Document } from '@shared/models/Document'
-import { DocumentHandler } from '@shared/models/DocumentHandler'
+import { Goal } from '@/models/Goal'
+import { Document } from '@/models/Document'
+import { DocumentHandler } from '@/models/DocumentHandler'
+import { formatDate } from '@/utils/formatDate'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import Modal from '@/components/ui/modal'
@@ -118,8 +119,7 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
                     {doc.name}
                   </p>
                   <p className="text-xs text-gray-600">
-                    Type: {doc.type} | Uploaded:{' '}
-                    {doc.uploadDate.toISOString()}
+                    Type: {doc.type} | Uploaded: {formatDate(doc.uploadDate)}
                   </p>
                 </div>
               </div>

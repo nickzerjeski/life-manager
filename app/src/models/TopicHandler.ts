@@ -1,4 +1,4 @@
-import supabase from '../db/supabase'
+import supabase from '../../supabase'
 import { Topic } from './Topic'
 import { Project } from './Project'
 import { Goal } from './Goal'

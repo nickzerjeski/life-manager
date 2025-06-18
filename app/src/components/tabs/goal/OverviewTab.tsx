@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Goal } from '@shared/models/Goal';
-import { ProjectHandler } from '@shared/models/ProjectHandler';
-import { DocumentHandler } from '@shared/models/DocumentHandler';
-import { APP_CONFIG } from '@shared/utils/appConfig';
+import { Goal } from '@/models/Goal';
+import { ProjectHandler } from '@/models/ProjectHandler';
+import { DocumentHandler } from '@/models/DocumentHandler';
+import { APP_CONFIG } from '@/utils/appConfig';
 import { Progbar } from '@/components/ui/progress-bar';
 import { Separator } from '@/components/ui/separator';
 
