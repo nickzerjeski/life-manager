@@ -56,7 +56,7 @@ export class TopicHandler {
     topicId: string
   ): Promise<string> {
     return DocumentHandler.getInstance().getMarkdown(
-      `${goalId}/${projectId}/${topicId}/topic.${topicId}.md`
+      `${goalId}/${projectId}/${topicId}/${topicId}.md`
     )
   }
 }

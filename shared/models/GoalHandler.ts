@@ -20,7 +20,9 @@ export class GoalHandler {
   async createGoal(goal: Goal): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-    await supabase.from('goals').insert({
+    const { data: inserted, error } = await supabase
+      .from('goals')
+      .insert({
       user_id: user.id,
       name: goal.name,
       description: goal.description,
@@ -31,9 +33,13 @@ export class GoalHandler {
       period_to: goal.period[1].toISOString().slice(0,10),
       status: goal.status,
       area_of_life: goal.aol,
-    })
+      })
+      .select()
+      .single()
+    if (error || !inserted) return
+    goal.id = inserted.id
     await DocumentHandler.getInstance().uploadMarkdown(
-      `${goal.id}/goal.${goal.id}.md`,
+      `${goal.id}/${goal.id}.md`,
       MOCK_MARKDOWN
     )
   }

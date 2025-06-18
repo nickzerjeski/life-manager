@@ -19,7 +19,9 @@ export class ProjectHandler {
   async createProject(project: Project): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-    await supabase.from('projects').insert({
+    const { data: inserted, error } = await supabase
+      .from('projects')
+      .insert({
       user_id: user.id,
       goal_id: project.goal.id,
       name: project.name,
@@ -32,9 +34,13 @@ export class ProjectHandler {
       period_to: project.period[1].toISOString().slice(0,10),
       contribution_pct: project.contributionPct,
       status: project.status,
-    })
+      })
+      .select()
+      .single()
+    if (error || !inserted) return
+    project.id = inserted.id
     await DocumentHandler.getInstance().uploadMarkdown(
-      `${project.goal.id}/${project.id}/project.${project.id}.md`,
+      `${project.goal.id}/${project.id}/${project.id}.md`,
       MOCK_MARKDOWN
     )
   }

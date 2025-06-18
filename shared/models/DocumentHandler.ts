@@ -101,14 +101,14 @@ export class DocumentHandler {
   }
 
   async getMarkdownForGoal(goalId: string): Promise<string> {
-    return this.getMarkdown(`${goalId}/goal.${goalId}.md`)
+    return this.getMarkdown(`${goalId}/${goalId}.md`)
   }
 
   async getMarkdownForProject(
     goalId: string,
     projectId: string
   ): Promise<string> {
-    return this.getMarkdown(`${goalId}/${projectId}/project.${projectId}.md`)
+    return this.getMarkdown(`${goalId}/${projectId}/${projectId}.md`)
   }
 
   async getMarkdownForTopic(
@@ -117,7 +117,7 @@ export class DocumentHandler {
     topicId: string
   ): Promise<string> {
     return this.getMarkdown(
-      `${goalId}/${projectId}/${topicId}/topic.${topicId}.md`
+      `${goalId}/${projectId}/${topicId}/${topicId}.md`
     )
   }
 }
