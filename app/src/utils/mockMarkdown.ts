@@ -1,8 +1,8 @@
-export const MOCK_MARKDOWN = `# Overview
+export const MOCK_MARKDOWN = `## Description
 
 This document demonstrates **Markdown** features.
 
-## List
+### List
 - Item 1
 - Item 2
 
