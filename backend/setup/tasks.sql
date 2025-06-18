@@ -7,6 +7,8 @@ create table public.tasks (
   deadline timestamp with time zone,
   duration integer,
   priority smallint,
+  is_automated boolean not null default false,
+  status text check (status in ('running','attention','not_started','failed')),
   dependency_ids uuid[] default '{}',
   completed_at timestamp with time zone,
   inserted_at timestamp with time zone default now()

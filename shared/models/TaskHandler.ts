@@ -53,8 +53,17 @@ export class TaskHandler {
         t.duration,
         [],
         t.completed_at ? new Date(t.completed_at) : null
-      ] as const
-      if (t.status) {
+      ] as [
+        string,
+        string,
+        string,
+        Date,
+        Project,
+        number,
+        Task[],
+        Date | null
+      ]
+      if (t.is_automated) {
         return new AutomatedTask(
           common[0],
           common[1],
