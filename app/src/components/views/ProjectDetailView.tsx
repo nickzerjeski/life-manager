@@ -6,21 +6,43 @@ import {
   ChartNoAxesCombined,
   LucideProps,
   Tags,
+  Trash2,
 } from 'lucide-react'
 import { Project } from '@shared/models/Project'
+import { ProjectHandler } from '@shared/models/ProjectHandler'
 import OverviewTab from '../tabs/project/OverviewTab'
 import TaskTab from '../tabs/project/TaskTab'
 import TopicTab from '../tabs/project/TopicTab'
 import DocumentTab from '../tabs/project/DocumentTab'
+import Modal from '@/components/ui/modal'
 
 interface ProjectDetailViewProps {
   project: Project
   onBack: () => void
+  onDeleted?: () => void
 }
 
-const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onBack }) => {
+const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
+  project,
+  onBack,
+  onDeleted,
+}) => {
   const [activeTab, setActiveTab] = useState('overview')
   const [currentProject, setCurrentProject] = useState<Project>(project)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  const handleDelete = async () => {
+    try {
+      await ProjectHandler.getInstance().deleteProject(currentProject.id)
+      if (onDeleted) await onDeleted()
+      onBack()
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err)
+    } finally {
+      setShowDeleteConfirm(false)
+    }
+  }
 
   useEffect(() => {
     setCurrentProject(project)
@@ -64,11 +86,19 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onBack }
 
   return (
     <div className="bg-white p-4 sm:p-6 rounded-lg shadow border border-gray-200">
-      <div className="flex items-center gap-2 mb-4">
-        <button onClick={onBack} aria-label="Back to Projects">
-          <ArrowLeft size={20} />
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
+        <div className="flex items-center gap-2 flex-grow min-w-0">
+          <button onClick={onBack} aria-label="Back to Projects" className="mt-2">
+            <ArrowLeft size={20} />
+          </button>
+          <h2 className="text-2xl font-bold text-gray-800 truncate" title={project.name}>{project.name}</h2>
+        </div>
+        <button
+          onClick={() => setShowDeleteConfirm(true)}
+          className="flex items-center bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
+        >
+          <Trash2 size={16} className="mr-1 sm:mr-2" /> Delete
         </button>
-        <h2 className="text-2xl font-bold text-gray-800 truncate" title={project.name}>{project.name}</h2>
       </div>
       <div className="mb-6 border-b border-gray-200">
         <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
@@ -79,8 +109,33 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({ project, onBack }
         </nav>
       </div>
       <div className="mt-4">{renderTabContent()}</div>
+      <Modal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        title="Confirm delete project"
+      >
+        <p className="mb-4">
+          Are you sure you want to permanently delete the project{' '}
+          <strong>{project.name}</strong>? This action cannot be undone.
+        </p>
+        <div className="flex justify-end space-x-3">
+          <button
+            onClick={() => setShowDeleteConfirm(false)}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-150 ease-in-out"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDelete}
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out"
+          >
+            Confirm Delete
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }
 
 export default ProjectDetailView
+

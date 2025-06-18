@@ -22,7 +22,13 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ project }) => {
   const loadDocuments = React.useCallback(() => {
     handler
       .getDocumentsForProject(project.goal.id, project.id)
-      .then(setDocuments)
+      .then(d =>
+        setDocuments(
+          d.filter(
+            doc => doc.type && doc.name !== `${project.id}.md`
+          )
+        )
+      )
       .catch(console.error)
   }, [project.goal.id, project.id, handler])
 

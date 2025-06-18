@@ -23,16 +23,18 @@ export class DocumentHandler {
       .from('documents')
       .list(path)
     if (error || !data) return []
-    return data.map(
-      f =>
-        new Document(
-          `${path}/${f.name}`,
-          {},
-          f.name,
-          f.name.split('.').pop()?.toLowerCase() || '',
-          new Date(f.updated_at)
-        )
-    )
+    return data
+      .filter(f => f.metadata) // folders have null metadata
+      .map(
+        f =>
+          new Document(
+            `${path}/${f.name}`,
+            {},
+            f.name,
+            f.name.split('.').pop()?.toLowerCase() || '',
+            new Date(f.updated_at)
+          )
+      )
   }
 
   async getDocumentsForGoal(goalId: string): Promise<Document[]> {
@@ -77,6 +79,33 @@ export class DocumentHandler {
 
   async deleteDocument(fullPath: string): Promise<void> {
     await supabase.storage.from('documents').remove([fullPath])
+  }
+
+  private async listFilePaths(prefix: string): Promise<string[]> {
+    const { data, error } = await supabase.storage.from('documents').list(prefix)
+    if (error || !data) return []
+    const results = await Promise.all(
+      data.map(item => {
+        const path = `${prefix}/${item.name}`
+        if (item.metadata) {
+          return Promise.resolve([path])
+        }
+        return this.listFilePaths(path)
+      })
+    )
+    return results.flat()
+  }
+
+  async deleteFolder(prefix: string): Promise<void> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return
+    const fullPrefix = `${user.id}/${prefix}`
+    const files = await this.listFilePaths(fullPrefix)
+    if (files.length > 0) {
+      await supabase.storage.from('documents').remove(files)
+    }
   }
 
   async uploadMarkdown(relativePath: string, content: string): Promise<void> {

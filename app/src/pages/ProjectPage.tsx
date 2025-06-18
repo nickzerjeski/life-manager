@@ -20,6 +20,12 @@ export default function ProjectPage() {
   const [showAdd, setShowAdd] = useState(false);
   const [search, setSearch] = useState("");
 
+  const handleDeleted = async () => {
+    const updated = await ProjectHandler.getInstance().getProjects();
+    setProjects(updated);
+    setSelectedProject(null);
+  };
+
   const filtered = projects.filter((p) =>
     `${p.name} ${p.shortDescription} ${p.description}`
       .toLowerCase()
@@ -32,6 +38,7 @@ export default function ProjectPage() {
         <ProjectDetailView
           project={selectedProject}
           onBack={() => setSelectedProject(null)}
+          onDeleted={handleDeleted}
         />
       ) : (
         <>

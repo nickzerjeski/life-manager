@@ -2,6 +2,7 @@ import supabase from '../db/supabase'
 import { Goal } from './Goal'
 import { DocumentHandler } from './DocumentHandler'
 import { MOCK_MARKDOWN } from '../utils/mockMarkdown'
+import { ProjectHandler } from './ProjectHandler'
 
 export class GoalHandler {
   private static instance: GoalHandler | null = null
@@ -45,6 +46,10 @@ export class GoalHandler {
   }
 
   async deleteGoal(id: string): Promise<void> {
+    const projectHandler = ProjectHandler.getInstance()
+    const projects = await projectHandler.getProjectsForGoal(id)
+    await Promise.all(projects.map(p => projectHandler.deleteProject(p.id)))
+    await DocumentHandler.getInstance().deleteFolder(`${id}`)
     await supabase.from('goals').delete().eq('id', id)
   }
 
