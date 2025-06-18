@@ -72,12 +72,15 @@ export class DocumentHandler {
           reader.readAsDataURL(file)
         })
 
-        const [goalId, projectId] = relativePath.split('/')
+        const pathParts = relativePath.split('/')
+        pathParts.pop()
+        const [goalId, projectId, topicId] = pathParts
 
         await axios.post(webhookUrl, {
           id: fullPath,
           goal_id: goalId,
           project_id: projectId,
+          topic_id: topicId,
           url: data.publicUrl,
           data: {
             fileName: file.name,
