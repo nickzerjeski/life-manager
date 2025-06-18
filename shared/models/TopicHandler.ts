@@ -59,4 +59,22 @@ export class TopicHandler {
       `${goalId}/${projectId}/${topicId}/${topicId}.md`
     )
   }
+
+  async deleteTopic(id: string): Promise<void> {
+    const { data } = await supabase
+      .from('topics')
+      .select('project_id, projects(goal_id)')
+      .eq('id', id)
+      .single()
+    if (data) {
+      const goalId = data.projects?.goal_id
+      const projectId = data.project_id
+      if (goalId && projectId) {
+        await DocumentHandler.getInstance().deleteFolder(
+          `${goalId}/${projectId}/${id}`
+        )
+      }
+    }
+    await supabase.from('topics').delete().eq('id', id)
+  }
 }

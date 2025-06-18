@@ -49,6 +49,7 @@ export class GoalHandler {
     const projectHandler = ProjectHandler.getInstance()
     const projects = await projectHandler.getProjectsForGoal(id)
     await Promise.all(projects.map(p => projectHandler.deleteProject(p.id)))
+    await DocumentHandler.getInstance().deleteFolder(`${id}`)
     await supabase.from('goals').delete().eq('id', id)
   }
 

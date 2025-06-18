@@ -81,6 +81,33 @@ export class DocumentHandler {
     await supabase.storage.from('documents').remove([fullPath])
   }
 
+  private async listFilePaths(prefix: string): Promise<string[]> {
+    const { data, error } = await supabase.storage.from('documents').list(prefix)
+    if (error || !data) return []
+    const results = await Promise.all(
+      data.map(item => {
+        const path = `${prefix}/${item.name}`
+        if (item.metadata) {
+          return Promise.resolve([path])
+        }
+        return this.listFilePaths(path)
+      })
+    )
+    return results.flat()
+  }
+
+  async deleteFolder(prefix: string): Promise<void> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return
+    const fullPrefix = `${user.id}/${prefix}`
+    const files = await this.listFilePaths(fullPrefix)
+    if (files.length > 0) {
+      await supabase.storage.from('documents').remove(files)
+    }
+  }
+
   async uploadMarkdown(relativePath: string, content: string): Promise<void> {
     const file = new File(
       [content],
