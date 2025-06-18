@@ -34,12 +34,6 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
   - `<user-id>/<goal-id>/` for all goal related files.
   - `<user-id>/<goal-id>/<project-id>/` for all project related files.
   - `<user-id>/<goal-id>/<project-id>/<topic-id>/` for all topic related files.
-## AI Pipeline
-1. Trigger – User presses Start Goal; client POSTs `/ai/expand-goal` with goal ID and document references.
-2. Workflow – n8n retrieves documents, feeds cleaned text and metadata to OpenAI.
-3. LLM Output – JSON list of projects and tasks with names, descriptions, durations, dependencies, and priority hints.
-4. Validation – Backend enforces schema rules, persists new objects.
-5. Client Sync – WebSocket or long-poll delivers objects to the client store.
 ## Scheduling Logic
 1. Pull Google Calendar free/busy intervals for the goal period.
 2. Build a DAG from task dependencies and sort topologically.
@@ -49,40 +43,14 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
     - no calendar overlap
 4.  If placement fails, mark project At Risk or Off Track.
 5. Re-evaluate after any task completion, deadline change, or new event.
-## Status Algorithm
-|Condition   |Status   |
-|---|---|
-|No tasks started   |Not started   |
-|`workRemaining / daysRemaining ≤ nominalRate`   |On Track   |
-|Above nominal rate but deadline feasible   |At Risk   |
-|Deadline infeasible   |Off Track   |
-|All work complete   |Achieved  |
-
-`nominalRate` defaults to 1 h per calendar day.
-## REST API
-- `POST /auth/google` → 200 { token }
-- `GET /goals`
-- `POST /goals`
-- `PATCH /goals/{id}`
-- `POST /goals/{id}/start` (AI trigger)
-- `GET /projects?goal={id}`
-- `POST /projects/generate` – create a project for a given goal
-- `PATCH /tasks/{id}/complete`
-- `POST /documents/upload-url` (presign PUT)
-- `POST /calendar/sync`
 ## Tech Stack
 - Client: React, TypeScript, Vite, Tailwind CSS
-- Backend: Language-agnostic REST (reference Node.js), n8n for AI orchestration
+- Backend: Supabase, n8n
 - AI: OpenAI Chat Completions (gpt-4o) and embeddings
-- Storage: PostgreSQL for metadata, S3-compatible bucket for documents
-- Calendar: Google Calendar API v3
-- Desktop: Electron 30 with context isolation
-- CI/CD: GitHub Actions, codecov
+- Storage: Supabase Buckets
 ## Development Workflow
 1. Install dependencies with `npm install`.
-2. Run the backend server using `npm run server` and keep it running.
-   Verify it is reachable with `curl http://localhost:3001/goals`.
-3. In another terminal start the Vite dev server with `npm run dev`.
+3. Start frontend with `npm run dev`.
 4. Lint with `npm run lint`.
 5. Build production assets with `npm run build`.
 
