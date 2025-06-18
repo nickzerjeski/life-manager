@@ -26,7 +26,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ goal }) => {
       .then(([p, d]) =>
         setCounts({
           projects: p.length,
-          documents: d.filter(doc => doc.name !== `${goal.id}.md`).length,
+          documents: d.filter(
+            doc => doc.type && doc.name !== `${goal.id}.md`
+          ).length,
         })
       )
       .catch(() => setCounts({ projects: 0, documents: 0 }));

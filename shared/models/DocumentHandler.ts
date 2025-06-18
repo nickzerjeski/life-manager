@@ -23,16 +23,18 @@ export class DocumentHandler {
       .from('documents')
       .list(path)
     if (error || !data) return []
-    return data.map(
-      f =>
-        new Document(
-          `${path}/${f.name}`,
-          {},
-          f.name,
-          f.name.split('.').pop()?.toLowerCase() || '',
-          new Date(f.updated_at)
-        )
-    )
+    return data
+      .filter(f => f.metadata) // folders have null metadata
+      .map(
+        f =>
+          new Document(
+            `${path}/${f.name}`,
+            {},
+            f.name,
+            f.name.split('.').pop()?.toLowerCase() || '',
+            new Date(f.updated_at)
+          )
+      )
   }
 
   async getDocumentsForGoal(goalId: string): Promise<Document[]> {

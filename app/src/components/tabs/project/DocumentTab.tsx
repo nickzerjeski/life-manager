@@ -23,7 +23,11 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ project }) => {
     handler
       .getDocumentsForProject(project.goal.id, project.id)
       .then(d =>
-        setDocuments(d.filter(doc => doc.name !== `${project.id}.md`))
+        setDocuments(
+          d.filter(
+            doc => doc.type && doc.name !== `${project.id}.md`
+          )
+        )
       )
       .catch(console.error)
   }, [project.goal.id, project.id, handler])

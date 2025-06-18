@@ -24,7 +24,11 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ goal, isEditing }) => {
     handler
       .getDocumentsForGoal(goal.id)
       .then(d =>
-        setDocuments(d.filter(doc => doc.name !== `${goal.id}.md`))
+        setDocuments(
+          d.filter(
+            doc => doc.type && doc.name !== `${goal.id}.md`
+          )
+        )
       )
       .catch(console.error)
   }, [goal.id, handler])
