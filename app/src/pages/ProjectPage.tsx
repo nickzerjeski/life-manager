@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Plus, Search } from "lucide-react";
-import { ProjectHandler } from "@shared/models/ProjectHandler";
+import { ProjectHandler } from "@/models/ProjectHandler";
 import { containerStyle, statusLabelStyle } from "@/styles/statusStyles";
 import AddProjectModal from "@/modals/AddProjectModal";
-import { Project } from "@shared/models/Project";
+import { Project } from "@/models/Project";
 import ProjectDetailView from "../components/views/ProjectDetailView";
 
 

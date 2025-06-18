@@ -4,7 +4,7 @@ import { ProjectHandler } from './ProjectHandler'
 import { GoalHandler } from './GoalHandler'
 import { Goal } from './Goal'
 import { Project } from './Project'
-import { AOL } from '../types/AOL'
+import { AOL } from './AOL'
 // Use the same HTTP server as the application for test isolation. The server
 // resides two directories up from this test file.
 import { createServer } from '../../server/src/server'

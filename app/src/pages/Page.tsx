@@ -1,6 +1,6 @@
 import DashboardContent from '@/components/ui/dashboard-content';
-import { GoalHandler } from '@shared/models/GoalHandler';
-import { ProjectHandler } from '@shared/models/ProjectHandler';
+import { GoalHandler } from '@/models/GoalHandler';
+import { ProjectHandler } from '@/models/ProjectHandler';
 
 // initialize handlers on first load
 const goals = GoalHandler.getInstance();

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Modal from '@/components/ui/modal';
-import { Project } from '@shared/models/Project';
-import { ProjectHandler } from '@shared/models/ProjectHandler';
-import { GoalHandler } from '@shared/models/GoalHandler';
-import { Goal } from '@shared/models/Goal';
+import { Project } from '@/models/Project';
+import { ProjectHandler } from '@/models/ProjectHandler';
+import { GoalHandler } from '@/models/GoalHandler';
+import { Goal } from '@/models/Goal';
 
 interface AddProjectModalProps {
   isOpen: boolean;

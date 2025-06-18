@@ -1,8 +1,8 @@
-import { Status } from "../types/Status";
-import { Goal } from "./Goal";
+import { AOL } from "./AOL";
+import { Status } from "./Status";
 import { APP_CONFIG } from "../utils/appConfig";
 
-export class Project {
+export class Goal {
   id: string;
   name: string;
   description: string;
@@ -10,10 +10,8 @@ export class Project {
   current: number;
   objective: number;
   period: [Date, Date];
-  /** percentage of this project's contribution to the parent goal */
-  contributionPct: number;
   status: Status;
-  goal: Goal;
+  aol: AOL;
     
     /**
      * Creates a new Project instance.
@@ -27,17 +25,8 @@ export class Project {
      * @param status - Current status of the project.
      * @param goal - Associated goal for the project.
      */
-    constructor(
-        id: string,
-        name: string,
-        description: string,
-        start: number,
-        current: number,
-        objective: number,
-        period: [Date, Date],
-        goal: Goal,
-        contributionPct: number
-    ) {
+    constructor(id: string, name: string, description: string, start: number, current: number,
+                objective: number, period: [Date, Date], aol: AOL) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,38 +34,46 @@ export class Project {
         this.current = current;
         this.objective = objective;
         this.period = period;
-        this.contributionPct = contributionPct;
         this.status = Status.NOT_STARTED;
-        this.goal = goal;
+        this.aol = aol;
         this.updateStatus();
     }
 
-    /** Percentage progress based on start, current and objective values. */
+    /**
+     * Percentage progress based on start, current and objective values.
+     */
     get progressPercentage(): number {
         if (this.objective === this.start) return 0;
         return ((this.current - this.start) / (this.objective - this.start)) * 100;
     }
 
-    /** Total number of days for the project period. */
+    /** Total number of days for the goal period. */
     get totalDays(): number {
         const ms = this.period[1].getTime() - this.period[0].getTime();
         return Math.ceil(ms / (1000 * 60 * 60 * 24));
     }
 
-    /** Days elapsed since the project started. */
+    /** Days elapsed since the start of the goal. */
     get daysElapsed(): number {
         const now = new Date();
         const ms = now.getTime() - this.period[0].getTime();
         return Math.max(0, Math.floor(ms / (1000 * 60 * 60 * 24)));
     }
 
-    /** Percentage of time elapsed for the project. */
+    /** Remaining days until the goal ends. */
+    get daysRemaining(): number {
+        const now = new Date();
+        const ms = this.period[1].getTime() - now.getTime();
+        return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
+    }
+
+    /** Percentage of time elapsed in the goal period. */
     get timePercentage(): number {
         if (this.totalDays === 0) return 100;
         return (this.daysElapsed / this.totalDays) * 100;
     }
 
-    /** Recalculate status based on progress and elapsed time. */
+    /** Recalculate the status based on progress and elapsed time. */
     updateStatus(): void {
         if (this.current >= this.objective) {
             this.status = Status.ACHIEVED;

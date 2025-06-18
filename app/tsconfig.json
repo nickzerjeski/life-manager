@@ -14,10 +14,9 @@
     "jsx": "react-jsx",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@shared/*": ["../shared/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "**/*.ts", "**/*.tsx", "../shared/**/*", "vite.config.mts", "vite-env.d.ts"],
+  "include": ["src/**/*", "**/*.ts", "**/*.tsx", "vite.config.mts", "vite-env.d.ts"],
   "exclude": ["node_modules"]
 }

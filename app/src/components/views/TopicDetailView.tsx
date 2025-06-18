@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react'
-import { Topic } from '@shared/models/Topic'
-import { Chat } from '@shared/models/Chat'
+import { Topic } from '@/models/Topic'
+import { Chat } from '@/models/Chat'
 
 interface TopicDetailViewProps {
   topic: Topic

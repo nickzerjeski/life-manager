@@ -1,4 +1,4 @@
-import { Status } from "@shared/types/Status";
+import { Status } from "@/models/Status";
 
 export const containerStyle: Record<Status, string> = {
   [Status.ON_TRACK]: 'bg-green-50 border border-green-200',

@@ -1,4 +1,4 @@
-import supabase from '../db/supabase'
+import supabase from '../../supabase'
 import { Goal } from './Goal'
 import { DocumentHandler } from './DocumentHandler'
 import { MOCK_MARKDOWN } from '../utils/mockMarkdown'

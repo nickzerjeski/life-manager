@@ -1,4 +1,4 @@
-import supabase from '../db/supabase'
+import supabase from '../../supabase'
 import { Task, ManualTask, AutomatedTask, AutomationState } from './Task'
 import { Project } from './Project'
 import { Goal } from './Goal'
