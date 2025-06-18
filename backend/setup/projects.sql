@@ -3,7 +3,6 @@ create table public.projects (
   user_id uuid references auth.users(id) not null,
   goal_id uuid references public.goals(id) on delete cascade,
   name text not null,
-  short_description text,
   description text,
   start numeric,
   current numeric,

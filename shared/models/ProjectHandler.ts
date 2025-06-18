@@ -26,7 +26,6 @@ export class ProjectHandler {
       user_id: user.id,
       goal_id: project.goal.id,
       name: project.name,
-      short_description: project.shortDescription,
       description: project.description,
       start: project.start,
       current: project.current,
@@ -67,7 +66,6 @@ export class ProjectHandler {
     return data.map(p => new Project(
       p.id,
       p.name,
-      p.short_description ?? '',
       p.description ?? '',
       p.start,
       p.current,
@@ -96,7 +94,6 @@ export class ProjectHandler {
     return data.map(p => new Project(
       p.id,
       p.name,
-      p.short_description ?? '',
       p.description ?? '',
       p.start,
       p.current,

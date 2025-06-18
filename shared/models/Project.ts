@@ -5,7 +5,6 @@ import { APP_CONFIG } from "../utils/appConfig";
 export class Project {
   id: string;
   name: string;
-  shortDescription: string;
   description: string;
   start: number;
   current: number;
@@ -31,7 +30,6 @@ export class Project {
     constructor(
         id: string,
         name: string,
-        shortDescription: string,
         description: string,
         start: number,
         current: number,
@@ -42,7 +40,6 @@ export class Project {
     ) {
         this.id = id;
         this.name = name;
-        this.shortDescription = shortDescription;
         this.description = description;
         this.start = start;
         this.current = current;

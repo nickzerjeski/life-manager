@@ -18,7 +18,6 @@ function createProject(id: number, goal: Goal): Project {
     id,
     `p${id}`,
     '',
-    '',
     0,
     0,
     1,
