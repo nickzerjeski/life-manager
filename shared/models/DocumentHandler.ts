@@ -78,4 +78,46 @@ export class DocumentHandler {
   async deleteDocument(fullPath: string): Promise<void> {
     await supabase.storage.from('documents').remove([fullPath])
   }
+
+  async uploadMarkdown(relativePath: string, content: string): Promise<void> {
+    const file = new File(
+      [content],
+      relativePath.split('/').pop() || 'note.md',
+      { type: 'text/markdown' }
+    )
+    await this.uploadDocument(relativePath, file)
+  }
+
+  async getMarkdown(relativePath: string): Promise<string> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return ''
+    const { data, error } = await supabase.storage
+      .from('documents')
+      .download(`${user.id}/${relativePath}`)
+    if (error || !data) return ''
+    return data.text()
+  }
+
+  async getMarkdownForGoal(goalId: string): Promise<string> {
+    return this.getMarkdown(`${goalId}/goal.${goalId}.md`)
+  }
+
+  async getMarkdownForProject(
+    goalId: string,
+    projectId: string
+  ): Promise<string> {
+    return this.getMarkdown(`${goalId}/${projectId}/project.${projectId}.md`)
+  }
+
+  async getMarkdownForTopic(
+    goalId: string,
+    projectId: string,
+    topicId: string
+  ): Promise<string> {
+    return this.getMarkdown(
+      `${goalId}/${projectId}/${topicId}/topic.${topicId}.md`
+    )
+  }
 }

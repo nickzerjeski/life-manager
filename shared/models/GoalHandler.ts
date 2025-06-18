@@ -1,5 +1,7 @@
 import supabase from '../db/supabase'
 import { Goal } from './Goal'
+import { DocumentHandler } from './DocumentHandler'
+import { MOCK_MARKDOWN } from '../utils/mockMarkdown'
 
 export class GoalHandler {
   private static instance: GoalHandler | null = null
@@ -30,6 +32,10 @@ export class GoalHandler {
       status: goal.status,
       area_of_life: goal.aol,
     })
+    await DocumentHandler.getInstance().uploadMarkdown(
+      `${goal.id}/goal.${goal.id}.md`,
+      MOCK_MARKDOWN
+    )
   }
 
   async deleteGoal(id: string): Promise<void> {
