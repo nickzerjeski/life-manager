@@ -82,10 +82,12 @@ export class DocumentHandler {
           project_id: projectId,
           topic_id: topicId,
           url: data.publicUrl,
-          data: {
-            fileName: file.name,
-            mimeType: file.type,
-            data: base64,
+          fileName: file.name,
+          mimeType: file.type,
+          data: base64,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
           },
         })
       } catch (err) {
