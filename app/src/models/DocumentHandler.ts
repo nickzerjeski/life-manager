@@ -59,18 +59,7 @@ export class DocumentHandler {
     const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL
     if (webhookUrl) {
       try {
-        const { data } = supabase.storage
-          .from('documents')
-          .getPublicUrl(fullPath)
-        const base64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader()
-          reader.onerror = () => reject(reader.error)
-          reader.onloadend = () => {
-            const res = reader.result as string
-            resolve(res.split(',')[1])
-          }
-          reader.readAsDataURL(file)
-        })
+        const url = `${import.meta.env.VITE_SUPABASE_STORAGE_URL}/documents/${fullPath}`;
 
         const pathParts = relativePath.split('/')
         pathParts.pop()
@@ -78,13 +67,12 @@ export class DocumentHandler {
 
         await axios.post(webhookUrl, {
           id: fullPath,
+          title: file.name,
+          type: file.type,
+          url: url,
           goal_id: goalId,
           project_id: projectId,
           topic_id: topicId,
-          url: data.publicUrl,
-          fileName: file.name,
-          mimeType: file.type,
-          data: base64,
         }, {
           headers: {
             'Content-Type': 'application/json',
