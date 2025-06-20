@@ -56,7 +56,7 @@ export class DocumentHandler {
       .from('documents')
       .upload(fullPath, file, { upsert: true })
 
-    const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL
+    const webhookUrl = import.meta.env.VITE_DOCUMENT_ENCODING_WEBHOOK
     if (webhookUrl) {
       try {
         const url = `${import.meta.env.VITE_SUPABASE_STORAGE_URL}/documents/${fullPath}`;
