@@ -28,20 +28,18 @@ export const SpeedDial = () => {
         const url = import.meta.env.VITE_RAG_AGENT_WEBHOOK
         if (!url) return
         try {
-          await axios.post(
-            url,
-            {
+          const response = await axios.post(url, {
               session_id: '00888e6a2d014d5cb70d43b009d0ba80',
               chat_input: 'What documents are in my database?',
               goal_id: '221ff76a-16ff-4ed8-aaeb-4d6557f8bc90',
-              project_id: 'NULL',
-            },
+          },
             {
               headers: {
                 'Content-Type': 'application/json',
               },
             },
           )
+          console.log('Response from RAG agent:', response.data)
         } catch (err) {
           /* eslint-disable no-console */
           console.error(err)
