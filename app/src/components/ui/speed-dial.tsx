@@ -1,4 +1,4 @@
-import { JSX, useState } from "react";
+import { JSX, useState } from 'react'
 import {
   Share2,
   Printer,
@@ -6,8 +6,9 @@ import {
   Copy,
   Plus,
   Edit,
-  BotMessageSquare
-} from "lucide-react";
+  BotMessageSquare,
+} from 'lucide-react'
+import axios from 'axios'
 
 interface Action {
   label: string;
@@ -20,7 +21,33 @@ export const SpeedDial = () => {
 
   const actions: Action[] = [
     { label: "Edit", icon: <Edit className="w-5 h-5" />, onClick: () => {} },
-    { label: "Ask a Question", icon: <BotMessageSquare className="w-5 h-5" />, onClick: () => {} },
+    {
+      label: 'Ask a Question',
+      icon: <BotMessageSquare className="w-5 h-5" />,
+      onClick: async () => {
+        const url = import.meta.env.VITE_RAG_AGENT_WEBHOOK
+        if (!url) return
+        try {
+          await axios.post(
+            url,
+            {
+              session_id: '00888e6a2d014d5cb70d43b009d0ba80',
+              chat_input: 'What documents are in my database?',
+              goal_id: '221ff76a-16ff-4ed8-aaeb-4d6557f8bc90',
+              project_id: 'NULL',
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            },
+          )
+        } catch (err) {
+          /* eslint-disable no-console */
+          console.error(err)
+        }
+      },
+    },
     //{ label: "Download", icon: <Download className="w-5 h-5" />, onClick: () => {} },
     //{ label: "Copy", icon: <Copy className="w-5 h-5" />, onClick: () => {} },
   ];
