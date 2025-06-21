@@ -10,6 +10,8 @@ import {
   LucideProps,
 } from 'lucide-react';
 import Modal from '@/components/ui/modal';
+import { SpeedDial } from '@/components/ui/speed-dial';
+import ChatView from '@/components/views/ChatView';
 import OverviewTab from '../tabs/goal/OverviewTab';
 import ProjectTab from '../tabs/goal/ProjectTab';
 import TaskTab from '../tabs/goal/TaskTab';
@@ -32,6 +34,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
   const [editedGoal, setEditedGoal] = useState<Goal>(goal);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   useEffect(() => {
     setEditedGoal(goal);
@@ -147,6 +150,8 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
 
       <div className="mt-4">{renderTabContent()}</div>
 
+      <SpeedDial onAskQuestion={() => setShowChat(true)} />
+
       <Modal isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} title="Confirm delete goal">
         <p className="mb-4">
           Are you sure you want to permanently delete the goal <strong>{goal.name}</strong>? This action cannot be undone.
@@ -165,6 +170,10 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
             Confirm Delete
           </button>
         </div>
+      </Modal>
+
+      <Modal isOpen={showChat} onClose={() => setShowChat(false)} title="Ask a question">
+        <ChatView goalId={goal.id} />
       </Modal>
     </div>
   );

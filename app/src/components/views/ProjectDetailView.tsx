@@ -15,6 +15,8 @@ import TaskTab from '../tabs/project/TaskTab'
 import TopicTab from '../tabs/project/TopicTab'
 import DocumentTab from '../tabs/project/DocumentTab'
 import Modal from '@/components/ui/modal'
+import { SpeedDial } from '@/components/ui/speed-dial'
+import ChatView from '@/components/views/ChatView'
 
 interface ProjectDetailViewProps {
   project: Project
@@ -30,6 +32,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   const [activeTab, setActiveTab] = useState('overview')
   const [currentProject, setCurrentProject] = useState<Project>(project)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showChat, setShowChat] = useState(false)
 
   const handleDelete = async () => {
     try {
@@ -109,6 +112,8 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
         </nav>
       </div>
       <div className="mt-4">{renderTabContent()}</div>
+
+      <SpeedDial onAskQuestion={() => setShowChat(true)} />
       <Modal
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
@@ -132,6 +137,10 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
             Confirm Delete
           </button>
         </div>
+      </Modal>
+
+      <Modal isOpen={showChat} onClose={() => setShowChat(false)} title="Ask a question">
+        <ChatView projectId={project.id} />
       </Modal>
     </div>
   )

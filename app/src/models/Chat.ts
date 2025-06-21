@@ -3,6 +3,7 @@ import { Topic } from './Topic'
 export interface ChatMessage {
   sender: 'user' | 'assistant'
   text: string
+  isError?: boolean
 }
 
 export class Chat {
