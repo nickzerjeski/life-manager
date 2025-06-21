@@ -4,11 +4,13 @@ import { Project } from '@/models/Project';
 import { ProjectHandler } from '@/models/ProjectHandler';
 import { GoalHandler } from '@/models/GoalHandler';
 import { Goal } from '@/models/Goal';
+import { AutomatedTask } from '@/models/Task';
+import { TaskHandler } from '@/models/TaskHandler';
 
 interface AddProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreated?: () => void;
+  onCreated?: (project: Project) => void;
 }
 
 export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProjectModalProps) {
@@ -20,21 +22,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       .catch(() => setGoals([]));
   }, []);
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [start, setStart] = useState(0);
-  const [current, setCurrent] = useState(0);
-  const [objective, setObjective] = useState(0);
-  const [startDate, setStartDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().slice(0, 10);
-  });
-  const [endDate, setEndDate] = useState(() => {
-    const nextYear = new Date();
-    nextYear.setFullYear(nextYear.getFullYear() + 1);
-    return nextYear.toISOString().slice(0, 10);
-  });
   const [goalId, setGoalId] = useState('');
-  const [contributionPct, setContributionPct] = useState(0);
   useEffect(() => {
     if (goals.length > 0 && !goalId) {
       setGoalId(goals[0].id);
@@ -44,34 +32,26 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
   const handleCreate = async () => {
     const goal = goals.find((g) => g.id === goalId) || goals[0];
     if (!goal) return;
+    const today = new Date();
+    const nextYear = new Date();
+    nextYear.setFullYear(today.getFullYear() + 1);
     const project = new Project(
       Date.now().toString(),
       name,
-      description,
-      start,
-      current,
-      objective,
-      [new Date(startDate), new Date(endDate)],
+      '',
+      0,
+      0,
+      1,
+      [today, nextYear],
       goal,
-      contributionPct
+      0
     );
     await ProjectHandler.getInstance(GoalHandler.getInstance()).createProject(project);
-    if (onCreated) await onCreated();
+    await TaskHandler.getInstance().createAutomatedTaskForProject(project, 'setup project');
+    if (onCreated) await onCreated(project);
     onClose();
-    // reset fields
     setName('');
-    setDescription('');
-    setStart(0);
-    setCurrent(0);
-    setObjective(0);
-    const today = new Date().toISOString().slice(0, 10);
-    const nextYear = new Date();
-    nextYear.setFullYear(nextYear.getFullYear() + 1);
-    const yearLater = nextYear.toISOString().slice(0, 10);
-    setStartDate(today);
-    setEndDate(yearLater);
-    setGoalId(goals[0]?.id ?? 0);
-    setContributionPct(0);
+    setGoalId(goals[0]?.id ?? '');
   };
 
   return (
@@ -86,72 +66,6 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
           className="w-full p-2 border border-gray-300 rounded"
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start</label>
-            <input
-              type="number"
-              value={start}
-              onChange={(e) => setStart(Number(e.target.value))}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Current</label>
-            <input
-              type="number"
-              value={current}
-              onChange={(e) => setCurrent(Number(e.target.value))}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Objective</label>
-            <input
-              type="number"
-              value={objective}
-              onChange={(e) => setObjective(Number(e.target.value))}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Goal Contribution %</label>
-          <input
-            type="number"
-            value={contributionPct}
-            onChange={(e) => setContributionPct(Number(e.target.value))}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Goal</label>
           <select

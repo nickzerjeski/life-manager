@@ -91,10 +91,7 @@ export default function ProjectPage() {
           <AddProjectModal
             isOpen={showAdd}
             onClose={() => setShowAdd(false)}
-            onCreated={async () => {
-              const updated = await ProjectHandler.getInstance().getProjects();
-              setProjects(updated);
-            }}
+            onCreated={project => setProjects(prev => [...prev, project])}
           />
         </>
       )}
