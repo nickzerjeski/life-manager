@@ -47,12 +47,21 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
     handler
       .getTasksForGoal(goal.id)
       .then(list => {
-        setEditedGoal(g => {
-          g.tasks = list
-          return { ...g }
-        })
+        setEditedGoal(g =>
+          new Goal(
+            g.id,
+            g.name,
+            g.description,
+            g.start,
+            g.current,
+            g.objective,
+            g.period,
+            g.aol,
+            list,
+          ),
+        )
         setAttentionNeeded(
-          list.some(t => t.status === 'attention' && !t.completedAt)
+          list.some(t => t.status === 'attention' && !t.completedAt),
         )
       })
       .catch(() => {
