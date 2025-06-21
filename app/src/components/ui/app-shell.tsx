@@ -88,14 +88,14 @@ function ShellInner({ children }: { children: React.ReactNode }) {
             }`}
           >
             <Settings className="w-5 h-5 mr-3" />
-            Einstellungen
+            Settings
           </button>
           <button
             onClick={() => supabase.auth.signOut()}
             className="w-full flex items-center px-3 py-2.5 rounded-md text-sm text-gray-600 hover:bg-gray-100"
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Ausloggen
+            Logout
           </button>
         </div>
       </nav>
