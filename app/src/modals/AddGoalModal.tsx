@@ -4,6 +4,7 @@ import { Goal } from '@/models/Goal';
 import { GoalHandler } from '@/models/GoalHandler';
 import { AOL } from '@/models/AOL';
 import { AutomatedTask } from '@/models/Task';
+import { TaskHandler } from '@/models/TaskHandler';
 
 interface AddGoalModalProps {
   isOpen: boolean;
@@ -39,6 +40,7 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
       [task]
     );
     await GoalHandler.getInstance().createGoal(goal);
+    await TaskHandler.getInstance().createAutomatedTaskForGoal(goal, 'setup goal');
     if (onCreated) await onCreated(goal);
     onClose();
     setName('');
