@@ -103,4 +103,27 @@ export class TaskHandler {
       return new ManualTask(...common)
     })
   }
+
+  async getTasksForGoal(goalId: string): Promise<AutomatedTask[]> {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('goal_id', goalId)
+    if (error || !data) return []
+    return data
+      .filter(t => t.is_automated)
+      .map(t =>
+        new AutomatedTask(
+          t.id,
+          t.name,
+          t.description ?? '',
+          new Date(t.deadline),
+          null,
+          t.duration,
+          t.status as AutomationState,
+          [],
+          t.completed_at ? new Date(t.completed_at) : null
+        )
+      )
+  }
 }

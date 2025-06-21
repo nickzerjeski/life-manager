@@ -19,6 +19,7 @@ import DocumentTab from '../tabs/goal/DocumentTab';
 import { Goal } from '@/models/Goal';
 import { Badge } from '@/components/ui/badge';
 import { GoalHandler } from '@/models/GoalHandler';
+import { TaskHandler } from '@/models/TaskHandler';
 
 interface GoalDetailViewProps {
   goal: Goal;
@@ -36,14 +37,37 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showChat, setShowChat] = useState(false);
-
-  const attentionNeeded = editedGoal.hasAttentionTask();
+  const [attentionNeeded, setAttentionNeeded] = useState(false);
+  const handler = React.useMemo(() => TaskHandler.getInstance(), []);
 
   useEffect(() => {
     setEditedGoal(goal);
     setIsEditing(false);
     setActiveTab('overview');
-  }, [goal]);
+    handler
+      .getTasksForGoal(goal.id)
+      .then(list => {
+        setEditedGoal(g =>
+          new Goal(
+            g.id,
+            g.name,
+            g.description,
+            g.start,
+            g.current,
+            g.objective,
+            g.period,
+            g.aol,
+            list,
+          ),
+        )
+        setAttentionNeeded(
+          list.some(t => t.status === 'attention' && !t.completedAt),
+        )
+      })
+      .catch(() => {
+        setAttentionNeeded(false)
+      })
+  }, [goal, handler]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
