@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { applyMathJaxDelimiters } from '@/utils/markdown';
 import { Goal } from '@/models/Goal';
 import { ProjectHandler } from '@/models/ProjectHandler';
 import { DocumentHandler } from '@/models/DocumentHandler';
@@ -81,7 +82,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ goal }) => {
           td: ({ node, ...props }) => <td className="border px-2 py-1" {...props} />,
         }}
       >
-        {markdown || goal.description}
+        {applyMathJaxDelimiters(markdown || goal.description)}
       </ReactMarkdown>
     </div>
   );

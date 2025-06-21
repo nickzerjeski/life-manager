@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { applyMathJaxDelimiters } from '@/utils/markdown'
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react'
 import { Topic } from '@/models/Topic'
 import { Chat } from '@/models/Chat'
@@ -50,7 +51,7 @@ const TopicDetailView: React.FC<TopicDetailViewProps> = ({
           td: ({ node, ...props }) => <td className="border px-2 py-1" {...props} />,
         }}
       >
-        {markdown}
+        {applyMathJaxDelimiters(markdown)}
       </ReactMarkdown>
       {chats.length > 0 && (
         <div>

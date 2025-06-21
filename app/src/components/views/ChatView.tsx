@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { applyMathJaxDelimiters } from '@/utils/markdown'
 import axios from 'axios'
 import { XCircle } from 'lucide-react'
 import { Chat, ChatMessage } from '@/models/Chat'
@@ -100,7 +101,7 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
                     ),
                   }}
                 >
-                  {m.text}
+                  {applyMathJaxDelimiters(m.text)}
                 </ReactMarkdown>
               </ChatBubble>
             ) : (
@@ -125,7 +126,7 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
                       ),
                     }}
                   >
-                    {m.text}
+                    {applyMathJaxDelimiters(m.text)}
                   </ReactMarkdown>
                 )}
               </CleanChatBubble>
