@@ -1,30 +1,58 @@
 import React, { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import axios from 'axios'
 import { Chat, ChatMessage } from '@/models/Chat'
 import ChatBubble from '@/components/ui/chat-bubble'
 import CleanChatBubble from '@/components/ui/clean-chat-bubble'
 import ChatTextField from '../ui/chat-text-field'
 
 interface ChatViewProps {
-  chat: Chat
+  chat?: Chat
+  goalId?: string
+  projectId?: string
 }
 
-const ChatView: React.FC<ChatViewProps> = ({ chat }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>(chat.messages)
+const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
+  const [messages, setMessages] = useState<ChatMessage[]>(chat?.messages ?? [])
   const bottomRef = useRef<HTMLDivElement>(null)
+  const sessionIdRef = useRef<string>(crypto.randomUUID())
 
-  const handleSubmit = (text: string) => {
+  const handleSubmit = async (text: string) => {
     if (!text.trim()) return
-    setMessages(prev => [
-      ...prev,
-      { sender: 'user', text },
-      {
-        sender: 'assistant',
-        text:
-          'This is $a^2+b^2=c^2$ a inline equation $$ \\int_a^b f(x)\\,dx = F(b) - F(a) $$\n\n| Name     | Age | Occupation   |\n|----------|-----|--------------|\n| Alice    | 30  | Engineer     |\n| Bob      | 25  | Designer     |\n| Charlie  | 35  | Manager      |',
-      },
-    ])
+    setMessages(prev => [...prev, { sender: 'user', text }])
+    const url = import.meta.env.VITE_RAG_AGENT_WEBHOOK
+    if (!url) {
+      setMessages(prev => [
+        ...prev,
+        { sender: 'assistant', text: 'RAG agent webhook not configured.' },
+      ])
+      return
+    }
+    try {
+      const payload: Record<string, string> = {
+        session_id: sessionIdRef.current,
+        chat_input: text,
+      }
+      if (goalId) payload.goal_id = goalId
+      if (projectId) payload.project_id = projectId
+      const response = await axios.post(url, payload, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const answer =
+        response.data?.text ||
+        response.data?.answer ||
+        response.data?.message ||
+        JSON.stringify(response.data)
+      setMessages(prev => [...prev, { sender: 'assistant', text: answer }])
+    } catch (err) {
+      /* eslint-disable no-console */
+      console.error(err)
+      setMessages(prev => [
+        ...prev,
+        { sender: 'assistant', text: 'Failed to get response.' },
+      ])
+    }
   }
 
   useEffect(() => {
@@ -87,3 +115,4 @@ const ChatView: React.FC<ChatViewProps> = ({ chat }) => {
 }
 
 export default ChatView
+
