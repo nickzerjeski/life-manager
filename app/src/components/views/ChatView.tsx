@@ -19,7 +19,7 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
   const [messages, setMessages] = useState<ChatMessage[]>(chat?.messages ?? [])
   const [isLoading, setIsLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
-  const sessionIdRef = useRef<string>(crypto.randomUUID())
+  const sessionIdRef = useRef<string>(goalId ?? projectId ?? crypto.randomUUID())
 
   const handleSubmit = async (text: string) => {
     if (!text.trim()) return
