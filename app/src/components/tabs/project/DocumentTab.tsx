@@ -127,7 +127,10 @@ const DocumentTab: React.FC<DocumentTabProps> = ({ project }) => {
               </div>
               <button
                 type="button"
-                onClick={() => handleDelete(doc.id)}
+                onClick={e => {
+                  e.stopPropagation()
+                  handleDelete(doc.id)
+                }}
                 className="text-red-600 hover:text-red-800 p-1 self-end sm:self-center"
                 title="Delete"
               >
