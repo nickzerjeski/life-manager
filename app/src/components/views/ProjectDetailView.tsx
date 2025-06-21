@@ -17,6 +17,7 @@ import DocumentTab from '../tabs/project/DocumentTab'
 import Modal from '@/components/ui/modal'
 import { SpeedDial } from '@/components/ui/speed-dial'
 import ChatView from '@/components/views/ChatView'
+import { Badge } from '@/components/ui/badge'
 
 interface ProjectDetailViewProps {
   project: Project
@@ -33,6 +34,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   const [currentProject, setCurrentProject] = useState<Project>(project)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showChat, setShowChat] = useState(false)
+  const [attentionNeeded, setAttentionNeeded] = useState(false)
 
   const handleDelete = async () => {
     try {
@@ -50,6 +52,9 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   useEffect(() => {
     setCurrentProject(project)
     setActiveTab('overview')
+    project.hasAttentionTask()
+      .then(setAttentionNeeded)
+      .catch(() => setAttentionNeeded(false))
   }, [project])
 
   const renderTabContent = () => {
@@ -71,12 +76,13 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     tabId: string
     label: string
     icon: React.ComponentType<LucideProps>
+    badge?: boolean
   }
 
-  const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon }) => (
+  const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon, badge }) => (
     <button
       onClick={() => setActiveTab(tabId)}
-      className={`flex flex-1 flex-shrink-0 items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition ${
+      className={`relative flex flex-1 flex-shrink-0 items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition ${
         activeTab === tabId
           ? 'bg-blue-100 text-blue-700'
           : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
@@ -84,6 +90,14 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     >
       <Icon size={18} className="mr-2" />
       {label}
+      {badge && (
+        <Badge
+          variant="destructive"
+          className="pointer-events-none absolute -top-1 -right-1 w-4 h-4 text-xs flex items-center justify-center rounded-full p-0"
+        >
+          !
+        </Badge>
+      )}
     </button>
   )
 
@@ -104,9 +118,9 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
         </button>
       </div>
       <div className="mb-6 border-b border-gray-200">
-        <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
+        <nav className="flex space-x-2 overflow-visible whitespace-nowrap pb-2" aria-label="Tabs">
           <TabButton tabId="overview" label="Overview" icon={ChartNoAxesCombined} />
-          <TabButton tabId="tasks" label="Tasks" icon={Calendar} />
+          <TabButton tabId="tasks" label="Tasks" icon={Calendar} badge={attentionNeeded} />
           <TabButton tabId="topics" label="Topics" icon={Tags} />
           <TabButton tabId="documents" label="Documents" icon={FileText} />
         </nav>

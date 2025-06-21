@@ -110,10 +110,16 @@ export class Goal {
     /**
      * Loads the goal's main markdown note.
      */
-    async getOverview(): Promise<string> {
-        const res = await DocumentHandler.getInstance().getDocument(
-            `${this.id}/${this.id}.md`
-        );
-        return res.content || '';
-    }
+  async getOverview(): Promise<string> {
+    const res = await DocumentHandler.getInstance().getDocument(
+      `${this.id}/${this.id}.md`
+    );
+    return res.content || '';
+  }
+
+  hasAttentionTask(): boolean {
+    return this.tasks.some(
+      t => t.status === 'attention' && !t.completedAt,
+    );
+  }
 }
