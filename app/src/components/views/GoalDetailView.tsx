@@ -17,6 +17,7 @@ import ProjectTab from '../tabs/goal/ProjectTab';
 import TaskTab from '../tabs/goal/TaskTab';
 import DocumentTab from '../tabs/goal/DocumentTab';
 import { Goal } from '@/models/Goal';
+import { Badge } from '@/components/ui/badge';
 import { GoalHandler } from '@/models/GoalHandler';
 
 interface GoalDetailViewProps {
@@ -35,6 +36,8 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showChat, setShowChat] = useState(false);
+
+  const attentionNeeded = editedGoal.hasAttentionTask();
 
   useEffect(() => {
     setEditedGoal(goal);
@@ -92,9 +95,10 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
     tabId: string;
     label: string;
     icon: React.ComponentType<LucideProps>;
+    badge?: boolean;
   }
 
-  const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon }) => (
+  const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon, badge }) => (
     <button
       onClick={() => setActiveTab(tabId)}
       className={`flex flex-1 flex-shrink-0 items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition ${
@@ -105,6 +109,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
     >
       <Icon size={18} className="mr-2" />
       {label}
+      {badge && <Badge variant="destructive" className="ml-1">!</Badge>}
     </button>
   );
 
@@ -143,7 +148,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
         <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
           <TabButton tabId="overview" label="Overview" icon={ChartNoAxesCombined} />
           <TabButton tabId="project" label="Projects" icon={ListTodo} />
-          <TabButton tabId="tasks" label="Tasks" icon={Calendar} />
+          <TabButton tabId="tasks" label="Tasks" icon={Calendar} badge={attentionNeeded} />
           <TabButton tabId="documents" label="Documents" icon={FileText} />
         </nav>
       </div>

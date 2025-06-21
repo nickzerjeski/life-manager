@@ -17,6 +17,7 @@ import DocumentTab from '../tabs/project/DocumentTab'
 import Modal from '@/components/ui/modal'
 import { SpeedDial } from '@/components/ui/speed-dial'
 import ChatView from '@/components/views/ChatView'
+import { Badge } from '@/components/ui/badge'
 
 interface ProjectDetailViewProps {
   project: Project
@@ -33,6 +34,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   const [currentProject, setCurrentProject] = useState<Project>(project)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showChat, setShowChat] = useState(false)
+  const [attentionNeeded, setAttentionNeeded] = useState(false)
 
   const handleDelete = async () => {
     try {
@@ -50,6 +52,9 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   useEffect(() => {
     setCurrentProject(project)
     setActiveTab('overview')
+    project.hasAttentionTask()
+      .then(setAttentionNeeded)
+      .catch(() => setAttentionNeeded(false))
   }, [project])
 
   const renderTabContent = () => {
@@ -71,9 +76,10 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     tabId: string
     label: string
     icon: React.ComponentType<LucideProps>
+    badge?: boolean
   }
 
-  const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon }) => (
+  const TabButton: React.FC<TabButtonProps> = ({ tabId, label, icon: Icon, badge }) => (
     <button
       onClick={() => setActiveTab(tabId)}
       className={`flex flex-1 flex-shrink-0 items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition ${
@@ -84,6 +90,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     >
       <Icon size={18} className="mr-2" />
       {label}
+      {badge && <Badge variant="destructive" className="ml-1">!</Badge>}
     </button>
   )
 
@@ -106,7 +113,7 @@ const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
       <div className="mb-6 border-b border-gray-200">
         <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
           <TabButton tabId="overview" label="Overview" icon={ChartNoAxesCombined} />
-          <TabButton tabId="tasks" label="Tasks" icon={Calendar} />
+          <TabButton tabId="tasks" label="Tasks" icon={Calendar} badge={attentionNeeded} />
           <TabButton tabId="topics" label="Topics" icon={Tags} />
           <TabButton tabId="documents" label="Documents" icon={FileText} />
         </nav>
