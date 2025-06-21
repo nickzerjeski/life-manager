@@ -129,13 +129,22 @@ export class DocumentHandler {
   /**
    * Downloads a file from Supabase and returns its content.
    */
-  async getDocument(fullPath: string): Promise<{ name: string; type: string; content: string | null }> {
+  async getDocument(path: string): Promise<{ name: string; type: string; content: string | null }> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return { name: '', type: '', content: null }
+
+    const fullPath = path.startsWith(`${user.id}/`) ? path : `${user.id}/${path}`
     const { data, error } = await supabase.storage.from('documents').download(fullPath)
     if (error || !data) return { name: '', type: '', content: null }
+
     const type = fullPath.split('.').pop()?.toLowerCase() || ''
-    if (type === 'txt') {
+
+    if (type === 'txt' || type === 'md' || type === 'markdown') {
       return { name: fullPath.split('/').pop() || '', type, content: await data.text() }
     }
+
     if (type === 'pdf') {
       const reader = new FileReader()
       const promise = new Promise<string>((resolve, reject) => {
@@ -148,6 +157,7 @@ export class DocumentHandler {
       reader.readAsDataURL(data)
       return { name: fullPath.split('/').pop() || '', type, content: await promise }
     }
+
     return { name: fullPath.split('/').pop() || '', type, content: null }
   }
 
@@ -203,48 +213,4 @@ export class DocumentHandler {
     await this.uploadDocument(relativePath, file)
   }
 
-  /**
-   * Downloads a markdown file and returns its text content.
-   */
-  async getMarkdown(relativePath: string): Promise<string> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return ''
-    const { data, error } = await supabase.storage
-      .from('documents')
-      .download(`${user.id}/${relativePath}`)
-    if (error || !data) return ''
-    return data.text()
-  }
-
-  /**
-   * Convenience wrapper to fetch a goal's main note.
-   */
-  async getMarkdownForGoal(goalId: string): Promise<string> {
-    return this.getMarkdown(`${goalId}/${goalId}.md`)
-  }
-
-  /**
-   * Convenience wrapper to fetch a project's main note.
-   */
-  async getMarkdownForProject(
-    goalId: string,
-    projectId: string
-  ): Promise<string> {
-    return this.getMarkdown(`${goalId}/${projectId}/${projectId}.md`)
-  }
-
-  /**
-   * Convenience wrapper to fetch a topic's note.
-   */
-  async getMarkdownForTopic(
-    goalId: string,
-    projectId: string,
-    topicId: string
-  ): Promise<string> {
-    return this.getMarkdown(
-      `${goalId}/${projectId}/${topicId}/${topicId}.md`
-    )
-  }
 }

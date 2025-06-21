@@ -1,6 +1,7 @@
 import { AOL } from "./AOL";
 import { Status } from "./Status";
 import { APP_CONFIG } from "../utils/appConfig";
+import { DocumentHandler } from "./DocumentHandler";
 
 export class Goal {
   id: string;
@@ -101,5 +102,15 @@ export class Goal {
         } else {
             this.status = Status.OFF_TRACK;
         }
+    }
+
+    /**
+     * Loads the goal's main markdown note.
+     */
+    async getOverview(): Promise<string> {
+        const res = await DocumentHandler.getInstance().getDocument(
+            `${this.id}/${this.id}.md`
+        );
+        return res.content || '';
     }
 }

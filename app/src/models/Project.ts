@@ -1,6 +1,7 @@
 import { Status } from "./Status";
 import { Goal } from "./Goal";
 import { APP_CONFIG } from "../utils/appConfig";
+import { DocumentHandler } from "./DocumentHandler";
 
 export class Project {
   id: string;
@@ -104,5 +105,15 @@ export class Project {
         } else {
             this.status = Status.OFF_TRACK;
         }
+    }
+
+    /**
+     * Loads the project's main markdown note.
+     */
+    async getOverview(): Promise<string> {
+        const res = await DocumentHandler.getInstance().getDocument(
+            `${this.goal.id}/${this.id}/${this.id}.md`
+        );
+        return res.content || '';
     }
 }
