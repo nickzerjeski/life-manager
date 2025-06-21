@@ -2,6 +2,7 @@ import { AOL } from "./AOL";
 import { Status } from "./Status";
 import { APP_CONFIG } from "../utils/appConfig";
 import { DocumentHandler } from "./DocumentHandler";
+import { AutomatedTask } from "./Task";
 
 export class Goal {
   id: string;
@@ -13,6 +14,7 @@ export class Goal {
   period: [Date, Date];
   status: Status;
   aol: AOL;
+  tasks: AutomatedTask[];
     
     /**
      * Creates a new Project instance.
@@ -27,7 +29,7 @@ export class Goal {
      * @param goal - Associated goal for the project.
      */
     constructor(id: string, name: string, description: string, start: number, current: number,
-                objective: number, period: [Date, Date], aol: AOL) {
+                objective: number, period: [Date, Date], aol: AOL, tasks: AutomatedTask[] = []) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -37,6 +39,7 @@ export class Goal {
         this.period = period;
         this.status = Status.NOT_STARTED;
         this.aol = aol;
+        this.tasks = tasks;
         this.updateStatus();
     }
 

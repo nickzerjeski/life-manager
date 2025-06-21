@@ -74,10 +74,7 @@ export default function GoalPage() {
       <AddGoalModal
         isOpen={showAdd}
         onClose={() => setShowAdd(false)}
-        onCreated={async () => {
-          const updated = await GoalHandler.getInstance().getGoals();
-          setGoals(updated);
-        }}
+        onCreated={goal => setGoals(prev => [...prev, goal])}
       />
     </section>
   );

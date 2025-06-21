@@ -5,7 +5,7 @@ export class Task {
   name: string
   description: string
   deadline: Date
-  project: Project
+  project: Project | null
   duration: number
   dependencies: Task[]
   completedAt?: Date | null
@@ -23,7 +23,7 @@ export class Task {
         name: string,
         description: string,
         deadline: Date,
-        project: Project,
+        project: Project | null,
         duration: number,
         dependencies: Task[] = [],
         completedAt: Date | null = null
@@ -43,7 +43,7 @@ export class Task {
      * @returns A string describing the task.
     */
     toString(): string {
-        return `Task[${this.id} ${this.name}]: ${this.description} (Deadline: ${this.deadline.toISOString()}, Project: ${this.project.name}, Duration: ${this.duration}s, Dependencies: [${this.dependencies.map(d => d.id).join(', ')}], Completed: ${this.completedAt ? this.completedAt.toISOString() : 'n/a'})`;
+        return `Task[${this.id} ${this.name}]: ${this.description} (Deadline: ${this.deadline.toISOString()}, Project: ${this.project?.name ?? 'n/a'}, Duration: ${this.duration}s, Dependencies: [${this.dependencies.map(d => d.id).join(', ')}], Completed: ${this.completedAt ? this.completedAt.toISOString() : 'n/a'})`;
     }
 }
 
@@ -59,7 +59,7 @@ export class AutomatedTask extends Task {
         name: string,
         description: string,
         deadline: Date,
-        project: Project,
+        project: Project | null,
         duration: number,
         status: AutomationState,
         dependencies: Task[] = [],

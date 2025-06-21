@@ -15,6 +15,30 @@ export class TaskHandler {
 
   private constructor() {}
 
+  async createAutomatedTaskForProject(project: Project, name: string): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('tasks').insert({
+      user_id: user.id,
+      project_id: project.id,
+      name,
+      is_automated: true,
+      status: 'attention',
+    })
+  }
+
+  async createAutomatedTaskForGoal(goal: Goal, name: string): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('tasks').insert({
+      user_id: user.id,
+      goal_id: goal.id,
+      name,
+      is_automated: true,
+      status: 'attention',
+    })
+  }
+
   async getTasksForProject(projectId: string): Promise<Task[]> {
     const { data, error } = await supabase
       .from('tasks')

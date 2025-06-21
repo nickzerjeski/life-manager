@@ -72,7 +72,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
   };
 
   const renderTabContent = () => {
-    const commonProps = { client: editedGoal, isEditing, onChange: handleInputChange };
+    const commonProps = { goal: editedGoal };
     const documentProps = { goal: editedGoal, isEditing };
     switch (activeTab) {
       case 'overview':
