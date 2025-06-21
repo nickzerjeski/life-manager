@@ -6,6 +6,7 @@ import { Chat, ChatMessage } from '@/models/Chat'
 import ChatBubble from '@/components/ui/chat-bubble'
 import CleanChatBubble from '@/components/ui/clean-chat-bubble'
 import ChatTextField from '../ui/chat-text-field'
+import TypingIndicator from '../ui/typing-indicator'
 
 interface ChatViewProps {
   chat?: Chat
@@ -15,18 +16,21 @@ interface ChatViewProps {
 
 const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
   const [messages, setMessages] = useState<ChatMessage[]>(chat?.messages ?? [])
+  const [isLoading, setIsLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const sessionIdRef = useRef<string>(crypto.randomUUID())
 
   const handleSubmit = async (text: string) => {
     if (!text.trim()) return
     setMessages(prev => [...prev, { sender: 'user', text }])
+    setIsLoading(true)
     const url = import.meta.env.VITE_RAG_AGENT_WEBHOOK
     if (!url) {
       setMessages(prev => [
         ...prev,
         { sender: 'assistant', text: 'RAG agent webhook not configured.' },
       ])
+      setIsLoading(false)
       return
     }
     try {
@@ -40,10 +44,13 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
         headers: { 'Content-Type': 'application/json' },
       })
       const answer =
+        response.data?.output ||
         response.data?.text ||
         response.data?.answer ||
         response.data?.message ||
-        JSON.stringify(response.data)
+        (typeof response.data === 'string'
+          ? response.data
+          : JSON.stringify(response.data))
       setMessages(prev => [...prev, { sender: 'assistant', text: answer }])
     } catch (err) {
       /* eslint-disable no-console */
@@ -52,6 +59,8 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
         ...prev,
         { sender: 'assistant', text: 'Failed to get response.' },
       ])
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -105,6 +114,13 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
             )}
           </div>
         ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <CleanChatBubble>
+              <TypingIndicator />
+            </CleanChatBubble>
+          </div>
+        )}
         <div ref={bottomRef} />
       </div>
       <div className="sticky bottom-0 bg-white pt-2">
