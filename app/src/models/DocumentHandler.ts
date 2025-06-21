@@ -2,18 +2,37 @@ import supabase from '../../supabase'
 import axios from 'axios'
 import { Document } from './Document'
 
+/**
+ * Singleton responsible for storing and retrieving files from Supabase.
+ *
+ * Files live under the `documents` bucket using the structure
+ * `<user-id>/<goal-id>/<project-id?>/filename`.
+ *
+ * The handler also triggers a webhook when new documents are uploaded so
+ * the backend can process them (e.g. generate embeddings).
+ */
+
 export class DocumentHandler {
   private static instance: DocumentHandler | null = null
 
+  /**
+   * Returns the singleton instance of the handler.
+   */
   static getInstance(): DocumentHandler {
     if (!DocumentHandler.instance) DocumentHandler.instance = new DocumentHandler()
     return DocumentHandler.instance
   }
 
+  /**
+   * Clears the singleton instance. Used mainly in tests.
+   */
   static reset(): void { DocumentHandler.instance = null }
 
   private constructor() {}
 
+  /**
+   * Lists documents stored under the provided prefix for the current user.
+   */
   private async list(prefix: string): Promise<Document[]> {
     const {
       data: { user },
@@ -38,14 +57,27 @@ export class DocumentHandler {
       )
   }
 
+  /**
+   * Returns all documents uploaded for the given goal.
+   */
   async getDocumentsForGoal(goalId: string): Promise<Document[]> {
     return this.list(`${goalId}`)
   }
 
+  /**
+   * Returns all documents uploaded for a specific project.
+   */
   async getDocumentsForProject(goalId: string, projectId: string): Promise<Document[]> {
     return this.list(`${goalId}/${projectId}`)
   }
 
+  /**
+   * Uploads a file to Supabase and notifies the encoding webhook.
+   *
+   * Only one of `goal_id` or `project_id` is included in the webhook
+   * payload depending on the destination folder. Topic documents are
+   * currently not supported, so no topic information is sent.
+   */
   async uploadDocument(relativePath: string, file: File): Promise<void> {
     const {
       data: { user },
@@ -59,25 +91,34 @@ export class DocumentHandler {
     const webhookUrl = import.meta.env.VITE_DOCUMENT_ENCODING_WEBHOOK
     if (webhookUrl) {
       try {
-        const url = `${import.meta.env.VITE_SUPABASE_STORAGE_URL}/documents/${fullPath}`;
+        const url = `${import.meta.env.VITE_SUPABASE_STORAGE_URL}/documents/${fullPath}`
 
         const pathParts = relativePath.split('/')
         pathParts.pop()
-        const [goalId, projectId, topicId] = pathParts
+        const [goalId, projectId] = pathParts
 
-        await axios.post(webhookUrl, {
+        const payload: Record<string, string> = {
           id: fullPath,
           title: file.name,
           type: file.type,
-          url: url,
-          goal_id: goalId,
-          project_id: projectId,
-          topic_id: topicId,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
+          url,
+        }
+
+        if (projectId) {
+          payload.project_id = projectId
+        } else if (goalId) {
+          payload.goal_id = goalId
+        }
+
+        await axios.post(
+          webhookUrl,
+          payload,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        })
+        )
       } catch (err) {
         /* eslint-disable no-console */
         console.error(err)
@@ -85,6 +126,9 @@ export class DocumentHandler {
     }
   }
 
+  /**
+   * Downloads a file from Supabase and returns its content.
+   */
   async getDocument(fullPath: string): Promise<{ name: string; type: string; content: string | null }> {
     const { data, error } = await supabase.storage.from('documents').download(fullPath)
     if (error || !data) return { name: '', type: '', content: null }
@@ -107,10 +151,16 @@ export class DocumentHandler {
     return { name: fullPath.split('/').pop() || '', type, content: null }
   }
 
+  /**
+   * Deletes a single file from storage.
+   */
   async deleteDocument(fullPath: string): Promise<void> {
     await supabase.storage.from('documents').remove([fullPath])
   }
 
+  /**
+   * Recursively collects all file paths under a given prefix.
+   */
   private async listFilePaths(prefix: string): Promise<string[]> {
     const { data, error } = await supabase.storage.from('documents').list(prefix)
     if (error || !data) return []
@@ -126,6 +176,9 @@ export class DocumentHandler {
     return results.flat()
   }
 
+  /**
+   * Deletes all files within the given folder prefix.
+   */
   async deleteFolder(prefix: string): Promise<void> {
     const {
       data: { user },
@@ -138,6 +191,9 @@ export class DocumentHandler {
     }
   }
 
+  /**
+   * Helper for uploading markdown notes.
+   */
   async uploadMarkdown(relativePath: string, content: string): Promise<void> {
     const file = new File(
       [content],
@@ -147,6 +203,9 @@ export class DocumentHandler {
     await this.uploadDocument(relativePath, file)
   }
 
+  /**
+   * Downloads a markdown file and returns its text content.
+   */
   async getMarkdown(relativePath: string): Promise<string> {
     const {
       data: { user },
@@ -159,10 +218,16 @@ export class DocumentHandler {
     return data.text()
   }
 
+  /**
+   * Convenience wrapper to fetch a goal's main note.
+   */
   async getMarkdownForGoal(goalId: string): Promise<string> {
     return this.getMarkdown(`${goalId}/${goalId}.md`)
   }
 
+  /**
+   * Convenience wrapper to fetch a project's main note.
+   */
   async getMarkdownForProject(
     goalId: string,
     projectId: string
@@ -170,6 +235,9 @@ export class DocumentHandler {
     return this.getMarkdown(`${goalId}/${projectId}/${projectId}.md`)
   }
 
+  /**
+   * Convenience wrapper to fetch a topic's note.
+   */
   async getMarkdownForTopic(
     goalId: string,
     projectId: string,
