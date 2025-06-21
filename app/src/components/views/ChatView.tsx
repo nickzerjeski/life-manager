@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import axios from 'axios'
+import { XCircle } from 'lucide-react'
 import { Chat, ChatMessage } from '@/models/Chat'
 import ChatBubble from '@/components/ui/chat-bubble'
 import CleanChatBubble from '@/components/ui/clean-chat-bubble'
@@ -57,7 +58,11 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
       console.error(err)
       setMessages(prev => [
         ...prev,
-        { sender: 'assistant', text: 'Failed to get response.' },
+        {
+          sender: 'assistant',
+          text: 'Failed to get a response',
+          isError: true,
+        },
       ])
     } finally {
       setIsLoading(false)
@@ -81,35 +86,48 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
           >
             {m.sender === 'user' ? (
               <ChatBubble>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
-                  table: ({ node, ...props }) => (
-                    <table className="min-w-full border border-gray-300 text-sm" {...props} />
-                  ),
-                  th: ({ node, ...props }) => (
-                    <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
-                  ),
-                  td: ({ node, ...props }) => (
-                    <td className="border px-2 py-1" {...props} />
-                  ),
-                }}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    table: (props) => (
+                      <table className="min-w-full border border-gray-300 text-sm" {...props} />
+                    ),
+                    th: (props) => (
+                      <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
+                    ),
+                    td: (props) => (
+                      <td className="border px-2 py-1" {...props} />
+                    ),
+                  }}
+                >
                   {m.text}
                 </ReactMarkdown>
               </ChatBubble>
             ) : (
               <CleanChatBubble>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
-                  table: ({ node, ...props }) => (
-                    <table className="min-w-full border border-gray-300 text-sm" {...props} />
-                  ),
-                  th: ({ node, ...props }) => (
-                    <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
-                  ),
-                  td: ({ node, ...props }) => (
-                    <td className="border px-2 py-1" {...props} />
-                  ),
-                }}>
-                  {m.text}
-                </ReactMarkdown>
+                {m.isError ? (
+                  <div className="flex items-center gap-2 rounded bg-red-50 border border-red-200 text-red-800 p-2">
+                    <XCircle className="w-4 h-4" />
+                    <span>{m.text}</span>
+                  </div>
+                ) : (
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      table: (props) => (
+                        <table className="min-w-full border border-gray-300 text-sm" {...props} />
+                      ),
+                      th: (props) => (
+                        <th className="border px-2 py-1 bg-gray-100 text-left" {...props} />
+                      ),
+                      td: (props) => (
+                        <td className="border px-2 py-1" {...props} />
+                      ),
+                    }}
+                  >
+                    {m.text}
+                  </ReactMarkdown>
+                )}
               </CleanChatBubble>
             )}
           </div>
