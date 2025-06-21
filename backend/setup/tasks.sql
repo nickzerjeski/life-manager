@@ -1,6 +1,7 @@
 create table public.tasks (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) not null,
+  goal_id uuid references public.goals(id) on delete cascade,
   project_id uuid references public.projects(id) on delete cascade,
   goal_id uuid references public.goals(id) on delete cascade,
   name text not null,
