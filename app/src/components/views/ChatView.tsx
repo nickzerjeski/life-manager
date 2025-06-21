@@ -149,4 +149,3 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
 }
 
 export default ChatView
-
