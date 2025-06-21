@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Project } from '@/models/Project'
 import { Topic } from '@/models/Topic'
 import { TopicHandler } from '@/models/TopicHandler'
-import { DocumentHandler } from '@/models/DocumentHandler'
 import Modal from '@/components/ui/modal'
 import TopicDetailView from '@/components/views/TopicDetailView'
 
@@ -28,10 +27,8 @@ const TopicTab: React.FC<TopicTabProps> = ({ project }) => {
 
   const openTopic = async (topic: Topic) => {
     setActiveTopic(topic)
-    const res = await DocumentHandler.getInstance().getDocument(
-      `${topic.project.goal.id}/${topic.project.id}/${topic.id}/${topic.id}.md`
-    )
-    setMarkdown(res.content || '')
+    const md = await topic.getOverview()
+    setMarkdown(md)
   }
 
   useEffect(() => {
