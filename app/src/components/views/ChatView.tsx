@@ -21,6 +21,13 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
   const sessionIdRef = useRef<string>(crypto.randomUUID())
 
+  const normalizeLatex = (text: string): string =>
+    text
+      .replace(/\\\[/g, '$$$$')
+      .replace(/\\\]/g, '$$$$')
+      .replace(/\\\(/g, '$$')
+      .replace(/\\\)/g, '$$')
+
   const handleSubmit = async (text: string) => {
     if (!text.trim()) return
     setMessages(prev => [...prev, { sender: 'user', text }])
@@ -100,7 +107,7 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
                     ),
                   }}
                 >
-                  {m.text}
+                  {normalizeLatex(m.text)}
                 </ReactMarkdown>
               </ChatBubble>
             ) : (
@@ -108,7 +115,7 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
                 {m.isError ? (
                   <div className="flex items-center gap-2 rounded-3xl bg-red-50 border border-red-200 text-red-800 p-2">
                     <XCircle className="w-4 h-4" />
-                    <span>{m.text}</span>
+                    <span>{normalizeLatex(m.text)}</span>
                   </div>
                 ) : (
                   <ReactMarkdown
@@ -125,7 +132,7 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
                       ),
                     }}
                   >
-                    {m.text}
+                    {normalizeLatex(m.text)}
                   </ReactMarkdown>
                 )}
               </CleanChatBubble>
