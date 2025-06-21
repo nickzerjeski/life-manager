@@ -106,7 +106,7 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
             ) : (
               <CleanChatBubble>
                 {m.isError ? (
-                  <div className="flex items-center gap-2 rounded bg-red-50 border border-red-200 text-red-800 p-2">
+                  <div className="flex items-center gap-2 rounded-3xl bg-red-50 border border-red-200 text-red-800 p-2">
                     <XCircle className="w-4 h-4" />
                     <span>{m.text}</span>
                   </div>
