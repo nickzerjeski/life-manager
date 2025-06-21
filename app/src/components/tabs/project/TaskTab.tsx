@@ -154,7 +154,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
 
       {activeChat && (
         <Modal isOpen={!!activeChat} onClose={() => setActiveChat(null)} title={activeChat.title}>
-          <ChatView chat={activeChat} />
+          <ChatView chat={activeChat} projectId={project.id} />
         </Modal>
       )}
     </div>

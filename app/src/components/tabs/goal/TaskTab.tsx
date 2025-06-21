@@ -3,6 +3,11 @@ import { Goal } from '@/models/Goal';
 import { AutomatedTask, AutomationState } from '@/models/Task';
 import { StatusIndicator } from '@/components/ui/status-indicator';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import Modal from '@/components/ui/modal';
+import ChatView from '@/components/views/ChatView';
+import { Chat } from '@/models/Chat';
+import { Topic } from '@/models/Topic';
+import { Project } from '@/models/Project';
 
 interface TaskTabProps {
   goal: Goal;
@@ -17,6 +22,7 @@ const automationStyle: Record<AutomationState, string> = {
 
 const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
   const [tasks, setTasks] = useState<AutomatedTask[]>([]);
+  const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [showTimeline, setShowTimeline] = useState(false);
 
   const sortTasks = (list: AutomatedTask[]) =>
@@ -30,6 +36,23 @@ const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
     setTasks(sortTasks(goal.tasks ?? []));
   }, [goal]);
 
+  const openTask = (task: AutomatedTask) => {
+    const dummyProject = new Project(
+      '',
+      goal.name,
+      '',
+      goal.start,
+      goal.current,
+      goal.objective,
+      goal.period,
+      goal,
+      100,
+    );
+    const dummyTopic = new Topic('0', 'Task Chat', '', dummyProject);
+    const chat = new Chat(task.id, task.name, task.description, [], dummyTopic);
+    setActiveChat(chat);
+  };
+
 
   return (
     <div className="space-y-4">
@@ -41,7 +64,8 @@ const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
             .map(task => (
               <li
                 key={task.id}
-                className={`${automationStyle[task.status]} p-3 rounded-md flex justify-between items-center gap-2`}
+                onClick={() => openTask(task)}
+                className={`${automationStyle[task.status]} p-3 rounded-md flex justify-between items-center gap-2 cursor-pointer`}
               >
                 <div className="flex-1">
                   <p className="font-medium text-sm text-gray-800">{task.name}</p>
@@ -80,6 +104,12 @@ const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
             </ul>
           )}
         </div>
+      )}
+
+      {activeChat && (
+        <Modal isOpen={!!activeChat} onClose={() => setActiveChat(null)} title={activeChat.title}>
+          <ChatView chat={activeChat} goalId={goal.id} />
+        </Modal>
       )}
 
     </div>
