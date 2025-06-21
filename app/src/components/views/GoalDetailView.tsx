@@ -112,7 +112,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
       {badge && (
         <Badge
           variant="destructive"
-          className="pointer-events-none absolute -top-1 -right-1 px-1 py-0 text-xs"
+          className="pointer-events-none absolute -top-1 -right-1 w-4 h-4 text-xs flex items-center justify-center rounded-full p-0"
         >
           !
         </Badge>
@@ -152,7 +152,7 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
       </div>
 
       <div className="mb-6 border-b border-gray-200">
-        <nav className="flex space-x-2 overflow-x-auto whitespace-nowrap pb-2" aria-label="Tabs">
+        <nav className="flex space-x-2 overflow-visible whitespace-nowrap pb-2" aria-label="Tabs">
           <TabButton tabId="overview" label="Overview" icon={ChartNoAxesCombined} />
           <TabButton tabId="project" label="Projects" icon={ListTodo} />
           <TabButton tabId="tasks" label="Tasks" icon={Calendar} badge={attentionNeeded} />
