@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Goal } from '@/models/Goal';
 import { AutomatedTask, AutomationState } from '@/models/Task';
+import { TaskHandler } from '@/models/TaskHandler';
 import { StatusIndicator } from '@/components/ui/status-indicator';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Modal from '@/components/ui/modal';
@@ -24,6 +25,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
   const [tasks, setTasks] = useState<AutomatedTask[]>([]);
   const [activeChat, setActiveChat] = useState<Chat | null>(null);
   const [showTimeline, setShowTimeline] = useState(false);
+  const handler = React.useMemo(() => TaskHandler.getInstance(), []);
 
   const sortTasks = (list: AutomatedTask[]) =>
     [...list].sort((a, b) => {
@@ -34,7 +36,11 @@ const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
 
   useEffect(() => {
     setTasks(sortTasks(goal.tasks ?? []));
-  }, [goal]);
+    handler
+      .getTasksForGoal(goal.id)
+      .then(list => setTasks(sortTasks(list)))
+      .catch(() => {})
+  }, [goal.id, handler])
 
   const openTask = (task: AutomatedTask) => {
     const dummyProject = new Project(
