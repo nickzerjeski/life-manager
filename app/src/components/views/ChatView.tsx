@@ -8,6 +8,7 @@ import ChatBubble from '@/components/ui/chat-bubble'
 import CleanChatBubble from '@/components/ui/clean-chat-bubble'
 import ChatTextField from '../ui/chat-text-field'
 import TypingIndicator from '../ui/typing-indicator'
+import supabase from '../../../supabase'
 
 interface ChatViewProps {
   chat?: Chat
@@ -19,7 +20,39 @@ const ChatView: React.FC<ChatViewProps> = ({ chat, goalId, projectId }) => {
   const [messages, setMessages] = useState<ChatMessage[]>(chat?.messages ?? [])
   const [isLoading, setIsLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
-  const sessionIdRef = useRef<string>(goalId ?? projectId ?? crypto.randomUUID())
+  const sessionIdRef = useRef<string>(
+    chat?.id ?? goalId ?? projectId ?? crypto.randomUUID()
+  )
+
+  useEffect(() => {
+    const loadHistory = async () => {
+      if (!chat?.id) return
+      const { data, error } = await supabase
+        .from('n8n_chat_histories')
+        .select('id, message')
+        .eq('session_id', chat.id)
+        .order('id', { ascending: true })
+      if (error || !data) return
+      const history = data
+        .map(row => {
+          try {
+            const msg =
+              typeof row.message === 'string'
+                ? JSON.parse(row.message)
+                : row.message
+            return {
+              sender: msg.type === 'ai' ? 'assistant' : 'user',
+              text: msg.content,
+            } as ChatMessage
+          } catch {
+            return null
+          }
+        })
+        .filter((m): m is ChatMessage => !!m)
+      setMessages(history)
+    }
+    loadHistory()
+  }, [chat?.id])
 
   const handleSubmit = async (text: string) => {
     if (!text.trim()) return
