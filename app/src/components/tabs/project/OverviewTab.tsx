@@ -37,8 +37,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ project }) => {
       )
       .catch(() => setCounts({ tasks: 0, topics: 0, documents: 0 }))
     documentHandler
-      .getMarkdownForProject(project.goal.id, project.id)
-      .then(setMarkdown)
+      .getDocument(`${project.goal.id}/${project.id}/${project.id}.md`)
+      .then(res => setMarkdown(res.content || ''))
       .catch(() => setMarkdown(''))
   }, [project.goal.id, project.id, taskHandler, topicHandler, documentHandler])
 

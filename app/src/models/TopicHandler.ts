@@ -49,15 +49,6 @@ export class TopicHandler {
     ))
   }
 
-  async getMarkdownForTopic(
-    goalId: string,
-    projectId: string,
-    topicId: string
-  ): Promise<string> {
-    return DocumentHandler.getInstance().getMarkdown(
-      `${goalId}/${projectId}/${topicId}/${topicId}.md`
-    )
-  }
 
   async deleteTopic(id: string): Promise<void> {
     const { data } = await supabase
