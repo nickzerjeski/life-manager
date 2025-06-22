@@ -21,7 +21,7 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
     nextYear.setFullYear(today.getFullYear() + 1);
     const task = new AutomatedTask(
       crypto.randomUUID(),
-      'setup goal',
+      'Setup Goal',
       '',
       today,
       null,
@@ -40,7 +40,7 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
       [task]
     );
     await GoalHandler.getInstance().createGoal(goal);
-    await TaskHandler.getInstance().createAutomatedTaskForGoal(goal, 'setup goal');
+    await TaskHandler.getInstance().createAutomatedTaskForGoal(goal, 'Setup Goal');
     if (onCreated) await onCreated(goal);
     onClose();
     setName('');

@@ -46,8 +46,8 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       goal,
       0
     );
-    await ProjectHandler.getInstance(GoalHandler.getInstance()).createProject(project);
-    await TaskHandler.getInstance().createAutomatedTaskForProject(project, 'setup project');
+    await ProjectHandler.getInstance().createProject(project);
+    await TaskHandler.getInstance().createAutomatedTaskForProject(project, 'Setup Project');
     if (onCreated) await onCreated(project);
     onClose();
     setName('');
