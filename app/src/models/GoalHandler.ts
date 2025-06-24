@@ -45,6 +45,16 @@ export class GoalHandler {
     )
   }
 
+  async createGoalStub(id: string, name: string): Promise<void> {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase
+      .from('goals')
+      .insert({ id, user_id: user.id, name })
+  }
+
   async deleteGoal(id: string): Promise<void> {
     const projectHandler = ProjectHandler.getInstance()
     const projects = await projectHandler.getProjectsForGoal(id)
