@@ -10,7 +10,7 @@
     "start": "vite preview app --config app/vite.config.mts",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit -p app/tsconfig.json && tsc --noEmit -p server/tsconfig.json",
-    "test": "tsx --test",
+    "test": "c8 vitest run --config app/vite.config.mts",
     "server": "tsx --tsconfig server/tsconfig.json server/src/server.ts"
   },
   "dependencies": {
@@ -64,12 +64,15 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "genkit-cli": "^0.0.2",
     "install": "^0.13.0",
+    "jsdom": "^24.0.0",
     "minimatch": "^10.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.9",
     "typescript": "^5",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^1.6.0",
+    "c8": "^10.1.2"
   }
 }

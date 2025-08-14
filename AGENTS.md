@@ -11,6 +11,7 @@ TODO
 - `npm run build`    – Production build with Vite
 - `npm run lint`     – ESLint
 - `npm run electron` – Desktop shell
+- `npm test`         – Vitest unit tests with coverage
 
 ## Coding conventions
 - Use TypeScript and React function components.
@@ -18,7 +19,8 @@ TODO
 - Prefer named exports and keep components small.
 
 ## Testing
-Unit tests are not yet configured.
+- Run `npm test` to execute unit tests.
+- Coverage output is written to `app/coverage`.
 ## Usage notes for Codex
 When adding new features, update corresponding domain model first, then UI. Run `npm run lint` before committing.
 For project information and structure read `README.md`.
