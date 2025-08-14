@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll } from 'vitest'
 
 const requiredEnv = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY']
-const missing = requiredEnv.filter(k => !process.env[k])
+const missing = requiredEnv.filter(k => !import.meta.env[k as keyof ImportMetaEnv])
 
 if (missing.length) {
   describe.skip('supabase backend', () => {
