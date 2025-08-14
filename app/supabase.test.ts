@@ -20,7 +20,7 @@ if (missing.length) {
       expect(error).toBeNull()
     })
 
-    const tables = ['doc_emb', 'doc_metadata', 'doc_rows', 'goals', 'projects', 'tasks', 'topics']
+    const tables = ['documents', 'document_metadata', 'document_rows', 'goals', 'projects', 'tasks', 'topics']
     tables.forEach(table => {
       test(`table ${table} exists`, async () => {
         const { error } = await supabase.from(table).select('*').limit(1)
