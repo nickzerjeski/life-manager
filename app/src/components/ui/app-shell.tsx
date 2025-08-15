@@ -1,6 +1,16 @@
 'use client';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home } from 'lucide-react';
+import {
+  Menu,
+  X,
+  LogOut,
+  ListTodo,
+  Settings,
+  Target,
+  Repeat,
+  Home,
+} from 'lucide-react';
 import supabase from '../../../supabase';
 import { AppShellProvider, useAppShell } from './app-shell-context';
 
@@ -11,97 +21,147 @@ const nav = [
   { name: 'Projects', icon: ListTodo },
   { name: 'Goals', icon: Target },
 ] as const;
+const bottomNav = [...nav, { name: 'Settings', icon: Settings }] as const;
 
 function ShellInner({ children }: { children: React.ReactNode }) {
-  const { activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen } = useAppShell();
+  const { activeTab, setActiveTab, isSidebarOpen, setIsSidebarOpen } =
+    useAppShell();
 
   return (
-    <div className="relative h-screen flex flex-col md:flex-row overflow-hidden">
-      {/* ----- mobile top bar ----- */}
-      <div className="md:hidden flex justify-between items-center p-4 bg-white border-b sticky top-0 z-20">
-        <h1 className="text-lg font-bold text-blue-700">Lifemanager</h1>
-        <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
-          <Menu className="h-6 w-6" />
-        </Button>
-      </div>
+    <div className="relative flex h-screen overflow-hidden">
+      {/* ---- desktop sidebar ---- */}
+      <nav className="hidden md:flex md:w-64 md:flex-col md:bg-gray-800 md:text-white md:border-r">
+        <div className="p-4 text-xl font-bold">Lifemanager</div>
+        <div className="flex-1 space-y-1 p-2">
+          {nav.map(({ name, icon: Icon }) => {
+            const active = activeTab === name;
+            return (
+              <button
+                key={name}
+                onClick={() => setActiveTab(name)}
+                className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors
+                  ${active ? 'bg-blue-600' : 'hover:bg-gray-700'}
+                `}
+              >
+                <Icon className="mr-3 h-5 w-5" />
+                {name}
+              </button>
+            );
+          })}
+          <button
+            onClick={() => setActiveTab('Settings')}
+            className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors
+              ${activeTab === 'Settings' ? 'bg-blue-600' : 'hover:bg-gray-700'}
+            `}
+          >
+            <Settings className="mr-3 h-5 w-5" /> Settings
+          </button>
+        </div>
+      </nav>
 
-      {/* ----- dark overlay for mobile ----- */}
+      {/* ---- mobile sidebar ---- */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-30 md:hidden"
+          className="fixed inset-0 z-30 bg-black/60 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-
-      {/* ----- sidebar ----- */}
       <nav
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r p-4 flex flex-col transform transition-transform duration-300
-        md:static md:translate-x-0 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white border-r p-4 flex flex-col transform transition-transform duration-300 md:hidden
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        {/* header + close btn */}
-        <div className="px-2 mb-8 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-blue-700 hidden md:block">Lifemanager</h1>
+        <div className="mb-8 flex items-center justify-between">
+          <h1 className="text-xl font-bold">Lifemanager</h1>
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="text-white"
             onClick={() => setIsSidebarOpen(false)}
           >
             <X className="h-6 w-6" />
           </Button>
         </div>
-
-        {/* nav items */}
-        <div className="flex-grow space-y-1">
+        <div className="flex-1 space-y-1">
           {nav.map(({ name, icon: Icon }) => {
             const active = activeTab === name;
             return (
               <button
                 key={name}
                 onClick={() => {
-                  setActiveTab(name as any);
-                  if (window.innerWidth < 768) setIsSidebarOpen(false);
+                  setActiveTab(name);
+                  setIsSidebarOpen(false);
                 }}
-                className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm font-medium
-                  ${active ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors
+                  ${active ? 'bg-blue-600' : 'hover:bg-gray-700'}
+                `}
               >
-                <Icon className="w-5 h-5 mr-3" />
+                <Icon className="mr-3 h-5 w-5" />
                 {name}
               </button>
             );
           })}
-        </div>
-
-        {/* logout */}
-        <div className="mt-auto pt-4 border-t">
-        <button
+          <button
             onClick={() => {
               setActiveTab('Settings');
-              if (window.innerWidth < 768) setIsSidebarOpen(false);
+              setIsSidebarOpen(false);
             }}
-            className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm ${
-              activeTab === 'Settings'
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
+            className={`flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors
+              ${activeTab === 'Settings' ? 'bg-blue-600' : 'hover:bg-gray-700'}
+            `}
           >
-            <Settings className="w-5 h-5 mr-3" />
-            Settings
+            <Settings className="mr-3 h-5 w-5" /> Settings
           </button>
           <button
             onClick={() => supabase.auth.signOut()}
-            className="w-full flex items-center px-3 py-2.5 rounded-md text-sm text-gray-600 hover:bg-gray-100"
+            className="mt-auto flex w-full items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-700"
           >
-            <LogOut className="w-5 h-5 mr-3" />
-            Logout
+            <LogOut className="mr-3 h-5 w-5" /> Logout
           </button>
         </div>
       </nav>
 
-      {/* ----- main area ----- */}
-      <main className="flex-1 h-full bg-gray-50 overflow-y-auto pt-16 md:pt-0">{children}</main>
+      {/* ---- main area ---- */}
+      <div className="flex flex-1 flex-col">
+        <header className="sticky top-0 z-10 flex items-center justify-between bg-blue-600 px-4 py-3 text-white md:pl-8">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white md:hidden"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+            <h1 className="text-lg font-bold md:text-xl">{activeTab}</h1>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white"
+            onClick={() => supabase.auth.signOut()}
+          >
+            <LogOut className="h-5 w-5" />
+          </Button>
+        </header>
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-4 pb-20 md:p-8 md:pb-8">
+          {children}
+        </main>
+        <nav className="md:hidden fixed bottom-0 inset-x-0 z-20 flex justify-around border-t bg-white py-2">
+          {bottomNav.map(({ name, icon: Icon }) => {
+            const active = activeTab === name;
+            return (
+              <button
+                key={name}
+                onClick={() => setActiveTab(name)}
+                className={`flex flex-col items-center text-xs ${active ? 'text-blue-600' : 'text-gray-500'}`}
+              >
+                <Icon className="mb-1 h-5 w-5" />
+                {name}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
     </div>
   );
 }
