@@ -1,4 +1,34 @@
-import { describe, test, expect, beforeAll } from 'vitest'
+import { describe, test, expect, beforeAll, vi, afterEach } from 'vitest'
+
+describe('supabase configuration', () => {
+  const originalEnv = { ...import.meta.env } as Record<string, string | undefined>
+
+  afterEach(() => {
+    vi.resetModules()
+    const env = import.meta.env as Record<string, string | undefined>
+    env.VITE_SUPABASE_URL = originalEnv.VITE_SUPABASE_URL
+    env.VITE_SUPABASE_ANON_KEY = originalEnv.VITE_SUPABASE_ANON_KEY
+  })
+
+  test('throws when environment variables are missing', async () => {
+    const env = import.meta.env as Record<string, string | undefined>
+    delete env.VITE_SUPABASE_URL
+    delete env.VITE_SUPABASE_ANON_KEY
+
+    await expect(import('./supabase')).rejects.toThrow(
+      /VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY/,
+    )
+  })
+
+  test('creates client when environment variables are present', async () => {
+    const env = import.meta.env as Record<string, string | undefined>
+    env.VITE_SUPABASE_URL = 'https://example.supabase.co'
+    env.VITE_SUPABASE_ANON_KEY = 'anon-key'
+
+    const mod = await import('./supabase')
+    expect(mod.default).toBeDefined()
+  })
+})
 
 const requiredEnv = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY']
 const missing = requiredEnv.filter(k => !import.meta.env[k as keyof ImportMetaEnv])
