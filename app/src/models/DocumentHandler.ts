@@ -1,6 +1,7 @@
 import supabase from '../../supabase'
 import axios from 'axios'
 import { Document } from './Document'
+import { toast } from '../hooks/use-toast'
 
 /**
  * Singleton responsible for storing and retrieving files from Supabase.
@@ -34,27 +35,35 @@ export class DocumentHandler {
    * Lists documents stored under the provided prefix for the current user.
    */
   private async list(prefix: string): Promise<Document[]> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return []
-    const path = `${user.id}/${prefix}`
-    const { data, error } = await supabase.storage
-      .from('documents')
-      .list(path)
-    if (error || !data) return []
-    return data
-      .filter(f => f.metadata) // folders have null metadata
-      .map(
-        f =>
-          new Document(
-            `${path}/${f.name}`,
-            {},
-            f.name,
-            f.name.split('.').pop()?.toLowerCase() || '',
-            new Date(f.updated_at)
-          )
-      )
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return []
+      const path = `${user.id}/${prefix}`
+      const { data, error } = await supabase.storage
+        .from('documents')
+        .list(path)
+      if (error || !data) throw error || new Error('Failed to list documents')
+      return data
+        .filter(f => f.metadata) // folders have null metadata
+        .map(
+          f =>
+            new Document(
+              `${path}/${f.name}`,
+              {},
+              f.name,
+              f.name.split('.').pop()?.toLowerCase() || '',
+              new Date(f.updated_at)
+            )
+        )
+    } catch (err: unknown) {
+      toast({
+        title: 'Error fetching documents',
+        description: err instanceof Error ? err.message : 'Unknown error',
+      })
+      return []
+    }
   }
 
   /**
@@ -79,50 +88,62 @@ export class DocumentHandler {
    * currently not supported, so no topic information is sent.
    */
   async uploadDocument(relativePath: string, file: File): Promise<void> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return
-    const fullPath = `${user.id}/${relativePath}`
-    await supabase.storage
-      .from('documents')
-      .upload(fullPath, file, { upsert: true })
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+      const fullPath = `${user.id}/${relativePath}`
+      const { error } = await supabase.storage
+        .from('documents')
+        .upload(fullPath, file, { upsert: true })
+      if (error) throw error
 
-    const webhookUrl = import.meta.env.VITE_DOCUMENT_ENCODING_WEBHOOK
-    if (webhookUrl) {
-      try {
-        const url = `${import.meta.env.VITE_SUPABASE_STORAGE_URL}/documents/${fullPath}`
+      const webhookUrl = import.meta.env.VITE_DOCUMENT_ENCODING_WEBHOOK
+      if (webhookUrl) {
+        try {
+          const url = `${import.meta.env.VITE_SUPABASE_STORAGE_URL}/documents/${fullPath}`
 
-        const pathParts = relativePath.split('/')
-        pathParts.pop()
-        const [goalId, projectId] = pathParts
+          const pathParts = relativePath.split('/')
+          pathParts.pop()
+          const [goalId, projectId] = pathParts
 
-        const payload: Record<string, string> = {
-          id: fullPath,
-          title: file.name,
-          type: file.type,
-          url,
-        }
+          const payload: Record<string, string> = {
+            id: fullPath,
+            title: file.name,
+            type: file.type,
+            url,
+          }
 
-        if (projectId) {
-          payload.project_id = projectId
-        } else if (goalId) {
-          payload.goal_id = goalId
-        }
+          if (projectId) {
+            payload.project_id = projectId
+          } else if (goalId) {
+            payload.goal_id = goalId
+          }
 
-        await axios.post(
-          webhookUrl,
-          payload,
-          {
-            headers: {
-              'Content-Type': 'application/json',
+          await axios.post(
+            webhookUrl,
+            payload,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
             },
-          },
-        )
-      } catch (err) {
-        /* eslint-disable no-console */
-        console.error(err)
+          )
+        } catch (err) {
+          /* eslint-disable no-console */
+          console.error(err)
+          toast({
+            title: 'Error notifying document encoding',
+            description: err instanceof Error ? err.message : 'Unknown error',
+          })
+        }
       }
+    } catch (err: unknown) {
+      toast({
+        title: 'Error uploading document',
+        description: err instanceof Error ? err.message : 'Unknown error',
+      })
     }
   }
 
@@ -130,74 +151,106 @@ export class DocumentHandler {
    * Downloads a file from Supabase and returns its content.
    */
   async getDocument(path: string): Promise<{ name: string; type: string; content: string | null }> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return { name: '', type: '', content: null }
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return { name: '', type: '', content: null }
 
-    const fullPath = path.startsWith(`${user.id}/`) ? path : `${user.id}/${path}`
-    const { data, error } = await supabase.storage.from('documents').download(fullPath)
-    if (error || !data) return { name: '', type: '', content: null }
+      const fullPath = path.startsWith(`${user.id}/`) ? path : `${user.id}/${path}`
+      const { data, error } = await supabase.storage.from('documents').download(fullPath)
+      if (error || !data) throw error || new Error('Failed to download document')
 
-    const type = fullPath.split('.').pop()?.toLowerCase() || ''
+      const type = fullPath.split('.').pop()?.toLowerCase() || ''
 
-    if (type === 'txt' || type === 'md' || type === 'markdown') {
-      return { name: fullPath.split('/').pop() || '', type, content: await data.text() }
-    }
+      if (type === 'txt' || type === 'md' || type === 'markdown') {
+        return { name: fullPath.split('/').pop() || '', type, content: await data.text() }
+      }
 
-    if (type === 'pdf') {
-      const reader = new FileReader()
-      const promise = new Promise<string>((resolve, reject) => {
-        reader.onerror = () => reject(reader.error)
-        reader.onloadend = () => {
-          const res = reader.result as string
-          resolve(res.split(',')[1])
-        }
+      if (type === 'pdf') {
+        const reader = new FileReader()
+        const promise = new Promise<string>((resolve, reject) => {
+          reader.onerror = () => reject(reader.error)
+          reader.onloadend = () => {
+            const res = reader.result as string
+            resolve(res.split(',')[1])
+          }
+        })
+        reader.readAsDataURL(data)
+        return { name: fullPath.split('/').pop() || '', type, content: await promise }
+      }
+
+      return { name: fullPath.split('/').pop() || '', type, content: null }
+    } catch (err: unknown) {
+      toast({
+        title: 'Error downloading document',
+        description: err instanceof Error ? err.message : 'Unknown error',
       })
-      reader.readAsDataURL(data)
-      return { name: fullPath.split('/').pop() || '', type, content: await promise }
+      return { name: '', type: '', content: null }
     }
-
-    return { name: fullPath.split('/').pop() || '', type, content: null }
   }
 
   /**
    * Deletes a single file from storage.
    */
   async deleteDocument(fullPath: string): Promise<void> {
-    await supabase.storage.from('documents').remove([fullPath])
+    try {
+      const { error } = await supabase.storage.from('documents').remove([fullPath])
+      if (error) throw error
+    } catch (err: unknown) {
+      toast({
+        title: 'Error deleting document',
+        description: err instanceof Error ? err.message : 'Unknown error',
+      })
+    }
   }
 
   /**
    * Recursively collects all file paths under a given prefix.
    */
   private async listFilePaths(prefix: string): Promise<string[]> {
-    const { data, error } = await supabase.storage.from('documents').list(prefix)
-    if (error || !data) return []
-    const results = await Promise.all(
-      data.map(item => {
-        const path = `${prefix}/${item.name}`
-        if (item.metadata) {
-          return Promise.resolve([path])
-        }
-        return this.listFilePaths(path)
+    try {
+      const { data, error } = await supabase.storage.from('documents').list(prefix)
+      if (error || !data) throw error || new Error('Failed to list file paths')
+      const results = await Promise.all(
+        data.map(item => {
+          const path = `${prefix}/${item.name}`
+          if (item.metadata) {
+            return Promise.resolve([path])
+          }
+          return this.listFilePaths(path)
+        })
+      )
+      return results.flat()
+    } catch (err: unknown) {
+      toast({
+        title: 'Error accessing storage',
+        description: err instanceof Error ? err.message : 'Unknown error',
       })
-    )
-    return results.flat()
+      return []
+    }
   }
 
   /**
    * Deletes all files within the given folder prefix.
    */
   async deleteFolder(prefix: string): Promise<void> {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return
-    const fullPrefix = `${user.id}/${prefix}`
-    const files = await this.listFilePaths(fullPrefix)
-    if (files.length > 0) {
-      await supabase.storage.from('documents').remove(files)
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+      const fullPrefix = `${user.id}/${prefix}`
+      const files = await this.listFilePaths(fullPrefix)
+      if (files.length > 0) {
+        const { error } = await supabase.storage.from('documents').remove(files)
+        if (error) throw error
+      }
+    } catch (err: unknown) {
+      toast({
+        title: 'Error deleting documents',
+        description: err instanceof Error ? err.message : 'Unknown error',
+      })
     }
   }
 
