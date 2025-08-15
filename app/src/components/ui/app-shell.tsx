@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home } from 'lucide-react';
 import supabase from '../../../supabase';
@@ -18,9 +19,9 @@ function ShellInner({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative h-screen flex flex-col md:flex-row overflow-hidden">
       {/* ----- mobile top bar ----- */}
-      <div className="md:hidden flex justify-between items-center p-4 bg-white border-b sticky top-0 z-20">
-        <h1 className="text-lg font-bold text-blue-700">Lifemanager</h1>
-        <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)}>
+      <div className="md:hidden flex justify-between items-center p-4 bg-blue-600 text-white sticky top-0 z-20">
+        <h1 className="text-lg font-bold">Lifemanager</h1>
+        <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="text-white">
           <Menu className="h-6 w-6" />
         </Button>
       </div>
@@ -35,18 +36,18 @@ function ShellInner({ children }: { children: React.ReactNode }) {
 
       {/* ----- sidebar ----- */}
       <nav
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r p-4 flex flex-col transform transition-transform duration-300
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-gray-800 text-white p-4 flex flex-col transform transition-transform duration-300
         md:static md:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* header + close btn */}
         <div className="px-2 mb-8 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-blue-700 hidden md:block">Lifemanager</h1>
+          <h1 className="text-xl font-bold hidden md:block">Lifemanager</h1>
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden text-white"
             onClick={() => setIsSidebarOpen(false)}
           >
             <X className="h-6 w-6" />
@@ -61,11 +62,11 @@ function ShellInner({ children }: { children: React.ReactNode }) {
               <button
                 key={name}
                 onClick={() => {
-                  setActiveTab(name as any);
+                  setActiveTab(name);
                   if (window.innerWidth < 768) setIsSidebarOpen(false);
                 }}
                 className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm font-medium
-                  ${active ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                  ${active ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
               >
                 <Icon className="w-5 h-5 mr-3" />
                 {name}
@@ -75,7 +76,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* logout */}
-        <div className="mt-auto pt-4 border-t">
+        <div className="mt-auto pt-4 border-t border-gray-700">
         <button
             onClick={() => {
               setActiveTab('Settings');
@@ -83,8 +84,8 @@ function ShellInner({ children }: { children: React.ReactNode }) {
             }}
             className={`w-full flex items-center px-3 py-2.5 rounded-md text-sm ${
               activeTab === 'Settings'
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-gray-600 hover:bg-gray-100'
+                ? 'bg-gray-900 text-white'
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white'
             }`}
           >
             <Settings className="w-5 h-5 mr-3" />
@@ -92,7 +93,7 @@ function ShellInner({ children }: { children: React.ReactNode }) {
           </button>
           <button
             onClick={() => supabase.auth.signOut()}
-            className="w-full flex items-center px-3 py-2.5 rounded-md text-sm text-gray-600 hover:bg-gray-100"
+            className="w-full flex items-center px-3 py-2.5 rounded-md text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
           >
             <LogOut className="w-5 h-5 mr-3" />
             Logout
