@@ -17,6 +17,7 @@ TODO
 - Use TypeScript and React function components.
 - Place tests beside source files using `*.test.ts`.
 - Prefer named exports and keep components small.
+- Whenever you commit something adjust the documentation if necessary.
 
 ## Testing
 - Run `npm test` to execute unit tests.
