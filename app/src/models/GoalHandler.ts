@@ -1,7 +1,6 @@
 import supabase from '../../supabase'
 import { Goal } from './Goal'
 import { DocumentHandler } from './DocumentHandler'
-import { MOCK_MARKDOWN } from '../utils/mockMarkdown'
 import { ProjectHandler } from './ProjectHandler'
 import { toast } from '../hooks/use-toast'
 
@@ -43,7 +42,7 @@ export class GoalHandler {
       goal.id = inserted.id
       await DocumentHandler.getInstance().uploadMarkdown(
         `${goal.id}/${goal.id}.md`,
-        MOCK_MARKDOWN
+        goal.description
       )
     } catch (err: unknown) {
       toast({
