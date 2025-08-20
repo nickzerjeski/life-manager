@@ -1,4 +1,6 @@
+
 'use client';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home, Calendar as CalendarIcon } from 'lucide-react';
 import supabase from '../../../supabase';

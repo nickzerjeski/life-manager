@@ -1,3 +1,4 @@
+import React from 'react';
 import GoalPage from '../../pages/GoalPage';
 import { useAppShell } from './app-shell-context';
 import ProjectPage from '../../pages/ProjectPage';
