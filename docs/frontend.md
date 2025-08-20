@@ -17,7 +17,7 @@ app/
 
 ## Pages
 Each file in `pages/` represents a top-level route. Key screens include:
-- `HomePage` – entry point after login.
+- `HomePage` – entry point after login showing all tasks and an option to create new ones.
 - `GoalPage` and `ProjectPage` – manage goals, projects and their tasks.
 - `HabitPage` – track recurring habits.
 - `LoginPage` and `RegisterPage` – authentication flows using Supabase.
