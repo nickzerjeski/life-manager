@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { Goal } from './Goal'
 import { AOL } from './AOL'
 import { GoalHandler } from './GoalHandler'
-import { MOCK_MARKDOWN } from '../utils/mockMarkdown'
 
 const {
   authGetUser,
@@ -63,7 +62,7 @@ describe('GoalHandler', () => {
 
     expect(insert).toHaveBeenCalled()
     expect(goal.id).toBe('g1')
-    expect(uploadMarkdown).toHaveBeenCalledWith('g1/g1.md', MOCK_MARKDOWN)
+    expect(uploadMarkdown).toHaveBeenCalledWith('g1/g1.md', goal.description)
   })
 
   test('deleteGoal removes related data', async () => {

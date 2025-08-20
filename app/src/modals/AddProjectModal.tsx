@@ -4,8 +4,6 @@ import { Project } from '@/models/Project';
 import { ProjectHandler } from '@/models/ProjectHandler';
 import { GoalHandler } from '@/models/GoalHandler';
 import { Goal } from '@/models/Goal';
-import { AutomatedTask } from '@/models/Task';
-import { TaskHandler } from '@/models/TaskHandler';
 
 interface AddProjectModalProps {
   isOpen: boolean;
@@ -22,6 +20,13 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
       .catch(() => setGoals([]));
   }, []);
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [start, setStart] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const [objective, setObjective] = useState(1);
+  const [periodFrom, setPeriodFrom] = useState('');
+  const [periodTo, setPeriodTo] = useState('');
+  const [contributionPct, setContributionPct] = useState(0);
   const [goalId, setGoalId] = useState('');
   useEffect(() => {
     if (goals.length > 0 && !goalId) {
@@ -30,50 +35,119 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
   }, [goals, goalId]);
 
   const handleCreate = async () => {
-    const goal = goals.find((g) => g.id === goalId) || goals[0];
+    const goal = goals.find(g => g.id === goalId) || goals[0];
     if (!goal) return;
-    const today = new Date();
-    const nextYear = new Date();
-    nextYear.setFullYear(today.getFullYear() + 1);
     const project = new Project(
-      Date.now().toString(),
+      crypto.randomUUID(),
       name,
-      '',
-      0,
-      0,
-      1,
-      [today, nextYear],
+      description,
+      start,
+      current,
+      objective,
+      [new Date(periodFrom), new Date(periodTo)],
       goal,
-      0
+      contributionPct,
     );
     await ProjectHandler.getInstance().createProject(project);
-    await TaskHandler.getInstance().createAutomatedTaskForProject(project, 'Setup Project');
     if (onCreated) await onCreated(project);
     onClose();
     setName('');
+    setDescription('');
+    setStart(0);
+    setCurrent(0);
+    setObjective(1);
+    setPeriodFrom('');
+    setPeriodTo('');
+    setContributionPct(0);
     setGoalId(goals[0]?.id ?? '');
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add Project">
       <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <textarea
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Start</label>
+            <input
+              type="number"
+              value={start}
+              onChange={e => setStart(Number(e.target.value))}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Current</label>
+            <input
+              type="number"
+              value={current}
+              onChange={e => setCurrent(Number(e.target.value))}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Objective</label>
+            <input
+              type="number"
+              value={objective}
+              onChange={e => setObjective(Number(e.target.value))}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+            <input
+              type="date"
+              value={periodFrom}
+              onChange={e => setPeriodFrom(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+            <input
+              type="date"
+              value={periodTo}
+              onChange={e => setPeriodTo(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Contribution %</label>
+          <input
+            type="number"
+            value={contributionPct}
+            onChange={e => setContributionPct(Number(e.target.value))}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Goal</label>
           <select
             value={goalId}
-            onChange={(e) => setGoalId(e.target.value)}
+            onChange={e => setGoalId(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
           >
-            {goals.map((g) => (
+            {goals.map(g => (
               <option key={g.id} value={g.id}>
                 {g.name}
               </option>
@@ -85,7 +159,7 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
             onClick={handleCreate}
             className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
           >
-            Create Project
+            Add Project
           </button>
         </div>
       </div>
