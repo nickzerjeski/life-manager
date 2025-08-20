@@ -16,8 +16,14 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
   const [start, setStart] = useState(0);
   const [current, setCurrent] = useState(0);
   const [objective, setObjective] = useState(1);
-  const [periodFrom, setPeriodFrom] = useState('');
-  const [periodTo, setPeriodTo] = useState('');
+  const todayStr = () => new Date().toISOString().split('T')[0];
+  const nextYearStr = () => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() + 1);
+    return d.toISOString().split('T')[0];
+  };
+  const [periodFrom, setPeriodFrom] = useState(todayStr());
+  const [periodTo, setPeriodTo] = useState(nextYearStr());
   const [aol, setAol] = useState<AOL>(AOL.GROWTH);
 
   const handleCreate = async () => {
@@ -40,8 +46,8 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
     setStart(0);
     setCurrent(0);
     setObjective(1);
-    setPeriodFrom('');
-    setPeriodTo('');
+    setPeriodFrom(todayStr());
+    setPeriodTo(nextYearStr());
     setAol(AOL.GROWTH);
   };
 

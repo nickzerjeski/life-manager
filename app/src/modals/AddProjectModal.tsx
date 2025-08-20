@@ -24,8 +24,14 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
   const [start, setStart] = useState(0);
   const [current, setCurrent] = useState(0);
   const [objective, setObjective] = useState(1);
-  const [periodFrom, setPeriodFrom] = useState('');
-  const [periodTo, setPeriodTo] = useState('');
+  const todayStr = () => new Date().toISOString().split('T')[0];
+  const nextYearStr = () => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() + 1);
+    return d.toISOString().split('T')[0];
+  };
+  const [periodFrom, setPeriodFrom] = useState(todayStr());
+  const [periodTo, setPeriodTo] = useState(nextYearStr());
   const [contributionPct, setContributionPct] = useState(0);
   const [goalId, setGoalId] = useState('');
   useEffect(() => {
@@ -56,8 +62,8 @@ export default function AddProjectModal({ isOpen, onClose, onCreated }: AddProje
     setStart(0);
     setCurrent(0);
     setObjective(1);
-    setPeriodFrom('');
-    setPeriodTo('');
+    setPeriodFrom(todayStr());
+    setPeriodTo(nextYearStr());
     setContributionPct(0);
     setGoalId(goals[0]?.id ?? '');
   };

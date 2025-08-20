@@ -21,7 +21,12 @@ export default function AddTaskModal({
   const [projects, setProjects] = useState<Project[]>([])
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [deadline, setDeadline] = useState('')
+  const defaultDeadline = () => {
+    const d = new Date()
+    d.setDate(d.getDate() + 7)
+    return d.toISOString().split('T')[0]
+  }
+  const [deadline, setDeadline] = useState(defaultDeadline())
   const [duration, setDuration] = useState(1)
   const [projectId, setProjectId] = useState(defaultProjectId || '')
 
@@ -55,7 +60,7 @@ export default function AddTaskModal({
     onClose()
     setName('')
     setDescription('')
-    setDeadline('')
+    setDeadline(defaultDeadline())
     setDuration(1)
     setProjectId(defaultProjectId ?? projects[0]?.id ?? '')
   }
