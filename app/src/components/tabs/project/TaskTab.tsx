@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Project } from '@/models/Project'
-import { Task, ManualTask, AutomatedTask, AutomationState } from '@/models/Task'
+import { Task, ManualTask, AutomatedTask } from '@/models/Task'
 import { TaskHandler } from '@/models/TaskHandler'
 import { Check, Plus, ChevronDown, ChevronUp } from 'lucide-react'
 import { Timeline } from '@/components/ui/timeline'
@@ -10,14 +10,7 @@ import ChatView from '@/components/views/ChatView'
 import { Chat } from '@/models/Chat'
 import { Topic } from '@/models/Topic'
 import AddTaskModal from '@/modals/AddTaskModal'
-
-const manualStyle = 'bg-blue-50 border border-blue-200'
-const automationStyle: Record<AutomationState, string> = {
-  running: 'bg-green-50 border border-green-200 animate-pulse',
-  attention: 'bg-orange-50 border border-orange-200',
-  not_started: 'bg-gray-50 border border-gray-200',
-  failed: 'bg-red-50 border border-red-200',
-}
+import { manualTaskStyle, automationTaskStyle } from '@/styles/taskStyles'
 
 interface TaskTabProps {
   project: Project
@@ -81,10 +74,10 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
             <li
               key={task.id}
               onClick={() => openTask(task)}
-              className={`${
+                className={`${
                 task instanceof AutomatedTask
-                  ? automationStyle[task.status]
-                  : manualStyle
+                  ? automationTaskStyle[task.status]
+                  : manualTaskStyle
               } p-3 rounded-md flex justify-between items-center gap-2 cursor-pointer`}
             >
               <div className="flex-1">

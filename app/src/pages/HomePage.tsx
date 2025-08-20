@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Task } from '@/models/Task'
+import { Task, AutomatedTask } from '@/models/Task'
 import { TaskHandler } from '@/models/TaskHandler'
 import AddTaskModal from '@/modals/AddTaskModal'
+import { manualTaskStyle, automationTaskStyle } from '@/styles/taskStyles'
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -35,15 +36,26 @@ export default function HomePage() {
           </button>
         </div>
         {tasks.length > 0 ? (
-          <ul className="list-disc list-inside space-y-1 text-sm">
+          <ul className="space-y-2">
             {tasks.map(t => (
-              <li key={t.id} className="flex flex-col">
-                <span className="font-semibold">{t.name}</span>
-                {t.description && <span className="text-gray-600">{t.description}</span>}
-                <span className="text-gray-500 text-xs">
+              <li
+                key={t.id}
+                className={`${
+                  t instanceof AutomatedTask
+                    ? automationTaskStyle[t.status]
+                    : manualTaskStyle
+                } p-3 rounded-md`}
+              >
+                <p className="font-medium text-sm text-gray-800">{t.name}</p>
+                {t.description && (
+                  <p className="text-xs text-gray-600">{t.description}</p>
+                )}
+                <p className="text-xs text-gray-500">
+                  Duration {(t.duration / 3600).toFixed(1)}h •
+                  {' '}
                   {t.deadline.toLocaleDateString()}
                   {t.project && ` • ${t.project.name}`}
-                </span>
+                </p>
               </li>
             ))}
           </ul>

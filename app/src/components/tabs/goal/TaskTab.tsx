@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Goal } from '@/models/Goal';
-import { AutomatedTask, AutomationState } from '@/models/Task';
+import { AutomatedTask } from '@/models/Task';
 import { TaskHandler } from '@/models/TaskHandler';
 import { StatusIndicator } from '@/components/ui/status-indicator';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -9,17 +9,11 @@ import ChatView from '@/components/views/ChatView';
 import { Chat } from '@/models/Chat';
 import { Topic } from '@/models/Topic';
 import { Project } from '@/models/Project';
+import { automationTaskStyle } from '@/styles/taskStyles';
 
 interface TaskTabProps {
   goal: Goal;
 }
-
-const automationStyle: Record<AutomationState, string> = {
-  running: 'bg-green-50 border border-green-200 animate-pulse',
-  attention: 'bg-orange-50 border border-orange-200',
-  not_started: 'bg-gray-50 border border-gray-200',
-  failed: 'bg-red-50 border border-red-200',
-};
 
 const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
   const [tasks, setTasks] = useState<AutomatedTask[]>([]);
@@ -71,7 +65,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ goal }) => {
               <li
                 key={task.id}
                 onClick={() => openTask(task)}
-                className={`${automationStyle[task.status]} p-3 rounded-md flex justify-between items-center gap-2 cursor-pointer`}
+                className={`${automationTaskStyle[task.status]} p-3 rounded-md flex justify-between items-center gap-2 cursor-pointer`}
               >
                 <div className="flex-1">
                   <p className="font-medium text-sm text-gray-800">{task.name}</p>
