@@ -9,7 +9,7 @@ app/
     ├─ pages/        # Route components such as Home, Goal, Project and Login
     ├─ components/   # Reusable UI elements and views
     ├─ hooks/        # Custom React hooks (auth, mobile detection, toast)
-    ├─ modals/       # Dialog components for creating goals, projects and folders
+    ├─ modals/       # Dialog components for creating goals, projects, tasks and folders
     ├─ models/       # TypeScript models and handlers for domain entities
     ├─ utils/        # General utilities
     └─ styles/       # Global Tailwind definitions

@@ -9,25 +9,35 @@ interface AddTaskModalProps {
   isOpen: boolean
   onClose: () => void
   onCreated?: (task: Task) => void
+  defaultProjectId?: string
 }
 
-export default function AddTaskModal({ isOpen, onClose, onCreated }: AddTaskModalProps) {
+export default function AddTaskModal({
+  isOpen,
+  onClose,
+  onCreated,
+  defaultProjectId,
+}: AddTaskModalProps) {
   const [projects, setProjects] = useState<Project[]>([])
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [deadline, setDeadline] = useState('')
   const [duration, setDuration] = useState(1)
-  const [projectId, setProjectId] = useState('')
+  const [projectId, setProjectId] = useState(defaultProjectId || '')
 
   useEffect(() => {
     ProjectHandler.getInstance()
       .getProjects()
       .then(list => {
         setProjects(list)
-        if (list.length > 0 && !projectId) setProjectId(list[0].id)
+        if (defaultProjectId) {
+          setProjectId(defaultProjectId)
+        } else if (list.length > 0 && !projectId) {
+          setProjectId(list[0].id)
+        }
       })
       .catch(() => setProjects([]))
-  }, [projectId])
+  }, [defaultProjectId])
 
   const handleCreate = async () => {
     const project = projects.find(p => p.id === projectId) || null
@@ -47,7 +57,7 @@ export default function AddTaskModal({ isOpen, onClose, onCreated }: AddTaskModa
     setDescription('')
     setDeadline('')
     setDuration(1)
-    setProjectId(projects[0]?.id ?? '')
+    setProjectId(defaultProjectId ?? projects[0]?.id ?? '')
   }
 
   return (
