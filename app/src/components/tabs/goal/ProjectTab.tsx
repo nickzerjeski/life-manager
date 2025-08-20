@@ -3,7 +3,6 @@ import { Goal } from '@/models/Goal';
 import { Project } from '@/models/Project';
 import { ProjectHandler } from '@/models/ProjectHandler';
 import { containerStyle, statusLabelStyle } from '@/styles/statusStyles';
-import { Sparkles } from 'lucide-react';
 
 interface ProjectTabProps {
   goal: Goal;
@@ -20,27 +19,9 @@ const ProjectTab: React.FC<ProjectTabProps> = ({ goal }) => {
       .catch(() => setProjects([]));
   }, [goal.id, handler]);
 
-  const generate = async () => {
-    try {
-      const generated = await handler.generateProjects(goal.id);
-      setProjects(prev => [...prev, ...generated]);
-    } catch (err) {
-      /* eslint-disable no-console */
-      console.error(err);
-    }
-  };
-
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h4 className="text-lg font-semibold mb-2 text-gray-700">Projects</h4>
-        <button
-            onClick={generate}
-            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
-          >
-            <Sparkles size={16} className="mr-1 sm:mr-2" /> Generate Projects
-        </button>
-      </div>
+      <h4 className="text-lg font-semibold mb-2 text-gray-700">Projects</h4>
       {projects.length > 0 ? (
         <ul className="space-y-2">
           {projects.map((project) => (

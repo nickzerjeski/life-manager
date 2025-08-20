@@ -55,7 +55,6 @@ export default function GoalPage() {
                 >
                   <div>
                     <p className="font-medium text-sm text-gray-800">{goal.name}</p>
-                    <p className="text-xs text-gray-500">{goal.description}</p>
                     <p className="text-xs text-gray-600">{goal.period[0].toLocaleDateString()} - {goal.period[1].toLocaleDateString()}</p>
                   </div>
                   <span

@@ -160,7 +160,6 @@ const GoalDetailView: React.FC<GoalDetailViewProps> = ({
               <h2 className="text-2xl font-bold text-gray-800 truncate" title={goal.name}>
                 {goal.name}
               </h2>
-              <p className="text-sm text-gray-500 truncate">{goal.description}</p>
             </div>
           </div>
         </div>

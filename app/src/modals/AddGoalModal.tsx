@@ -133,7 +133,7 @@ export default function AddGoalModal({ isOpen, onClose, onCreated }: AddGoalModa
             onClick={handleCreate}
             className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
           >
-            Add Goal
+            Create Goal
           </button>
         </div>
       </div>
