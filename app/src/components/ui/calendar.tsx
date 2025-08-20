@@ -13,6 +13,8 @@ import {
   subMonths,
   subWeeks,
 } from 'date-fns';
+import { Task } from '@/models/Task';
+import { TaskHandler } from '@/models/TaskHandler';
 
 const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -21,6 +23,25 @@ type View = 'day' | 'week' | 'month';
 export function Calendar() {
   const [current, setCurrent] = React.useState(new Date());
   const [view, setView] = React.useState<View>('month');
+  const [tasks, setTasks] = React.useState<Task[]>([]);
+  const handler = React.useMemo(() => TaskHandler.getInstance(), []);
+
+  React.useEffect(() => {
+    handler
+      .getTasks()
+      .then(setTasks)
+      .catch(() => setTasks([]));
+  }, [handler]);
+
+  const tasksByDay = React.useMemo(() => {
+    const map: Record<string, Task[]> = {};
+    tasks.forEach(t => {
+      const key = format(t.deadline, 'yyyy-MM-dd');
+      if (!map[key]) map[key] = [];
+      map[key].push(t);
+    });
+    return map;
+  }, [tasks]);
 
   const goPrev = () => {
     setCurrent(prev =>
@@ -100,40 +121,75 @@ export function Calendar() {
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-7 gap-1 text-sm text-center">
+          <div className="grid grid-cols-7 gap-1 text-sm">
             {Array.from({ length: offset }).map((_, i) => (
               <div key={`empty-${i}`} />
             ))}
-            {days.map(day => (
-              <div
-                key={day.toISOString()}
-                className="p-2 rounded hover:bg-blue-50"
-              >
-                {format(day, 'd')}
-              </div>
-            ))}
+            {days.map(day => {
+              const key = format(day, 'yyyy-MM-dd');
+              const dayTasks = tasksByDay[key] || [];
+              return (
+                <div
+                  key={day.toISOString()}
+                  className="p-2 rounded hover:bg-blue-50 space-y-1"
+                >
+                  <div className="text-center font-medium">
+                    {format(day, 'd')}
+                  </div>
+                  {dayTasks.map(t => (
+                    <div
+                      key={t.id}
+                      className="text-xs text-left truncate"
+                    >
+                      {t.name}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
           </div>
         </>
       )}
 
       {view === 'week' && (
-        <div className="grid grid-cols-7 gap-1 text-sm text-center">
-          {days.map(day => (
-            <div
-              key={day.toISOString()}
-              className="p-2 rounded hover:bg-blue-50"
-            >
-              <div className="font-medium">{format(day, 'EEE')}</div>
-              <div>{format(day, 'd')}</div>
-            </div>
-          ))}
+        <div className="grid grid-cols-7 gap-1 text-sm">
+          {days.map(day => {
+            const key = format(day, 'yyyy-MM-dd');
+            const dayTasks = tasksByDay[key] || [];
+            return (
+              <div
+                key={day.toISOString()}
+                className="p-2 rounded hover:bg-blue-50 space-y-1 text-center"
+              >
+                <div className="font-medium">{format(day, 'EEE')}</div>
+                <div>{format(day, 'd')}</div>
+                {dayTasks.map(t => (
+                  <div key={t.id} className="text-xs text-left truncate">
+                    {t.name}
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       )}
 
       {view === 'day' && (
-        <div className="p-4 rounded border text-center">
-          <div className="text-2xl font-bold">{format(current, 'd')}</div>
-          <div>{format(current, 'EEEE, MMMM yyyy')}</div>
+        <div className="p-4 rounded border">
+          <div className="text-center mb-2">
+            <div className="text-2xl font-bold">{format(current, 'd')}</div>
+            <div>{format(current, 'EEEE, MMMM yyyy')}</div>
+          </div>
+          <ul className="space-y-1">
+            {(tasksByDay[format(current, 'yyyy-MM-dd')] || []).map(t => (
+              <li key={t.id} className="text-sm text-gray-800">
+                {t.name}
+              </li>
+            ))}
+            {!(tasksByDay[format(current, 'yyyy-MM-dd')] || []).length && (
+              <li className="text-sm text-gray-500 italic">No tasks</li>
+            )}
+          </ul>
         </div>
       )}
     </div>

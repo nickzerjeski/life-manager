@@ -5,6 +5,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - Goal Management – Create quantitative or qualitative goals; define period, area-of-life tag, attach documents, and monitor automatic status updates.
 - Project Management – Break goals into projects confined to the goal period; track progress, status, and related documents.
 - Task Management – Generate or manually add tasks ≤ 24 h, assign dependencies and priority 1-5; mark complete or reschedule.
+- Calendar Views – Browse tasks by day, week, or month with navigation.
 - AI-Assisted Planning – Backend webhook triggers an n8n workflow calling OpenAI to analyse documents and context, generate projects and tasks, and estimate durations.
 - Intelligent Scheduler – Deterministic service queries Google Calendar free/busy slots, inserts task blocks, and adjusts when tasks slip or constraints change.
 - Dynamic Status Evaluation – Goal and project status progress through Not started → On Track → At Risk → Off Track → Achieved based on remaining work versus time.
