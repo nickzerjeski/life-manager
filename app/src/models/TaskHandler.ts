@@ -39,6 +39,88 @@ export class TaskHandler {
     })
   }
 
+  async createTask(task: Task): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('tasks').insert({
+      id: task.id,
+      user_id: user.id,
+      project_id: task.project?.id ?? null,
+      name: task.name,
+      description: task.description,
+      deadline: task.deadline.toISOString(),
+      duration: task.duration,
+      is_automated: false,
+    })
+  }
+
+  async getTasks(): Promise<Task[]> {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*, projects(id, goal_id, name, description, start, current, objective, period_from, period_to, contribution_pct, goals:goals(id, name, description, start, current, objective, period_from, period_to, area_of_life))')
+    if (error || !data) return []
+    return data.map(t => {
+      let project: Project | null = null
+      if (t.projects) {
+        const p = t.projects
+        const g = p.goals
+        project = new Project(
+          p.goal_id,
+          p.name,
+          p.description ?? '',
+          p.start,
+          p.current,
+          p.objective,
+          [new Date(p.period_from), new Date(p.period_to)],
+          new Goal(
+            g.id,
+            g.name,
+            g.description,
+            g.start,
+            g.current,
+            g.objective,
+            [new Date(g.period_from), new Date(g.period_to)],
+            g.area_of_life,
+          ),
+          p.contribution_pct,
+        )
+      }
+      const common = [
+        t.id,
+        t.name,
+        t.description ?? '',
+        t.deadline ? new Date(t.deadline) : new Date(),
+        project,
+        t.duration ?? 0,
+        [],
+        t.completed_at ? new Date(t.completed_at) : null,
+      ] as [
+        string,
+        string,
+        string,
+        Date,
+        Project | null,
+        number,
+        Task[],
+        Date | null,
+      ]
+      if (t.is_automated) {
+        return new AutomatedTask(
+          common[0],
+          common[1],
+          common[2],
+          common[3],
+          project,
+          common[5],
+          t.status as AutomationState,
+          common[6],
+          common[7],
+        )
+      }
+      return new ManualTask(...common)
+    })
+  }
+
   async getTasksForProject(projectId: string): Promise<Task[]> {
     const { data, error } = await supabase
       .from('tasks')

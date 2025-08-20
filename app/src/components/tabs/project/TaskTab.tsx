@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Project } from '@/models/Project'
-import { Task, ManualTask, AutomatedTask, AutomationState } from '@/models/Task'
+import { Task, ManualTask, AutomatedTask } from '@/models/Task'
 import { TaskHandler } from '@/models/TaskHandler'
 import { Check, Plus, ChevronDown, ChevronUp } from 'lucide-react'
 import { Timeline } from '@/components/ui/timeline'
@@ -9,14 +9,8 @@ import Modal from '@/components/ui/modal'
 import ChatView from '@/components/views/ChatView'
 import { Chat } from '@/models/Chat'
 import { Topic } from '@/models/Topic'
-
-const manualStyle = 'bg-blue-50 border border-blue-200'
-const automationStyle: Record<AutomationState, string> = {
-  running: 'bg-green-50 border border-green-200 animate-pulse',
-  attention: 'bg-orange-50 border border-orange-200',
-  not_started: 'bg-gray-50 border border-gray-200',
-  failed: 'bg-red-50 border border-red-200',
-}
+import AddTaskModal from '@/modals/AddTaskModal'
+import { manualTaskStyle, automationTaskStyle } from '@/styles/taskStyles'
 
 interface TaskTabProps {
   project: Project
@@ -26,6 +20,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [activeChat, setActiveChat] = useState<Chat | null>(null)
   const [showTimeline, setShowTimeline] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const handler = React.useMemo(() => TaskHandler.getInstance(), [])
 
   const sortTasks = (list: Task[]) =>
@@ -42,14 +37,8 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
       .catch(() => setTasks([]))
   }, [project.id, handler])
 
-  const addTask = async () => {
-    try {
-      const generated = await handler.generateTasks(project.id)
-      setTasks(prev => sortTasks([...prev, ...generated]))
-    } catch (err) {
-      /* eslint-disable no-console */
-      console.error(err)
-    }
+  const addTask = (task: Task) => {
+    setTasks(prev => sortTasks([...prev, task]))
   }
 
   const completeTask = (task: Task) => {
@@ -71,7 +60,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
       <div className="flex items-center justify-between">
         <h4 className="text-lg font-semibold mb-2 text-gray-700">Tasks</h4>
         <button
-          onClick={addTask}
+          onClick={() => setShowModal(true)}
           className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
         >
           <Plus size={16} className="mr-1 sm:mr-2" /> Add Task
@@ -85,10 +74,10 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
             <li
               key={task.id}
               onClick={() => openTask(task)}
-              className={`${
+                className={`${
                 task instanceof AutomatedTask
-                  ? automationStyle[task.status]
-                  : manualStyle
+                  ? automationTaskStyle[task.status]
+                  : manualTaskStyle
               } p-3 rounded-md flex justify-between items-center gap-2 cursor-pointer`}
             >
               <div className="flex-1">
@@ -157,6 +146,13 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
           <ChatView chat={activeChat} projectId={project.id} />
         </Modal>
       )}
+
+      <AddTaskModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onCreated={addTask}
+        defaultProjectId={project.id}
+      />
     </div>
   )
 }
