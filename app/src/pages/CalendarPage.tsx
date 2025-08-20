@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import CalendarComponent from '@/components/ui/calendar';
 
 // Calendar page rendering using shared calendar component
 
