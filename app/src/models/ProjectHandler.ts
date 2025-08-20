@@ -3,7 +3,6 @@ import { Project } from './Project'
 import { Goal } from './Goal'
 import { DocumentHandler } from './DocumentHandler'
 import { TopicHandler } from './TopicHandler'
-import { MOCK_MARKDOWN } from '../utils/mockMarkdown'
 
 export class ProjectHandler {
   private static instance: ProjectHandler | null = null
@@ -41,7 +40,7 @@ export class ProjectHandler {
     project.id = inserted.id
     await DocumentHandler.getInstance().uploadMarkdown(
       `${project.goal.id}/${project.id}/${project.id}.md`,
-      MOCK_MARKDOWN
+      project.description
     )
   }
 

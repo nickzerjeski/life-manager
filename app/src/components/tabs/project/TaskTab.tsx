@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Project } from '@/models/Project'
 import { Task, ManualTask, AutomatedTask, AutomationState } from '@/models/Task'
 import { TaskHandler } from '@/models/TaskHandler'
-import { Check, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
+import { Check, Plus, ChevronDown, ChevronUp } from 'lucide-react'
 import { Timeline } from '@/components/ui/timeline'
 import { StatusIndicator } from '@/components/ui/status-indicator'
 import Modal from '@/components/ui/modal'
@@ -42,7 +42,7 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
       .catch(() => setTasks([]))
   }, [project.id, handler])
 
-  const generate = async () => {
+  const addTask = async () => {
     try {
       const generated = await handler.generateTasks(project.id)
       setTasks(prev => sortTasks([...prev, ...generated]))
@@ -71,10 +71,10 @@ const TaskTab: React.FC<TaskTabProps> = ({ project }) => {
       <div className="flex items-center justify-between">
         <h4 className="text-lg font-semibold mb-2 text-gray-700">Tasks</h4>
         <button
-          onClick={generate}
+          onClick={addTask}
           className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg shadow transition duration-150 ease-in-out text-sm"
         >
-          <Sparkles size={16} className="mr-1 sm:mr-2" /> Generate Tasks
+          <Plus size={16} className="mr-1 sm:mr-2" /> Add Task
         </button>
       </div>
       {tasks.filter(t => !t.completedAt).length > 0 ? (

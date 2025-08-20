@@ -26,10 +26,8 @@ export default function ProjectPage() {
     setSelectedProject(null);
   };
 
-  const filtered = projects.filter((p) =>
-    `${p.name} ${p.description}`
-      .toLowerCase()
-      .includes(search.toLowerCase()),
+  const filtered = projects.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -58,7 +56,7 @@ export default function ProjectPage() {
           <div className="relative mb-4">
             <input
               type="text"
-              placeholder="Search projects (name or description)…"
+              placeholder="Search projects…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -76,7 +74,6 @@ export default function ProjectPage() {
                   className={`${containerStyle[project.status]} p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer border border-gray-200 flex flex-col h-full`}
                 >
                   <h2 className="text-lg font-semibold">{project.name}</h2>
-                  <p className="text-sm text-gray-600 line-clamp-3">{project.description}</p>
                   <span
                     className={`${statusLabelStyle[project.status]} flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full mt-auto self-start`}
                   >
