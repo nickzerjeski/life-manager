@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home } from 'lucide-react';
+import { Menu, X, LogOut, ListTodo, Settings, Target, Repeat, Home, Calendar as CalendarIcon } from 'lucide-react';
 import supabase from '../../../supabase';
 import { AppShellProvider, useAppShell } from './app-shell-context';
 
@@ -10,6 +10,7 @@ const nav = [
   { name: 'Habits', icon: Repeat },
   { name: 'Projects', icon: ListTodo },
   { name: 'Goals', icon: Target },
+  { name: 'Calendar', icon: CalendarIcon },
 ] as const;
 
 function ShellInner({ children }: { children: React.ReactNode }) {
