@@ -1,7 +1,7 @@
 import React from 'react';
 import CalendarComponent from '@/components/ui/calendar';
 
-// Calendar page rendering using shared calendar component
+// Calendar page rendering using shared calendar componen
 
 export default function CalendarPage() {
   return (
