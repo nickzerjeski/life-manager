@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,15 +17,6 @@ export default function LoginPage({ onShowRegister }: Props) {
     setError(null)
     const { error } = await supabase.auth.signInWithPassword(values)
     if (error) setError(error.message)
-  }
-
-  async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'https://www.googleapis.com/auth/calendar',
-      },
-    })
   }
 
   return (
@@ -66,11 +57,8 @@ export default function LoginPage({ onShowRegister }: Props) {
             <Button type="submit" className="w-full">Sign In</Button>
           </form>
         </Form>
-        <Button onClick={signInWithGoogle} type="button" className="w-full">
-          Sign in with Google
-        </Button>
         <p className="text-sm">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <button onClick={onShowRegister} className="text-blue-600 hover:underline" type="button">
             Register
           </button>

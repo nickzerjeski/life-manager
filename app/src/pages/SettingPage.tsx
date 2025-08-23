@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import supabase from '../../supabase';
 import {
   APP_CONFIG,
   loadWorkweekConfig,
@@ -33,6 +34,15 @@ export default function SettingPage() {
   const save = () => {
     saveWorkweekConfig({ days, start, end });
   };
+
+  async function signInWithGoogle() {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        scopes: 'https://www.googleapis.com/auth/calendar',
+      },
+    });
+  }
 
   return (
     <section className="bg-white p-4 sm:p-6 rounded-lg shadow space-y-4">
@@ -79,8 +89,11 @@ export default function SettingPage() {
         </div>
       </div>
 
-      <div className="pt-2">
+      <div className="pt-2 flex gap-2">
         <Button onClick={save}>Save</Button>
+        <Button onClick={signInWithGoogle} type="button">
+          Sign in with Google
+        </Button>
       </div>
     </section>
   );
