@@ -34,6 +34,7 @@ Reusable building blocks live in `components/`:
 ## Hooks
 Custom hooks simplify common tasks:
 - `use-auth` – manages Supabase authentication state.
+- `use-auth-tokens` – exposes OAuth provider and refresh tokens.
 - `use-toast` – global toast notifications.
 - `use-mobile` – detects small screen layouts.
 

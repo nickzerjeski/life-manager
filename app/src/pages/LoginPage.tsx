@@ -19,6 +19,15 @@ export default function LoginPage({ onShowRegister }: Props) {
     if (error) setError(error.message)
   }
 
+  async function signInWithGoogle() {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        scopes: 'https://www.googleapis.com/auth/calendar',
+      },
+    })
+  }
+
   return (
     <div className="h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white shadow rounded p-6 w-full max-w-md space-y-4">
@@ -57,6 +66,9 @@ export default function LoginPage({ onShowRegister }: Props) {
             <Button type="submit" className="w-full">Sign In</Button>
           </form>
         </Form>
+        <Button onClick={signInWithGoogle} type="button" className="w-full">
+          Sign in with Google
+        </Button>
         <p className="text-sm">
           Don't have an account?{' '}
           <button onClick={onShowRegister} className="text-blue-600 hover:underline" type="button">
