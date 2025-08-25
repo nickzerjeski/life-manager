@@ -21,7 +21,7 @@ Each file in `pages/` represents a top-level route. Key screens include:
 - `GoalPage` and `ProjectPage` – manage goals, projects and their tasks.
 - `HabitPage` – track recurring habits.
 - `LoginPage` and `RegisterPage` – authentication flows using Supabase.
-- `SettingPage` – user preferences.
+- `SettingPage` – user preferences and external account connections such as Google sign-in.
 
 ## Components
 Reusable building blocks live in `components/`:
@@ -34,6 +34,8 @@ Reusable building blocks live in `components/`:
 ## Hooks
 Custom hooks simplify common tasks:
 - `use-auth` – manages Supabase authentication state.
+- `use-auth-tokens` – exposes OAuth provider and refresh tokens.
+- `use-google-calendar` – connects to Google Calendar using the OAuth token.
 - `use-toast` – global toast notifications.
 - `use-mobile` – detects small screen layouts.
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -58,7 +58,7 @@ export default function LoginPage({ onShowRegister }: Props) {
           </form>
         </Form>
         <p className="text-sm">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <button onClick={onShowRegister} className="text-blue-600 hover:underline" type="button">
             Register
           </button>
