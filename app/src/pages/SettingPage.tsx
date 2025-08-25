@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import useGoogleCalendar from '@/hooks/use-google-calendar';
 import {
   APP_CONFIG,
   loadWorkweekConfig,
@@ -14,6 +15,7 @@ export default function SettingPage() {
   const [days, setDays] = useState<string[]>(['Mon', 'Tue', 'Wed', 'Thu', 'Fri']);
   const [start, setStart] = useState('08:00');
   const [end, setEnd] = useState('17:00');
+  const { isSignedIn, signIn, signOut } = useGoogleCalendar();
 
   useEffect(() => {
     loadWorkweekConfig();
@@ -79,8 +81,11 @@ export default function SettingPage() {
         </div>
       </div>
 
-      <div className="pt-2">
+      <div className="pt-2 flex gap-2">
         <Button onClick={save}>Save</Button>
+        <Button onClick={isSignedIn ? signOut : signIn}>
+          {isSignedIn ? 'Disconnect Google Calendar' : 'Connect Google Calendar'}
+        </Button>
       </div>
     </section>
   );
