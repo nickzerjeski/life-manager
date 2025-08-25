@@ -6,6 +6,7 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 - Project Management – Break goals into projects confined to the goal period; track progress, status, and related documents.
 - Task Management – Generate or manually add tasks ≤ 24 h, assign dependencies and priority 1-5; mark complete or reschedule.
 - Calendar Views – Browse tasks by day, week, or month with navigation.
+- Google Calendar Sync – Connect your Google account in Settings to view calendar events.
 - AI-Assisted Planning – Backend webhook triggers an n8n workflow calling OpenAI to analyse documents and context, generate projects and tasks, and estimate durations.
 - Intelligent Scheduler – Deterministic service queries Google Calendar free/busy slots, inserts task blocks, and adjusts when tasks slip or constraints change.
 - Dynamic Status Evaluation – Goal and project status progress through Not started → On Track → At Risk → Off Track → Achieved based on remaining work versus time.
@@ -54,4 +55,11 @@ LifeManager accelerates personal goal attainment by turning a high-level aspirat
 3. Start frontend with `npm run dev`.
 4. Lint with `npm run lint`.
 5. Build production assets with `npm run build`.
+
+## Google Calendar Setup
+
+Set the following environment variables to enable Google Calendar integration:
+
+- `VITE_GOOGLE_CLIENT_ID`
+- `VITE_GOOGLE_API_KEY`
 

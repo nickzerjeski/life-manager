@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import useGoogleCalendar from "@/hooks/use-google-calendar";
 import { addDays, addMonths, endOfMonth, endOfWeek, format, getDate, getDay, getDaysInMonth, getMonth, getYear, isSameDay, isSameMonth, isSameWeek, isToday, parseISO, setHours, setMinutes, startOfMonth, startOfWeek, subMonths } from "date-fns";
 import { enAU } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
@@ -444,9 +445,17 @@ export default function CalendarPro() {
   const [search, setSearch] = useState<string>("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [tasks, setTasks] = useState<any[]>(mockTasks);
+  const { events: gEvents, isSignedIn, loadEvents } = useGoogleCalendar();
+
+  useEffect(() => {
+    if (isSignedIn) loadEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSignedIn]);
+
+  const events = useMemo(() => [...mockEvents, ...gEvents], [gEvents]);
 
   function filteredEvents() {
-    return mockEvents.filter(e => {
+    return events.filter(e => {
       const pOk = project === "all" || e.project === project;
       const qOk = !search || e.title.toLowerCase().includes(search.toLowerCase());
       return pOk && qOk;
@@ -482,7 +491,7 @@ export default function CalendarPro() {
             <Separator className="my-4" />
 
             <TabsContent value="year">
-              <YearView date={date} events={mockEvents} onPickMonth={(m) => setDate(d => new Date(getYear(d), m, 1))} />
+              <YearView date={date} events={events} onPickMonth={(m) => setDate(d => new Date(getYear(d), m, 1))} />
             </TabsContent>
 
             <TabsContent value="month">
