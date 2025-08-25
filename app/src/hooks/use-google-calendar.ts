@@ -32,6 +32,21 @@ const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY as string;
 const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
 
+export function performSignIn(auth: { signIn: () => void } | null | undefined, loaded: boolean) {
+  if (!loaded || !auth) return;
+  auth.signIn();
+}
+
+export function performSignOut(
+  auth: { signOut: () => void } | null | undefined,
+  loaded: boolean,
+  clear: () => void,
+) {
+  if (!loaded || !auth) return;
+  auth.signOut();
+  clear();
+}
+
 export function useGoogleCalendar() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -47,13 +62,20 @@ export function useGoogleCalendar() {
 
   function initClient() {
     // @ts-expect-error gapi provided by external script
-    gapi.load('client', async () => {
+    gapi.load('client:auth2', async () => {
       // @ts-expect-error gapi provided by external script
-      await gapi.client.init({ apiKey: API_KEY, clientId: CLIENT_ID, discoveryDocs: [DISCOVERY_DOC], scope: SCOPES });
+      await gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        discoveryDocs: [DISCOVERY_DOC],
+        scope: SCOPES,
+      });
       // @ts-expect-error gapi provided by external script
       const auth = gapi.auth2.getAuthInstance();
-      setIsSignedIn(auth.isSignedIn.get());
-      auth.isSignedIn.listen(setIsSignedIn);
+      if (auth) {
+        setIsSignedIn(auth.isSignedIn.get());
+        auth.isSignedIn.listen(setIsSignedIn);
+      }
       setGapiLoaded(true);
     });
   }
@@ -74,16 +96,15 @@ export function useGoogleCalendar() {
   }
 
   const signIn = () => {
-    if (!gapiLoaded) return;
     // @ts-expect-error gapi provided by external script
-    gapi.auth2.getAuthInstance().signIn();
+    const auth = gapi.auth2.getAuthInstance();
+    performSignIn(auth, gapiLoaded);
   };
 
   const signOut = () => {
-    if (!gapiLoaded) return;
     // @ts-expect-error gapi provided by external script
-    gapi.auth2.getAuthInstance().signOut();
-    setEvents([]);
+    const auth = gapi.auth2.getAuthInstance();
+    performSignOut(auth, gapiLoaded, () => setEvents([]));
   };
 
   return { isSignedIn, events, signIn, signOut, loadEvents };
